@@ -1,30 +1,4 @@
 RSpec.shared_context RoboRacer::CommandHandlers, type: :command_handlers do
-  class RaisingCommandCallback < Fountain::Command::CommandCallback
-    def on_failure(cause)
-      raise cause
-    end
-  end
-
-  class SpecEventStore < Fountain::EventStore::EventStore
-    attr_reader :recorded_events
-
-    def initialize
-      @recorded_events = []
-    end
-
-    def load_slice(stream_type, stream_id, first, last = -1)
-      raise NoMethodError, "Not yet implemented"
-    end
-
-    def load_all(stream_type, stream_id)
-      raise NoMethodError, "Not yet implemented"
-    end
-
-    def append(stream_type, stream_id, events)
-      @recorded_events.concat(events)
-    end
-  end
-
   let(:event_store) { SpecEventStore.new }
   let(:command_bus) { RoboRacer::Configuration.wire_up(event_store) }
 
