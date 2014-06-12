@@ -16,7 +16,7 @@ RSpec.shared_context RoboRacer::CommandHandlers, type: :command_handlers do
   def when_command(command)
     command_bus.dispatch(
       Fountain::Envelope.as_envelope(command),
-      RaisingCommandCallback.new
+      DefaultCommandCallback.new
     )
   end
 

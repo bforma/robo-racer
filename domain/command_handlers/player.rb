@@ -5,6 +5,7 @@ module RoboRacer
         player = Aggregates::Player.new(
           command.id,
           command.name,
+          command.email,
           command.password
         )
         repository.add(player)

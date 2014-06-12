@@ -1,4 +1,2 @@
-module RoboRacer
-  class PlayerCreated < Struct.new(:id, :name, :password)
-  end
+class PlayerCreated < Struct.new(:id, :name, :email, :password)
 end
