@@ -8,7 +8,12 @@ SimpleCov.start do
   add_filter "spec/"
 end
 
+require 'factory_girl'
+FactoryGirl.reload
+
 RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
 

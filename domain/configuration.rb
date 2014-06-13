@@ -1,19 +1,30 @@
 module RoboRacer
   class Configuration
     def self.wire_up(event_store, listeners = [])
-      command_bus = Fountain::Command::SimpleCommandBus.new
-      player_repository = Fountain::EventSourcing::Repository.build(
-        Aggregates::Player,
-        event_store
-      )
-      event_bus = Fountain::Event::SimpleEventBus.new
-      listeners.each { |listener| event_bus.subscribe(listener) }
-      player_repository.event_bus = event_bus
+      @event_store = event_store
 
-      player_command_handler = CommandHandlers::Player.new(player_repository)
-      command_bus.subscribe(CreatePlayer, player_command_handler)
+      Fountain::Command::SimpleCommandBus.new.tap do |commands|
+        @commands = commands
+        @events = Fountain::Event::SimpleEventBus.new
+        listeners.each { |listener| @events.subscribe(listener) }
 
-      command_bus
+        wire_commands(Aggregates::Player, CommandHandlers::Player, [
+          CreatePlayer
+        ])
+        
+        wire_commands(Aggregates::Game, CommandHandlers::Game, [
+          CreateGameCommand,
+          MoveRobotCommand
+        ])
+      end
+    end
+
+    def self.wire_commands(aggregate_class, handler_class, commands)
+      Fountain::EventSourcing::Repository.build(aggregate_class, @event_store).tap do |repository|
+        repository.event_bus = @events
+        handler = handler_class.new(repository)
+        commands.each { |command| @commands.subscribe(command, handler) }
+      end
     end
   end
 end

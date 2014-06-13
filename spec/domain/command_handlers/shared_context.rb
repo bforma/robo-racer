@@ -19,6 +19,7 @@ RSpec.shared_context RoboRacer::CommandHandlers, type: :command_handlers do
       DefaultCommandCallback.new
     )
   end
+  alias_method :dispatch, :when_command
 
   def then_events(*events)
     actual_events = event_store.recorded_events.map(&:payload)
