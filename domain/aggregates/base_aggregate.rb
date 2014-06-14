@@ -1,7 +1,3 @@
-module RoboRacer
-  module Aggregates
-    class Base
-      include Fountain::EventSourcing::AggregateRoot
-    end
-  end
+class BaseAggregate
+  include Fountain::EventSourcing::AggregateRoot
 end

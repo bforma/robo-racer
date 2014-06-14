@@ -1,4 +1,4 @@
-RSpec.shared_context RoboRacer::CommandHandlers, type: :command_handlers do
+RSpec.shared_context "CommandHandlers", type: :command_handlers do
   let(:event_store) { SpecEventStore.new }
   let(:command_bus) { RoboRacer::Configuration.wire_up(event_store) }
 

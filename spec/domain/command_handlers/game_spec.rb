@@ -1,6 +1,6 @@
 require 'domain_helper'
 
-describe RoboRacer::CommandHandlers::Game, type: :command_handlers do
+describe GameCommandHandler, type: :command_handlers do
   let(:id) { new_uuid }
 
   describe CreateGameCommand do

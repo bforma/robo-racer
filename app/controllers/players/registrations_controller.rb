@@ -1,10 +1,10 @@
 class Players::RegistrationsController < Devise::RegistrationsController
   def new
-    self.resource = RoboRacer::CreatePlayer.new
+    self.resource = CreatePlayer.new
   end
 
   def create
-    self.resource = command = RoboRacer::CreatePlayer.new(
+    self.resource = command = CreatePlayer.new(
       sign_up_params.merge(id: SecureRandom.uuid)
     )
     if command.valid?

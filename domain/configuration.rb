@@ -8,11 +8,11 @@ module RoboRacer
         @events = Fountain::Event::SimpleEventBus.new
         listeners.each { |listener| @events.subscribe(listener) }
 
-        wire_commands(Aggregates::PlayerAggregate, CommandHandlers::Player, [
+        wire_commands(PlayerAggregate, PlayerCommandHandler, [
           CreatePlayer
         ])
         
-        wire_commands(Aggregates::GameAggregate, CommandHandlers::Game, [
+        wire_commands(GameAggregate, GameCommandHandler, [
           CreateGameCommand,
           MoveRobotCommand
         ])

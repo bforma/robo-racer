@@ -1,13 +1,9 @@
-module RoboRacer
-  module CommandHandlers
-    class Base
-      include Fountain::Command::Handler
+class BaseCommandHandler
+  include Fountain::Command::Handler
 
-      attr_reader :repository
+  attr_reader :repository
 
-      def initialize(repository)
-        @repository = repository
-      end
-    end
+  def initialize(repository)
+    @repository = repository
   end
 end
