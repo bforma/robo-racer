@@ -9,23 +9,18 @@ RSpec.shared_context "CommandHandlers", type: :command_handlers do
     end
   end
 
-  def given_events(*events)
-    raise NoMethodError, "Not yet implemented"
-  end
-
-  def when_command(command)
+  def dispatch(command)
     command_bus.dispatch(
       Fountain::Envelope.as_envelope(command),
       DefaultCommandCallback.new
     )
   end
-  alias_method :dispatch, :when_command
+end
 
-  def then_events(*events)
-    actual_events = event_store.recorded_events.map(&:payload)
-    expect(actual_events.map(&:class)).to eq(events.map(&:class))
-    actual_events.zip(events).each do |actual, expected|
-      expect(actual).to eq(expected) if expected
-    end
+RSpec.shared_examples "an event publisher" do
+  specify do
+    expect { dispatch(command) }.
+      to change { event_store.recorded_events.map(&:payload) }.
+           by(expected_events)
   end
 end

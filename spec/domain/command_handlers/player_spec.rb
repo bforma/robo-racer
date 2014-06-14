@@ -14,7 +14,7 @@ describe PlayerCommandHandler, type: :command_handlers do
       )
     end
 
-    context "validations" do
+    describe "validations" do
       it { should validate_presence_of :id }
       it { should validate_presence_of :name }
       it { should validate_presence_of :email }
@@ -44,12 +44,12 @@ describe PlayerCommandHandler, type: :command_handlers do
       end
     end
 
-    specify do
-      when_command command
-
-      then_events PlayerCreated.new(
-        uuid, "Bob", "bob@localhost.local", "secret"
-      )
+    describe "dispatch" do
+      it_behaves_like "an event publisher" do
+        let(:expected_events) do
+          [PlayerCreated.new(uuid, "Bob", "bob@localhost.local", "secret")]
+        end
+      end
     end
   end
 end
