@@ -1,6 +1,6 @@
 module RoboRacer
   module Aggregates
-    class Game < Base
+    class GameAggregate < Base
       def initialize(id)
         apply GameCreatedEvent.new(id, GameState::LOBBYING, [])
       end

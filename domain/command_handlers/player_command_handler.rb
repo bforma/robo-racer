@@ -2,7 +2,7 @@ module RoboRacer
   module CommandHandlers
     class Player < Base
       route CreatePlayer do |command|
-        player = Aggregates::Player.new(
+        player = Aggregates::PlayerAggregate.new(
           command.id,
           command.name,
           command.email,

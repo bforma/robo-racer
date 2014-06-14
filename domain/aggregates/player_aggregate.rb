@@ -1,6 +1,6 @@
 module RoboRacer
   module Aggregates
-    class Player < Base
+    class PlayerAggregate < Base
       def initialize(id, name, email, password)
         apply PlayerCreated.new(id, name, email, password)
       end

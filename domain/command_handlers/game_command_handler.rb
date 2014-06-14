@@ -2,7 +2,7 @@ module RoboRacer
   module CommandHandlers
     class Game < Base
       route CreateGameCommand do |command|
-        game = Aggregates::Game.new(command.id)
+        game = Aggregates::GameAggregate.new(command.id)
         repository.add(game)
       end
 
