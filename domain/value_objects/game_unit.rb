@@ -21,5 +21,4 @@ private
     return y + amount if facing == DOWN
     y
   end
-
 end
