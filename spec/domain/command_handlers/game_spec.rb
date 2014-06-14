@@ -8,7 +8,7 @@ describe RoboRacer::CommandHandlers::Game, type: :command_handlers do
 
     specify do
       when_command command
-      then_events GameCreatedEvent.new(id)
+      then_events GameCreatedEvent.new(id, GameState::LOBBYING, [])
     end
   end
 

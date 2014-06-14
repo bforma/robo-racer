@@ -2,7 +2,7 @@ module RoboRacer
   module Aggregates
     class Game < Base
       def initialize(id)
-        apply GameCreatedEvent.new(id)
+        apply GameCreatedEvent.new(id, GameState::LOBBYING, [])
       end
 
       def move_robot(speed)
@@ -11,6 +11,8 @@ module RoboRacer
 
       route_event GameCreatedEvent do |event|
         @id = event.id
+        @state = event.state
+        @player_ids = event.player_ids
         @robot = GameUnit.new(0, 0, GameUnit::RIGHT)
       end
     end
