@@ -1,7 +1,7 @@
-class CreateGameCommand < RoboRacer::Command::Base
+class CreateGameCommand < BaseCommand
 end
 
-class MoveRobotCommand < RoboRacer::Command::Base
+class MoveRobotCommand < BaseCommand
   SPEEDS = [-1, 1]
 
   attr_accessor :speed

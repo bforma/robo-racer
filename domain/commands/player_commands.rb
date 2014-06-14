@@ -1,4 +1,4 @@
-class CreatePlayer < RoboRacer::Command::Base
+class CreatePlayer < BaseCommand
   attr_accessor :name, :email, :password, :password_confirmation
 
   validates_presence_of :name, :email, :password, :password_confirmation
