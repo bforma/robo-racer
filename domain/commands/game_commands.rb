@@ -1,7 +1,16 @@
-class CreateGameCommand < BaseCommand
+class CreateGameCommand < Command
 end
 
-class MoveRobotCommand < BaseCommand
+class JoinGameCommand < Command
+end
+
+class LeaveGameCommand < Command
+end
+
+class StartGameCommand < Command
+end
+
+class MoveRobotCommand < Command
   SPEEDS = [-1, 1]
 
   attr_accessor :speed

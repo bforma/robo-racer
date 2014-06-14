@@ -6,4 +6,11 @@ class BaseCommandHandler
   def initialize(repository)
     @repository = repository
   end
+
+private
+
+  def with_aggregate(id)
+    aggregate = repository.load(id)
+    yield(aggregate)
+  end
 end

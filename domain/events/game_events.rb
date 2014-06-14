@@ -1,2 +1,5 @@
-GameCreatedEvent = Struct.new(:id, :state, :player_ids)
+GameCreatedEvent = Struct.new(:id, :state, :host_id)
+PlayerJoinedGameEvent = Struct.new(:id, :player_id)
+PlayerLeftGameEvent = Struct.new(:id, :player_id)
+GameStartedEvent = Struct.new(:id, :state)
 RobotMovedEvent = Struct.new(:id, :new_position)

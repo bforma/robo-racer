@@ -14,6 +14,9 @@ module RoboRacer
         
         wire_commands(GameAggregate, GameCommandHandler, [
           CreateGameCommand,
+          JoinGameCommand,
+          LeaveGameCommand,
+          StartGameCommand,
           MoveRobotCommand
         ])
       end
