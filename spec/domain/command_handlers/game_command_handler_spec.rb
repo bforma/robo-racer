@@ -25,7 +25,26 @@ describe GameCommandHandler, type: :command_handlers do
     before { dispatch(create_game_command) }
 
     it_behaves_like "an event publisher" do
-      let(:expected_events) { [GameStartedEvent.new(id, GameState::RUNNING)] }
+      before do
+        allow(Time).to receive(:current) { Time.parse("2014-06-14T23:00:00") }
+        allow_any_instance_of(Array).to receive(:shuffle!)
+      end
+
+      let(:deck_state) { InstructionDeck.build.to_state }
+      let(:expected_events) do
+        [
+          GameStartedEvent.new(
+            id, GameState::RUNNING, deck_state
+          ),
+          GameRoundStartedEvent.new(id, GameRound.new(
+            1,
+            Time.current,
+            1.minute.from_now
+          )),
+          HandDrawnEvent.new(id, bob, deck_state.drawable.slice(0, 9)),
+          # InstructionDeckDealtEvent.new(id, nil)
+        ]
+      end
     end
 
     context "when dispatched by non-host" do
