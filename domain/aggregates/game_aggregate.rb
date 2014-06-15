@@ -111,11 +111,6 @@ class Deck
     @discarded << card
   end
 
-  def ==(other)
-    self.drawable == other.try(:drawable) &&
-      self.discarded == other.try(:discarded)
-  end
-
   def to_state
     DeckState.new(drawable.dup, drawn.dup, discarded.dup)
   end
