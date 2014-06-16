@@ -8,26 +8,39 @@ class GameAggregate < BaseAggregate
 
   def join(player_id)
     raise GameAlreadyStartedError if @state == GameState::RUNNING
-    raise AlreadyInGameError if @player_ids.include?(player_id)
+    raise PlayerAlreadyInGameError if @player_ids.include?(player_id)
 
     apply PlayerJoinedGameEvent.new(id, player_id)
   end
 
   def leave(player_id)
     raise GameAlreadyStartedError if @state == GameState::RUNNING
-    raise NotInGameError unless @player_ids.include?(player_id)
+    raise PlayerNotInGameError unless @player_ids.include?(player_id)
 
     apply PlayerLeftGameEvent.new(id, player_id)
   end
 
   def start(player_id)
-    raise NotGameOwnerError if @host_id != player_id
+    raise PlayerNotGameHostError if @host_id != player_id
     raise GameAlreadyStartedError if @state == GameState::RUNNING
 
     deck = InstructionDeck.build
     apply GameStartedEvent.new(id, GameState::RUNNING, deck.to_value_object)
 
     start_round
+  end
+
+  def program_robot(player_id, instruction_cards)
+    raise PlayerNotInGameError unless @player_ids.include?(player_id)
+    raise GameNotRunningError unless @state == GameState::RUNNING
+    raise RobotAlreadyProgrammedError if @programmed_robots.include?(player_id)
+
+    hand = @hands[player_id]
+    instruction_cards.each do |instruction_card|
+      raise IllegalInstructionCardError unless hand.include?(instruction_card)
+    end
+
+    apply RobotProgrammedEvent.new(id, player_id, instruction_cards)
   end
 
   def move_robot(speed)
@@ -71,9 +84,26 @@ private
   end
 
   route_event GameRoundStartedEvent do |event|
+    @hands = Hash.new(Array.new)
+    @programmed_robots = []
+  end
 
+  route_event InstructionCardDealtEvent do |event|
+    @hands[event.player_id] << event.instruction_card
+  end
+
+  route_event RobotProgrammedEvent do |event|
+    @programmed_robots << event.player_id
   end
 end
+
+class PlayerAlreadyInGameError < StandardError; end
+class PlayerNotInGameError < StandardError; end
+class PlayerNotGameHostError < StandardError; end
+class GameAlreadyStartedError < StandardError; end
+class GameNotRunningError < StandardError; end
+class IllegalInstructionCardError < StandardError; end
+class RobotAlreadyProgrammedError < StandardError; end
 
 class Deck
   attr_reader :drawable, :drawn, :discarded
@@ -170,8 +200,3 @@ class Dealer
     hands
   end
 end
-
-class AlreadyInGameError < StandardError; end
-class NotInGameError < StandardError; end
-class NotGameOwnerError < StandardError; end
-class GameAlreadyStartedError < StandardError; end

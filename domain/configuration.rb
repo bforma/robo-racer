@@ -17,6 +17,7 @@ module RoboRacer
           JoinGameCommand,
           LeaveGameCommand,
           StartGameCommand,
+          ProgramRobotCommand,
           MoveRobotCommand
         ])
       end

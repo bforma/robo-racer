@@ -22,6 +22,12 @@ class GameCommandHandler < BaseCommandHandler
     end
   end
 
+  route ProgramRobotCommand do |command|
+    with_aggregate(command.id) do |game|
+      game.program_robot(command.player_id, command.instruction_cards)
+    end
+  end
+
   route MoveRobotCommand do |command|
     with_aggregate(command.id) do |game|
       game.move_robot(command.speed)
