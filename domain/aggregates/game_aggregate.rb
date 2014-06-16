@@ -25,7 +25,7 @@ class GameAggregate < BaseAggregate
     raise GameAlreadyStartedError if @state == GameState::RUNNING
 
     deck = InstructionDeck.build
-    apply GameStartedEvent.new(id, GameState::RUNNING, deck.to_state)
+    apply GameStartedEvent.new(id, GameState::RUNNING, deck.to_value_object)
 
     start_round
   end
@@ -41,7 +41,7 @@ private
       id, GameRound.new(1, Time.current, 1.minute.from_now)
     )
 
-    deck = Deck.from_state(@instruction_deck)
+    deck = Deck.from_value_object(@instruction_deck)
     dealer = Dealer.new(deck, @player_ids)
     dealer.deal(MAX_HAND_SIZE).each do |player_id, hand|
       apply HandDrawnEvent.new(id, player_id, hand)
@@ -84,7 +84,7 @@ class Deck
     @discarded = discarded.dup
   end
 
-  def self.from_state(deck_state)
+  def self.from_value_object(deck_state)
     new(deck_state.drawable, deck_state.drawn, deck_state.discarded)
   end
 
@@ -111,7 +111,7 @@ class Deck
     @discarded << card
   end
 
-  def to_state
+  def to_value_object
     DeckState.new(drawable.dup, drawn.dup, discarded.dup)
   end
 end

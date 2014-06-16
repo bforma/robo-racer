@@ -30,7 +30,7 @@ describe GameCommandHandler, type: :command_handlers do
         allow_any_instance_of(Array).to receive(:shuffle!)
       end
 
-      let(:deck_state) { InstructionDeck.build.to_state }
+      let(:deck_state) { InstructionDeck.build.to_value_object }
       let(:expected_events) do
         [
           GameStartedEvent.new(
