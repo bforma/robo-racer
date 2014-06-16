@@ -41,8 +41,15 @@ describe GameCommandHandler, type: :command_handlers do
             Time.current,
             1.minute.from_now
           )),
-          HandDrawnEvent.new(id, bob, deck_state.drawable.slice(0, 9)),
-          # InstructionDeckDealtEvent.new(id, nil)
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(40)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(60)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(90)),
+          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110))
         ]
       end
     end

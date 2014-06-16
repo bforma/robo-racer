@@ -43,8 +43,8 @@ private
 
     deck = Deck.from_value_object(@instruction_deck)
     dealer = Dealer.new(deck, @player_ids)
-    dealer.deal(MAX_HAND_SIZE).each do |player_id, hand|
-      apply HandDrawnEvent.new(id, player_id, hand)
+    dealer.deal(MAX_HAND_SIZE) do |player_id, instruction_card|
+      apply InstructionCardDealtEvent.new(id, player_id, instruction_card)
     end
   end
 
@@ -161,7 +161,9 @@ class Dealer
     count.times do
       @players.reduce(hands) do |memo, player|
         memo[player] = [] unless memo[player]
-        memo[player] << @deck.draw_card
+        card = @deck.draw_card
+        yield(player, card) if block_given?
+        memo[player] << card
         memo
       end
     end
