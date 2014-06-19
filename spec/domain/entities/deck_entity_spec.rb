@@ -13,14 +13,14 @@ describe DeckEntity, type: :entities do
   describe "dealing and discarding cards" do
     subject { deck.deal_card(bob) }
 
-    it "draws the top card" do
+    it "deals the top card" do
       expect_events(card_1_dealt)
     end
 
     context "when a card is dealt" do
       before { given_events(card_1_dealt) }
 
-      it "draws the new top card" do
+      it "deals the new top card" do
         expect_events(card_2_dealt)
       end
 
@@ -55,7 +55,13 @@ describe DeckEntity, type: :entities do
     subject { deck.discard_card(card) }
     let(:card) { "1" }
 
-    context "when card has not yet been drawn" do
+    context "when a card is dealt" do
+      before { given_events(card_1_dealt) }
+
+      it { expect_events(card_1_discarded)  }
+    end
+
+    context "when card has not yet been dealt" do
       it { expect { subject }.to raise_error(CardNotYetDealtError) }
     end
 
