@@ -14,7 +14,7 @@ gem 'jquery-rails'
 gem 'haml'
 
 # event sourcing & CQRS
-gem 'fountain', github: 'ianunruh/fountain'
+gem 'fountain', github: 'bforma/fountain'
 gem 'fountain-redis', github: 'ianunruh/fountain-redis'
 gem 'redis'
 gem 'connection_pool'

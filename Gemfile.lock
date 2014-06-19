@@ -1,12 +1,6 @@
 GIT
-  remote: git://github.com/ianunruh/fountain-redis.git
-  revision: da76bc35df2b2e8b49d9f72b1415a12cd0d627ec
-  specs:
-    fountain-redis (0.0.1)
-
-GIT
-  remote: git://github.com/ianunruh/fountain.git
-  revision: 02b68bd4301953711e291f311d458c05807b9962
+  remote: git://github.com/bforma/fountain.git
+  revision: aa70ba237d157278307147f8771b7baced951850
   specs:
     fountain (0.0.1)
       abstract_type
@@ -16,12 +10,18 @@ GIT
       thread_safe
 
 GIT
-  remote: git://github.com/mongoid/mongoid.git
-  revision: 1261bc8a0989eeff0a977d12351a8e82ed1bf9a3
+  remote: git://github.com/ianunruh/fountain-redis.git
+  revision: da76bc35df2b2e8b49d9f72b1415a12cd0d627ec
   specs:
-    mongoid (4.0.0.rc1)
+    fountain-redis (0.0.1)
+
+GIT
+  remote: git://github.com/mongoid/mongoid.git
+  revision: 1fcb8721b0222ad4de7677f69fbf543a3f75b5f4
+  specs:
+    mongoid (4.0.0.rc2)
       activemodel (~> 4.0)
-      moped (~> 2.0.0.rc1)
+      moped (~> 2.0.0.rc2)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
 
@@ -94,7 +94,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
-    docile (1.1.3)
+    docile (1.1.5)
     equalizer (0.0.9)
     erubis (2.7.0)
     execjs (2.2.0)
@@ -119,8 +119,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     mime-types (1.25.1)
     mini_portile (0.6.0)
-    minitest (5.3.4)
-    moped (2.0.0.rc1)
+    minitest (5.3.5)
+    moped (2.0.0.rc2)
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
@@ -154,9 +154,9 @@ GEM
     require_all (1.3.2)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rspec-core (3.0.0)
+    rspec-core (3.0.1)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.0)
+    rspec-expectations (3.0.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
     rspec-its (1.0.1)
@@ -207,7 +207,7 @@ GEM
       polyglot (>= 0.3.1)
     tzinfo (1.2.1)
       thread_safe (~> 0.1)
-    uglifier (2.5.0)
+    uglifier (2.5.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     warden (1.2.3)
