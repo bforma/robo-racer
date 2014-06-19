@@ -48,7 +48,7 @@ private
   end
 end
 
-class OutOfCardsError < StandardError; end
-class UnknownCardError < StandardError; end
-class CardNotYetDealtError < StandardError; end
-class CardAlreadyDiscardedError < StandardError; end
+OutOfCardsError = Class.new(StandardError)
+UnknownCardError = Class.new(StandardError)
+CardNotYetDealtError = Class.new(StandardError)
+CardAlreadyDiscardedError = Class.new(StandardError)

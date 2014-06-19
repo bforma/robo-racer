@@ -97,13 +97,13 @@ private
   end
 end
 
-class PlayerAlreadyInGameError < StandardError; end
-class PlayerNotInGameError < StandardError; end
-class PlayerNotGameHostError < StandardError; end
-class GameAlreadyStartedError < StandardError; end
-class GameNotRunningError < StandardError; end
-class IllegalInstructionCardError < StandardError; end
-class RobotAlreadyProgrammedError < StandardError; end
+PlayerAlreadyInGameError = Class.new(StandardError)
+PlayerNotInGameError = Class.new(StandardError)
+PlayerNotGameHostError = Class.new(StandardError)
+GameAlreadyStartedError = Class.new(StandardError)
+GameNotRunningError = Class.new(StandardError)
+IllegalInstructionCardError = Class.new(StandardError)
+RobotAlreadyProgrammedError = Class.new(StandardError)
 
 class InstructionDeck
   DECK_COMPOSITION = [
