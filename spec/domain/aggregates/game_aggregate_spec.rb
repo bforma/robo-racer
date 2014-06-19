@@ -4,7 +4,7 @@ describe GameAggregate do
   describe GameAggregate::Dealer do
     let(:dealer) { GameAggregate::Dealer.new(deck, players) }
     let(:cards) { %w(1 2 3 4 5 6) }
-    let(:deck) { DeckEntity.new(cards) }
+    let(:deck) { InstructionDeckEntity.new(cards) }
     let(:players) { %i(bob steven) }
 
     describe "#deal" do

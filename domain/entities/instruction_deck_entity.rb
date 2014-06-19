@@ -1,4 +1,4 @@
-class DeckEntity < BaseEntity
+class InstructionDeckEntity < BaseEntity
 
   def initialize(instruction_cards)
     @drawable = instruction_cards.dup

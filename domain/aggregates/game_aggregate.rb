@@ -1,7 +1,7 @@
 class GameAggregate < BaseAggregate
   MAX_HAND_SIZE = 9
 
-  child_entities :deck
+  child_entities :instruction_deck
 
   def initialize(id, host_id)
     apply GameCreatedEvent.new(id, GameState::LOBBYING, host_id)
@@ -72,7 +72,7 @@ private
       id, GameRound.new(1, Time.current, 1.minute.from_now)
     )
 
-    dealer = Dealer.new(@deck, @player_ids)
+    dealer = Dealer.new(@instruction_deck, @player_ids)
     dealer.deal(MAX_HAND_SIZE)
   end
 
@@ -95,7 +95,7 @@ private
 
   route_event GameStartedEvent do |event|
     @state = event.state
-    @deck = DeckEntity.new(event.instruction_deck)
+    @instruction_deck = InstructionDeckEntity.new(event.instruction_deck)
   end
 
   route_event GameRoundStartedEvent do |event|

@@ -1,7 +1,7 @@
 require 'domain_helper'
 
-describe DeckEntity, type: :entities do
-  let(:deck) { DeckEntity.new(cards) }
+describe InstructionDeckEntity, type: :entities do
+  let(:deck) { InstructionDeckEntity.new(cards) }
   let(:entity) { deck }
   let(:cards) { %w(1 2) }
   let(:bob) { "bob" }
