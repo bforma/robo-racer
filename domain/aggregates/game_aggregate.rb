@@ -50,6 +50,21 @@ class GameAggregate < BaseAggregate
     apply RobotMovedEvent.new(id, @robot.move(speed))
   end
 
+  class Dealer
+    def initialize(deck, players)
+      @deck = deck
+      @players = players
+    end
+
+    def deal(count)
+      count.times do
+        @players.each do |player|
+          @deck.deal_card(player)
+        end
+      end
+    end
+  end
+
 private
 
   def start_round
@@ -124,21 +139,6 @@ class InstructionDeck
       end
 
       deck
-    end
-  end
-end
-
-class Dealer
-  def initialize(deck, players)
-    @deck = deck
-    @players = players
-  end
-
-  def deal(count)
-    count.times do
-      @players.each do |player|
-        @deck.deal_card(player)
-      end
     end
   end
 end
