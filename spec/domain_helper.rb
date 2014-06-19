@@ -9,7 +9,6 @@ require 'rspec/its'
 I18n.enforce_available_locales = false
 
 RSpec.configure do |config|
-  config.include CommandHandlerHelper, type: :command_handlers
   config.include DomainHelper
 end
 
