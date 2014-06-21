@@ -1,5 +1,9 @@
 class InstructionDeckEntity < BaseEntity
 
+  inheritable_accessor :event_router do
+    Fountain::Router.create_router
+  end
+
   def initialize(instruction_cards)
     @drawable = instruction_cards.dup
     @discarded = Array.new
@@ -41,11 +45,6 @@ class InstructionDeckEntity < BaseEntity
     @discarded = Array.new
   end
 
-private
-
-  def id
-    aggregate_root.id
-  end
 end
 
 OutOfCardsError = Class.new(StandardError)

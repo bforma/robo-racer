@@ -11,6 +11,14 @@ class InstructionCard < Struct.new(:action, :amount, :priority)
   THREE = 3
   BACK_UP = -1
 
+  def rotate?
+    action == ROTATE
+  end
+
+  def move?
+    action == MOVE
+  end
+
   def inspect
     "#{action}#{amount} (#{priority})"
   end

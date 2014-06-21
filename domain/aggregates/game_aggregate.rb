@@ -1,7 +1,7 @@
 class GameAggregate < BaseAggregate
   MAX_HAND_SIZE = 9
 
-  child_entities :instruction_deck
+  child_entities :instruction_deck, :board
 
   def initialize(id, host_id)
     apply GameCreatedEvent.new(id, GameState::LOBBYING, host_id)
@@ -27,16 +27,22 @@ class GameAggregate < BaseAggregate
     raise GameAlreadyStartedError if @state == GameState::RUNNING
 
     apply GameStartedEvent.new(
-      id, GameState::RUNNING, InstructionDeck.compose
+      id,
+      GameState::RUNNING,
+      InstructionDeck.compose,
+      Board.compose
     )
 
+    place_spawns
+    place_goals
+    spawn_players
     start_round
   end
 
   def program_robot(player_id, instruction_cards)
     raise PlayerNotInGameError unless @player_ids.include?(player_id)
     raise GameNotRunningError unless @state == GameState::RUNNING
-    raise RobotAlreadyProgrammedError if @programmed_robots.include?(player_id)
+    raise RobotAlreadyProgrammedError if @robot_programs.key?(player_id)
 
     hand = @hands[player_id]
     instruction_cards.each do |instruction_card|
@@ -44,6 +50,11 @@ class GameAggregate < BaseAggregate
     end
 
     apply RobotProgrammedEvent.new(id, player_id, instruction_cards)
+
+    if @robot_programs.size == @player_ids.size
+      apply AllRobotsProgrammedEvent.new(id)
+      play_round
+    end
   end
 
   def move_robot(speed)
@@ -76,6 +87,29 @@ private
     dealer.deal(MAX_HAND_SIZE)
   end
 
+  def place_spawns
+    @player_ids.each_with_index do |player_id, index|
+      @board.place_spawn(GameUnit.new(index + 2, 1, GameUnit::DOWN), player_id)
+    end
+  end
+
+  def place_goals
+    @board.place_goal(Goal.new(2, 11, 1))
+    @board.place_goal(Goal.new(10, 7, 2))
+  end
+
+  def spawn_players
+    @board.spawn_players
+  end
+
+  def play_round
+    @registers.each do |register|
+      register.each do |robot_instruction|
+        @board.instruct_robot(robot_instruction[0], robot_instruction[1])
+      end
+    end
+  end
+
   route_event GameCreatedEvent do |event|
     @id = event.id
     @state = event.state
@@ -96,11 +130,13 @@ private
   route_event GameStartedEvent do |event|
     @state = event.state
     @instruction_deck = InstructionDeckEntity.new(event.instruction_deck)
+    @board = BoardEntity.new(event.tiles)
   end
 
   route_event GameRoundStartedEvent do |event|
     @hands = Hash.new(Array.new)
-    @programmed_robots = Array.new
+    @robot_programs = Hash.new
+    @registers = Array.new
   end
 
   route_event InstructionCardDealtEvent do |event|
@@ -108,8 +144,20 @@ private
   end
 
   route_event RobotProgrammedEvent do |event|
-    @programmed_robots << event.player_id
+    @robot_programs[event.player_id] = event.instruction_cards
+
+    event.instruction_cards.each_with_index do |instruction_card, index|
+      @registers[index] ||= Array.new
+      @registers[index] << [event.player_id, instruction_card]
+    end
+
+    @registers.each do |register|
+      register.sort_by! do |robot_instruction|
+        robot_instruction[1].priority
+      end
+    end
   end
+
 end
 
 PlayerAlreadyInGameError = Class.new(StandardError)
@@ -139,6 +187,20 @@ class InstructionDeck
       end
 
       deck
+    end
+  end
+end
+
+class Board
+  DEFAULT_WIDTH = 12
+  DEFAULT_HEIGHT = 12
+
+  def self.compose(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT)
+    (0..width - 1).reduce({}) do |memo, x|
+      (0..height - 1).each do |y|
+        memo["#{x},#{y}"] = BoardTile.new(x, y)
+      end
+      memo
     end
   end
 end

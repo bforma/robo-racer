@@ -47,11 +47,20 @@ describe GameCommandHandler, type: :command_handlers do
           allow_any_instance_of(Array).to receive(:shuffle!)
         end
 
+        let(:instruction_deck) { InstructionDeck.compose }
+        let(:board) { Board.compose }
         let(:expected_events) do
           [
             GameStartedEvent.new(
-              id, GameState::RUNNING, InstructionDeck.compose
+              id,
+              GameState::RUNNING,
+              instruction_deck,
+              board
             ),
+            SpawnPlacedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+            GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
+            GoalPlacedEvent.new(id, Goal.new(10, 7, 2)),
+            RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
             GameRoundStartedEvent.new(id, GameRound.new(
               1,
               Time.current,
@@ -105,13 +114,21 @@ describe GameCommandHandler, type: :command_handlers do
         end
 
         let(:expected_events) do
-          [RobotProgrammedEvent.new(id, bob, [
-            InstructionCard.u_turn(10),
-            InstructionCard.u_turn(20),
-            InstructionCard.u_turn(30),
-            InstructionCard.u_turn(40),
-            InstructionCard.u_turn(50)
-          ])]
+          [
+            RobotProgrammedEvent.new(id, bob, [
+              InstructionCard.u_turn(10),
+              InstructionCard.u_turn(20),
+              InstructionCard.u_turn(30),
+              InstructionCard.u_turn(40),
+              InstructionCard.u_turn(50)
+            ]),
+            AllRobotsProgrammedEvent.new(id),
+            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP))
+          ]
         end
       end
 
