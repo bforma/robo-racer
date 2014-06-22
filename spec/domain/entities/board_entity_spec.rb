@@ -94,14 +94,14 @@ describe BoardEntity, type: :entities do
   end
 
   describe "#instruct_robot" do
-    let(:tiles) { Board.compose(4, 4) }
-    subject { board.instruct_robot(bob, instruction) }
+    let(:tiles) { Board.compose(5, 5) }
+    subject { board.instruct_robot(steven, instruction) }
 
-    context "given a spawned player" do
+    context "given a spawned robot" do
       before do
         given_events(
-          SpawnPlacedEvent.new(id, bob, spawn_bob),
-          RobotSpawnedEvent.new(id, bob, robot_bob)
+          SpawnPlacedEvent.new(id, steven, spawn_steven),
+          RobotSpawnedEvent.new(id, steven, robot_steven)
         )
       end
 
@@ -110,7 +110,7 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotMovedEvent.new(id, bob, GameUnit.new(1, 0, GameUnit::RIGHT))
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 2, GameUnit::DOWN))
           )
         end
       end
@@ -120,7 +120,8 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotMovedEvent.new(id, bob, GameUnit.new(2, 0, GameUnit::RIGHT))
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 2, GameUnit::DOWN)),
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 3, GameUnit::DOWN))
           )
         end
       end
@@ -130,7 +131,9 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotMovedEvent.new(id, bob, GameUnit.new(3, 0, GameUnit::RIGHT))
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 2, GameUnit::DOWN)),
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 3, GameUnit::DOWN)),
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 4, GameUnit::DOWN))
           )
         end
       end
@@ -140,7 +143,7 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotMovedEvent.new(id, bob, GameUnit.new(-1, 0, GameUnit::RIGHT))
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 0, GameUnit::DOWN))
           )
         end
       end
@@ -150,7 +153,7 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN))
+            RobotRotatedEvent.new(id, steven, GameUnit.new(1, 1, GameUnit::LEFT))
           )
         end
       end
@@ -160,7 +163,7 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP))
+            RobotRotatedEvent.new(id, steven, GameUnit.new(1, 1, GameUnit::RIGHT))
           )
         end
       end
@@ -170,7 +173,24 @@ describe BoardEntity, type: :entities do
 
         specify do
           expect_events(
-            RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::LEFT))
+            RobotRotatedEvent.new(id, steven, GameUnit.new(1, 1, GameUnit::UP))
+          )
+        end
+      end
+
+      context "given an instruction that moves a robot off the board" do
+        let(:instruction) { InstructionCard.move_3(0) }
+
+        before do
+          given_events(
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 4, GameUnit::DOWN))
+          )
+        end
+
+        specify do
+          expect_events(
+            RobotMovedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN)),
+            RobotDiedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN))
           )
         end
       end

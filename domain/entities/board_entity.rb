@@ -13,14 +13,14 @@ class BoardEntity < BaseEntity
 
   def place_spawn(spawn, player_id)
     raise SpawnAlreadyPlacedError if @spawns[player_id]
-    raise IllegalLocationError unless valid_location?(spawn)
+    raise IllegalLocationError if off_board?(spawn)
 
     apply SpawnPlacedEvent.new(id, player_id, spawn)
   end
 
   def place_goal(goal)
     raise GoalAlreadyPlacedError if @goals.key?(goal.priority)
-    raise IllegalLocationError unless valid_location?(goal)
+    raise IllegalLocationError if off_board?(goal)
 
     apply GoalPlacedEvent.new(id, goal)
   end
@@ -36,11 +36,10 @@ class BoardEntity < BaseEntity
   end
 
   def instruct_robot(player_id, instruction_card)
-    case
-      when instruction_card.move?
-        move_robot(player_id, instruction_card)
-      when instruction_card.rotate?
-        rotate_robot(player_id, instruction_card)
+    if instruction_card.move?
+      move_robot(player_id, instruction_card)
+    elsif instruction_card.rotate?
+      rotate_robot(player_id, instruction_card)
     end
   end
 
@@ -64,10 +63,14 @@ class BoardEntity < BaseEntity
     @robots[event.player_id] = event.robot
   end
 
+  route_event RobotDiedEvent do |event|
+    @robots.delete(event.player_id)
+  end
+
 private
 
-  def valid_location?(location)
-    tile_at(location.x, location.y).present?
+  def off_board?(location)
+    tile_at(location.x, location.y).nil?
   end
 
   def tile_at(x, y)
@@ -75,21 +78,29 @@ private
   end
 
   def move_robot(player_id, instruction_card)
+    instruction_card.amount.abs.times do
+      direction = [-1, instruction_card.amount, 1].sort[1]
+      break unless step_robot(player_id, direction)
+    end
+  end
+
+  def step_robot(player_id, direction)
     robot = @robots[player_id]
-    apply RobotMovedEvent.new(
-      id,
-      player_id,
-      robot.move(instruction_card.amount)
-    )
+    new_position = robot.move(direction)
+    apply RobotMovedEvent.new(id, player_id, new_position)
+
+    if off_board?(new_position)
+      apply RobotDiedEvent.new(id, player_id, new_position)
+      return false
+    end
+
+    true
   end
 
   def rotate_robot(player_id, instruction_card)
     robot = @robots[player_id]
-    apply RobotRotatedEvent.new(
-      id,
-      player_id,
-      robot.rotate(instruction_card.amount)
-    )
+    new_position = robot.rotate(instruction_card.amount)
+    apply RobotRotatedEvent.new(id, player_id, new_position)
   end
 
 end

@@ -21,3 +21,4 @@ AllRobotsProgrammedEvent = Struct.new(:id)
 
 RobotMovedEvent = Struct.new(:id, :player_id, :robot)
 RobotRotatedEvent = Struct.new(:id, :player_id, :robot)
+RobotDiedEvent = Struct.new(:id, :player_id, :robot)
