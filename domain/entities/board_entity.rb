@@ -59,6 +59,10 @@ class BoardEntity < BaseEntity
     @robots[event.player_id] = event.robot
   end
 
+  route_event RobotPushedEvent do |event|
+    @robots[event.player_id] = event.robot
+  end
+
   route_event RobotRotatedEvent do |event|
     @robots[event.player_id] = event.robot
   end
@@ -69,12 +73,20 @@ class BoardEntity < BaseEntity
 
 private
 
-  def off_board?(location)
-    tile_at(location.x, location.y).nil?
+  def off_board?(position)
+    tile_at(position.x, position.y).nil?
   end
 
   def tile_at(x, y)
     @tiles["#{x},#{y}"]
+  end
+
+  def robot_at(position)
+    @robots.find do |player_id, robot|
+      if robot.x == position.x && robot.y == position.y
+        return [player_id, robot]
+      end
+    end
   end
 
   def move_robot(player_id, instruction_card)
@@ -87,6 +99,8 @@ private
   def step_robot(player_id, direction)
     robot = @robots[player_id]
     new_position = robot.move(direction)
+    other_robot = robot_at(new_position)
+    push_robot(*other_robot, robot.facing) if other_robot
     apply RobotMovedEvent.new(id, player_id, new_position)
 
     if off_board?(new_position)
@@ -95,6 +109,17 @@ private
     end
 
     true
+  end
+
+  def push_robot(player_id, robot, direction)
+    new_position = robot.push(direction)
+    other_robot = robot_at(new_position)
+    push_robot(*other_robot, direction) if other_robot
+    apply RobotPushedEvent.new(id, player_id, new_position)
+
+    if off_board?(new_position)
+      apply RobotDiedEvent.new(id, player_id, new_position)
+    end
   end
 
   def rotate_robot(player_id, instruction_card)

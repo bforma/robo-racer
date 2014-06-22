@@ -5,7 +5,11 @@ class GameUnit < Struct.new(:x, :y, :facing)
   LEFT = 270
 
   def move(amount)
-    self.class.new(new_x(amount), new_y(amount), facing)
+    self.class.new(move_x(amount), move_y(amount), facing)
+  end
+
+  def push(direction)
+    self.class.new(push_x(direction), push_y(direction), facing)
   end
 
   def rotate(amount)
@@ -14,15 +18,27 @@ class GameUnit < Struct.new(:x, :y, :facing)
 
 private
 
-  def new_x(amount)
+  def move_x(amount)
     return x + amount if facing == RIGHT
     return x - amount if facing == LEFT
     x
   end
 
-  def new_y(amount)
+  def move_y(amount)
     return y - amount if facing == UP
     return y + amount if facing == DOWN
+    y
+  end
+
+  def push_x(direction)
+    return x + 1 if direction == RIGHT
+    return x - 1 if direction == LEFT
+    x
+  end
+
+  def push_y(direction)
+    return x - 1 if direction == UP
+    return x + 1 if direction == DOWN
     y
   end
 

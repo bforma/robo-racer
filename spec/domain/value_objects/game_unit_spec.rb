@@ -53,6 +53,30 @@ describe GameUnit do
     end
   end
 
+  describe "#push" do
+    subject { GameUnit.new(0, 0, GameUnit::DOWN).push(direction) }
+
+    context "up" do
+      let(:direction) { GameUnit::UP }
+      it { should eq(GameUnit.new(0, -1, GameUnit::DOWN)) }
+    end
+
+    context "right" do
+      let(:direction) { GameUnit::RIGHT }
+      it { should eq(GameUnit.new(1, 0, GameUnit::DOWN)) }
+    end
+
+    context "down" do
+      let(:direction) { GameUnit::DOWN }
+      it { should eq(GameUnit.new(0, 1, GameUnit::DOWN)) }
+    end
+
+    context "left" do
+      let(:direction) { GameUnit::LEFT }
+      it { should eq(GameUnit.new(-1, 0, GameUnit::DOWN)) }
+    end
+  end
+
   describe "#rotate" do
     subject { GameUnit.new(0, 0, facing).rotate(amount) }
 

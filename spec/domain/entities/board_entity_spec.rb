@@ -8,8 +8,8 @@ describe BoardEntity, type: :entities do
   let(:bob) { "bob" }
   let(:steven) { "steven" }
 
-  let(:spawn_bob) { GameUnit.new(0, 0, GameUnit::RIGHT) }
-  let(:robot_bob) { GameUnit.new(0, 0, GameUnit::RIGHT) }
+  let(:spawn_bob) { GameUnit.new(0, 1, GameUnit::RIGHT) }
+  let(:robot_bob) { GameUnit.new(0, 1, GameUnit::RIGHT) }
 
   let(:spawn_steven) { GameUnit.new(1, 1, GameUnit::DOWN) }
   let(:robot_steven) { GameUnit.new(1, 1, GameUnit::DOWN) }
@@ -94,10 +94,12 @@ describe BoardEntity, type: :entities do
   end
 
   describe "#instruct_robot" do
-    let(:tiles) { Board.compose(5, 5) }
-    subject { board.instruct_robot(steven, instruction) }
+    let(:tiles) { Board.compose(3, 5) }
+    subject { board.instruct_robot(robot, instruction) }
 
     context "given a spawned robot" do
+      let(:robot) { steven }
+
       before do
         given_events(
           SpawnPlacedEvent.new(id, steven, spawn_steven),
@@ -105,7 +107,7 @@ describe BoardEntity, type: :entities do
         )
       end
 
-      context "given a 'move 1' instruction" do
+      context "when instructing 'move 1'" do
         let(:instruction) { InstructionCard.move_1(0) }
 
         specify do
@@ -115,7 +117,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given a 'move 2' instruction" do
+      context "when instructing 'move 2'" do
         let(:instruction) { InstructionCard.move_2(0) }
 
         specify do
@@ -126,7 +128,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given a 'move 3' instruction" do
+      context "when instructing 'move 2'" do
         let(:instruction) { InstructionCard.move_3(0) }
 
         specify do
@@ -138,7 +140,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given a 'back-up' instruction" do
+      context "when instructing 'back-up'" do
         let(:instruction) { InstructionCard.back_up(0) }
 
         specify do
@@ -148,7 +150,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given a 'rotate right' instruction" do
+      context "when instructing 'rotate right'" do
         let(:instruction) { InstructionCard.rotate_right(0) }
 
         specify do
@@ -158,7 +160,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given a 'rotate left' instruction" do
+      context "when instructing 'rotate left'" do
         let(:instruction) { InstructionCard.rotate_left(0) }
 
         specify do
@@ -168,7 +170,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given a 'u-turn' instruction" do
+      context "when instructing 'u-turn'" do
         let(:instruction) { InstructionCard.u_turn(0) }
 
         specify do
@@ -178,7 +180,7 @@ describe BoardEntity, type: :entities do
         end
       end
 
-      context "given an instruction that moves a robot off the board" do
+      context "given a robot near the edge of the board" do
         let(:instruction) { InstructionCard.move_3(0) }
 
         before do
@@ -187,11 +189,80 @@ describe BoardEntity, type: :entities do
           )
         end
 
-        specify do
+        it "moves and dies" do
           expect_events(
             RobotMovedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN)),
             RobotDiedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN))
           )
+        end
+      end
+    end
+
+    context "given two spawned robots" do
+      let(:robot) { bob }
+
+      before do
+        given_events(
+          SpawnPlacedEvent.new(id, steven, spawn_steven),
+          SpawnPlacedEvent.new(id, bob, spawn_bob),
+          RobotSpawnedEvent.new(id, steven, robot_steven),
+          RobotSpawnedEvent.new(id, bob, robot_bob)
+        )
+      end
+
+      context "given a robot standing in front of another robot" do
+        let(:instruction) { InstructionCard.move_1(0) }
+
+        it "is pushed" do
+          expect_events(
+            RobotPushedEvent.new(id, steven, GameUnit.new(2, 1, GameUnit::DOWN)),
+            RobotMovedEvent.new(id, bob, GameUnit.new(1, 1, GameUnit::RIGHT))
+          )
+        end
+
+        context "and near the edge of the board" do
+          let(:instruction) { InstructionCard.move_2(0) }
+
+          it "is pushed and dies" do
+            expect_events(
+              RobotPushedEvent.new(id, steven, GameUnit.new(2, 1, GameUnit::DOWN)),
+              RobotMovedEvent.new(id, bob, GameUnit.new(1, 1, GameUnit::RIGHT)),
+              RobotPushedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+              RobotDiedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+              RobotMovedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::RIGHT))
+            )
+          end
+        end
+      end
+
+      context "and a third spawned robot" do
+        let(:peter) { "peter" }
+        let(:spawn_peter) { GameUnit.new(2, 1, GameUnit::UP) }
+        let(:robot_peter) { GameUnit.new(2, 1, GameUnit::UP) }
+
+        before do
+          given_events(
+            SpawnPlacedEvent.new(id, peter, spawn_peter),
+            RobotSpawnedEvent.new(id, peter, robot_peter)
+          )
+        end
+
+        context "train wreck" do
+          let(:instruction) { InstructionCard.move_3(0) }
+
+          specify do
+            expect_events(
+              RobotPushedEvent.new(id, peter, GameUnit.new(3, 1, GameUnit::UP)),
+              RobotDiedEvent.new(id, peter, GameUnit.new(3, 1, GameUnit::UP)),
+              RobotPushedEvent.new(id, steven, GameUnit.new(2, 1, GameUnit::DOWN)),
+              RobotMovedEvent.new(id, bob, GameUnit.new(1, 1, GameUnit::RIGHT)),
+              RobotPushedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+              RobotDiedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+              RobotMovedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::RIGHT)),
+              RobotMovedEvent.new(id, bob, GameUnit.new(3, 1, GameUnit::RIGHT)),
+              RobotDiedEvent.new(id, bob, GameUnit.new(3, 1, GameUnit::RIGHT))
+            )
+          end
         end
       end
     end
