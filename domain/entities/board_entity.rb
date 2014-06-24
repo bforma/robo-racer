@@ -9,6 +9,8 @@ class BoardEntity < BaseEntity
     @spawns = Hash.new
     @goals = Hash.new
     @robots = Hash.new
+
+    @last_touched_goals = Hash.new(0)
   end
 
   def place_spawn(spawn, player_id)
@@ -43,6 +45,24 @@ class BoardEntity < BaseEntity
     end
   end
 
+  def touch_goals
+    each_player_at_goal do |player_id, goal, _|
+      if next_goal_for_player?(player_id, goal)
+        apply GoalTouchedEvent.new(id, player_id, goal)
+      end
+    end
+  end
+
+  def replace_spawns
+    each_player_at_goal do |player_id, goal, robot|
+      apply SpawnReplacedEvent.new(
+        id,
+        player_id,
+        GameUnit.new(goal.x, goal.y, robot.facing)
+      )
+    end
+  end
+
   route_event SpawnPlacedEvent do |event|
     @spawns[event.player_id] = event.spawn
   end
@@ -71,6 +91,14 @@ class BoardEntity < BaseEntity
     @robots.delete(event.player_id)
   end
 
+  route_event GoalTouchedEvent do |event|
+    @last_touched_goals[event.player_id] = event.goal.priority
+  end
+
+  route_event SpawnReplacedEvent do |event|
+    @spawns[event.player_id] = event.spawn
+  end
+
 private
 
   def off_board?(position)
@@ -82,10 +110,14 @@ private
   end
 
   def robot_at(position)
-    @robots.find do |player_id, robot|
-      if robot.x == position.x && robot.y == position.y
-        return [player_id, robot]
-      end
+    @robots.find do |_, robot|
+      robot.x == position.x && robot.y == position.y
+    end
+  end
+
+  def goal_at(position)
+    @goals.find do |_, goal|
+      goal.x == position.x && goal.y == position.y
     end
   end
 
@@ -126,6 +158,17 @@ private
     robot = @robots[player_id]
     new_position = robot.rotate(instruction_card.amount)
     apply RobotRotatedEvent.new(id, player_id, new_position)
+  end
+
+  def each_player_at_goal
+    @robots.each do |player_id, robot|
+      _, goal = goal_at(robot)
+      yield(player_id, goal, robot) if goal
+    end
+  end
+
+  def next_goal_for_player?(player_id, goal)
+    (@last_touched_goals[player_id] + 1) == goal.priority
   end
 
 end

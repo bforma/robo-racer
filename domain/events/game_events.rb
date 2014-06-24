@@ -7,6 +7,7 @@ GameStartedEvent = Struct.new(
   :id, :state, :instruction_deck, :tiles
 )
 SpawnPlacedEvent = Struct.new(:id, :player_id, :spawn)
+SpawnReplacedEvent = Struct.new(:id, :player_id, :spawn)
 GoalPlacedEvent = Struct.new(:id, :goal)
 RobotSpawnedEvent = Struct.new(:id, :player_id, :robot)
 
@@ -23,3 +24,4 @@ RobotMovedEvent = Struct.new(:id, :player_id, :robot)
 RobotRotatedEvent = Struct.new(:id, :player_id, :robot)
 RobotDiedEvent = Struct.new(:id, :player_id, :robot)
 RobotPushedEvent = Struct.new(:id, :player_id, :robot)
+GoalTouchedEvent = Struct.new(:id, :player_id, :goal)

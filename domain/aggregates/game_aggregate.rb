@@ -36,7 +36,7 @@ class GameAggregate < BaseAggregate
     place_spawns
     place_goals
     spawn_players
-    start_round
+    start_new_round
   end
 
   def program_robot(player_id, instruction_cards)
@@ -53,7 +53,8 @@ class GameAggregate < BaseAggregate
 
     if @robot_programs.size == @player_ids.size
       apply AllRobotsProgrammedEvent.new(id)
-      play_round
+
+      play_current_round
     end
   end
 
@@ -78,7 +79,7 @@ class GameAggregate < BaseAggregate
 
 private
 
-  def start_round
+  def start_new_round
     apply GameRoundStartedEvent.new(
       id, GameRound.new(1, Time.current, 1.minute.from_now)
     )
@@ -102,7 +103,13 @@ private
     @board.spawn_players
   end
 
-  def play_round
+  def play_current_round
+    play_registers
+    @board.touch_goals
+    @board.replace_spawns
+  end
+
+  def play_registers
     @registers.each do |register|
       register.each do |robot_instruction|
         @board.instruct_robot(robot_instruction[0], robot_instruction[1])

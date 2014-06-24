@@ -52,6 +52,10 @@ RSpec.shared_context "Entities", type: :entities do
       to change { event_recorder.recorded_events }.
       by(expected_events)
   end
+
+  def expect_no_events
+    expect { subject }.to_not change { event_recorder.recorded_events }
+  end
 end
 
 RSpec.shared_examples "an event publisher" do
