@@ -55,6 +55,7 @@ class GameAggregate < BaseAggregate
       apply AllRobotsProgrammedEvent.new(id)
 
       play_current_round
+      start_new_round
     end
   end
 
@@ -80,9 +81,7 @@ class GameAggregate < BaseAggregate
 private
 
   def start_new_round
-    apply GameRoundStartedEvent.new(
-      id, GameRound.new(1, Time.current, 1.minute.from_now)
-    )
+    apply GameRoundStartedEvent.new(id, GameRound.new(@game_round_number + 1))
 
     dealer = Dealer.new(@instruction_deck, @player_ids)
     dealer.deal(MAX_HAND_SIZE)
@@ -107,6 +106,7 @@ private
     play_registers
     @board.touch_goals
     @board.replace_spawns
+    discard_instruction_cards
   end
 
   def play_registers
@@ -114,6 +114,12 @@ private
       register.each do |robot_instruction|
         @board.instruct_robot(robot_instruction[0], robot_instruction[1])
       end
+    end
+  end
+
+  def discard_instruction_cards
+    @hands.values.flatten.each do |instruction_card|
+      @instruction_deck.discard_card(instruction_card)
     end
   end
 
@@ -138,15 +144,18 @@ private
     @state = event.state
     @instruction_deck = InstructionDeckEntity.new(event.instruction_deck)
     @board = BoardEntity.new(event.tiles)
+    @game_round_number = 0
   end
 
   route_event GameRoundStartedEvent do |event|
-    @hands = Hash.new(Array.new)
+    @hands = Hash.new
     @robot_programs = Hash.new
     @registers = Array.new
+    @game_round_number = event.game_round.number
   end
 
   route_event InstructionCardDealtEvent do |event|
+    @hands[event.player_id] ||= Array.new
     @hands[event.player_id] << event.instruction_card
   end
 

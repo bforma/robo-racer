@@ -43,7 +43,6 @@ describe GameCommandHandler, type: :command_handlers do
 
       it_behaves_like "an event publisher" do
         before do
-          allow(Time).to receive(:current) { Time.parse("2014-06-14T23:00:00") }
           allow_any_instance_of(Array).to receive(:shuffle!)
         end
 
@@ -61,11 +60,7 @@ describe GameCommandHandler, type: :command_handlers do
             GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
             GoalPlacedEvent.new(id, Goal.new(10, 7, 2)),
             RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-            GameRoundStartedEvent.new(id, GameRound.new(
-              1,
-              Time.current,
-              1.minute.from_now
-            )),
+            GameRoundStartedEvent.new(id, GameRound.new(1)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
@@ -127,7 +122,26 @@ describe GameCommandHandler, type: :command_handlers do
             RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
             RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
             RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP))
+            RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(10)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(20)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(30)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(40)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(50)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(60)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(70)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(90)),
+            InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(110)),
+            GameRoundStartedEvent.new(id, GameRound.new(2)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(130)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(150)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(170)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(190)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(210)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(230)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(250)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(270)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(290))
           ]
         end
       end
@@ -152,7 +166,7 @@ describe GameCommandHandler, type: :command_handlers do
           dispatch(program_robot_command)
         end
 
-        specify do
+        pending do
           expect { dispatch(command) }.to raise_error(RobotAlreadyProgrammedError)
         end
       end

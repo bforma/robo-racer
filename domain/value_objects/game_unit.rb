@@ -16,6 +16,10 @@ class GameUnit < Struct.new(:x, :y, :facing)
     self.class.new(x, y, new_facing(amount))
   end
 
+  def inspect
+    "#{x},#{x} (#{facing})"
+  end
+
 private
 
   def move_x(amount)
