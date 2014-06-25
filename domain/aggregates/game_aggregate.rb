@@ -9,14 +9,14 @@ class GameAggregate < BaseAggregate
   end
 
   def join(player_id)
-    raise GameAlreadyStartedError if @state == GameState::RUNNING
+    raise GameAlreadyStartedError if game_running?
     raise PlayerAlreadyInGameError if @player_ids.include?(player_id)
 
     apply PlayerJoinedGameEvent.new(id, player_id)
   end
 
   def leave(player_id)
-    raise GameAlreadyStartedError if @state == GameState::RUNNING
+    raise GameAlreadyStartedError if game_running?
     raise PlayerNotInGameError unless @player_ids.include?(player_id)
 
     apply PlayerLeftGameEvent.new(id, player_id)
@@ -24,7 +24,7 @@ class GameAggregate < BaseAggregate
 
   def start(player_id)
     raise PlayerNotGameHostError if @host_id != player_id
-    raise GameAlreadyStartedError if @state == GameState::RUNNING
+    raise GameAlreadyStartedError if game_running?
 
     apply GameStartedEvent.new(
       id,
@@ -41,7 +41,7 @@ class GameAggregate < BaseAggregate
 
   def program_robot(player_id, instruction_cards)
     raise PlayerNotInGameError unless @player_ids.include?(player_id)
-    raise GameNotRunningError unless @state == GameState::RUNNING
+    raise GameNotRunningError unless game_running?
     raise RobotAlreadyProgrammedError if @robot_programs.key?(player_id)
 
     hand = @hands[player_id]
@@ -53,10 +53,17 @@ class GameAggregate < BaseAggregate
 
     if @robot_programs.size == @player_ids.size
       apply AllRobotsProgrammedEvent.new(id)
-
-      play_current_round
-      start_new_round
     end
+  end
+
+  def play_current_round
+    play_registers
+    @board.touch_goals
+    @board.replace_spawns
+    discard_instruction_cards
+
+    end_game if game_has_winner?
+    start_new_round if game_running?
   end
 
   def move_robot(speed)
@@ -102,13 +109,6 @@ private
     @board.spawn_players
   end
 
-  def play_current_round
-    play_registers
-    @board.touch_goals
-    @board.replace_spawns
-    discard_instruction_cards
-  end
-
   def play_registers
     @registers.each do |register|
       register.each do |robot_instruction|
@@ -121,6 +121,18 @@ private
     @hands.values.flatten.each do |instruction_card|
       @instruction_deck.discard_card(instruction_card)
     end
+  end
+
+  def end_game
+    apply GameEndedEvent.new(id, GameState::ENDED)
+  end
+
+  def game_has_winner?
+    @winner
+  end
+
+  def game_running?
+    @state == GameState::RUNNING
   end
 
   route_event GameCreatedEvent do |event|
@@ -174,6 +186,13 @@ private
     end
   end
 
+  route_event PlayerWonGameEvent do |event|
+    @winner = event.player_id
+  end
+
+  route_event GameEndedEvent do |event|
+    @state = event.state
+  end
 end
 
 PlayerAlreadyInGameError = Class.new(StandardError)

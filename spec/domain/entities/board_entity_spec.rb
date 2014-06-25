@@ -286,13 +286,14 @@ describe BoardEntity, type: :entities do
   describe "#touch_goals" do
     subject { board.touch_goals }
     let(:goal_1) { Goal.new(1, 2, 1) }
-    let(:goal_2) { Goal.new(1, 2, 2) }
+    let(:goal_2) { Goal.new(1, 0, 2) }
     let(:goal) { goal_1 }
 
     before do
       given_events(
         SpawnPlacedEvent.new(id, steven, spawn_steven),
-        GoalPlacedEvent.new(id, goal),
+        GoalPlacedEvent.new(id, goal_1),
+        GoalPlacedEvent.new(id, goal_2),
         RobotSpawnedEvent.new(id, steven, robot_steven)
       )
     end
@@ -331,7 +332,7 @@ describe BoardEntity, type: :entities do
       let(:goal) { goal_2 }
 
       before do
-        given_events(RobotMovedEvent.new(id, steven, robot_steven.move(1)))
+        given_events(RobotMovedEvent.new(id, steven, robot_steven.move(-1)))
       end
 
       specify { expect_no_events }
@@ -341,7 +342,12 @@ describe BoardEntity, type: :entities do
           given_events(GoalTouchedEvent.new(id, steven, goal_1))
         end
 
-        specify { expect_events(GoalTouchedEvent.new(id, steven, goal_2)) }
+        specify do
+          expect_events(
+            GoalTouchedEvent.new(id, steven, goal_2),
+            PlayerWonGameEvent.new(id, steven)
+          )
+        end
       end
     end
   end

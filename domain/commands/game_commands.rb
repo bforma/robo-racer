@@ -18,6 +18,9 @@ class ProgramRobotCommand < Command
   validates_length_of :instruction_cards, is: INSTRUCTION_REGISTER_COUNT
 end
 
+class PlayCurrentRoundCommand < BaseCommand
+end
+
 class MoveRobotCommand < Command
   SPEEDS = [-1, 1]
 

@@ -25,3 +25,6 @@ RobotRotatedEvent = Struct.new(:id, :player_id, :robot)
 RobotDiedEvent = Struct.new(:id, :player_id, :robot)
 RobotPushedEvent = Struct.new(:id, :player_id, :robot)
 GoalTouchedEvent = Struct.new(:id, :player_id, :goal)
+
+PlayerWonGameEvent = Struct.new(:id, :player_id)
+GameEndedEvent = Struct.new(:id, :state)

@@ -28,6 +28,12 @@ class GameCommandHandler < BaseCommandHandler
     end
   end
 
+  route PlayCurrentRoundCommand do |command|
+    with_aggregate(command.id) do |game|
+      game.play_current_round
+    end
+  end
+
   route MoveRobotCommand do |command|
     with_aggregate(command.id) do |game|
       game.move_robot(command.speed)

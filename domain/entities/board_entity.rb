@@ -49,6 +49,10 @@ class BoardEntity < BaseEntity
     each_player_at_goal do |player_id, goal, _|
       if next_goal_for_player?(player_id, goal)
         apply GoalTouchedEvent.new(id, player_id, goal)
+
+        if player_touched_final_goal?(player_id)
+          apply PlayerWonGameEvent.new(id, player_id)
+        end
       end
     end
   end
@@ -69,6 +73,7 @@ class BoardEntity < BaseEntity
 
   route_event GoalPlacedEvent do |event|
     @goals[event.goal.priority] = event.goal
+    @final_goal = @goals.values.map(&:priority).max
   end
 
   route_event RobotSpawnedEvent do |event|
@@ -169,6 +174,10 @@ private
 
   def next_goal_for_player?(player_id, goal)
     (@last_touched_goals[player_id] + 1) == goal.priority
+  end
+
+  def player_touched_final_goal?(player_id)
+    @last_touched_goals[player_id] == @final_goal
   end
 
 end

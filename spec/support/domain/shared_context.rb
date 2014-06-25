@@ -1,6 +1,7 @@
 RSpec.shared_context "CommandHandlers", type: :command_handlers do
   let(:event_store) { SpecEventStore.new }
   let(:command_bus) { RoboRacer::Configuration.wire_up(event_store) }
+  let(:journal) { Fountain::Domain::Journal.new }
 
   before do
     Fountain.configure do |config|
@@ -14,6 +15,12 @@ RSpec.shared_context "CommandHandlers", type: :command_handlers do
       Fountain::Envelope.as_envelope(command),
       DefaultCommandCallback.new
     )
+  end
+
+  def given_events(*events)
+    stream_id = events.first.id
+    events = events.map { |event| journal.push(event, {}) }
+    event_store.append("GameAggregate", stream_id, events)
   end
 end
 

@@ -20,6 +20,7 @@ describe GameCommandHandler, type: :command_handlers do
       ]
     )
   end
+  let(:play_current_round_command) { PlayCurrentRoundCommand.new(id: id) }
   let(:join_game_command) { JoinGameCommand.new(id: id, player_id: steven) }
   let(:leave_game_command) { LeaveGameCommand.new(id: id, player_id: steven) }
 
@@ -90,7 +91,7 @@ describe GameCommandHandler, type: :command_handlers do
         end
       end
 
-      context "when game finished" do
+      context "when game ended" do
         pending
       end
     end
@@ -117,7 +118,74 @@ describe GameCommandHandler, type: :command_handlers do
               InstructionCard.u_turn(40),
               InstructionCard.u_turn(50)
             ]),
-            AllRobotsProgrammedEvent.new(id),
+            AllRobotsProgrammedEvent.new(id)
+          ]
+        end
+      end
+
+      context "when trying to program an instruction that is not dealt to player" do
+        before do
+          dispatch(create_game_command)
+          dispatch(start_game_command)
+
+          command.instruction_cards[0] = InstructionCard.move_3(790)
+        end
+
+        specify do
+          expect { dispatch(command) }.to raise_error(IllegalInstructionCardError)
+        end
+      end
+
+      context "when robot is already programmed" do
+        before do
+          dispatch(create_game_command)
+          dispatch(start_game_command)
+          dispatch(program_robot_command)
+        end
+
+        specify do
+          expect { dispatch(command) }.to raise_error(RobotAlreadyProgrammedError)
+        end
+      end
+
+      context "when game not yet started" do
+        before { dispatch(create_game_command) }
+
+        specify do
+          expect { dispatch(command) }.to raise_error(GameNotRunningError)
+        end
+      end
+
+      context "when player not in game" do
+        before do
+          dispatch(create_game_command)
+          dispatch(start_game_command)
+
+          command.player_id = steven
+        end
+
+        specify do
+          expect { dispatch(command) }.to raise_error(PlayerNotInGameError)
+        end
+      end
+
+      context "when game ended" do
+        pending
+      end
+    end
+
+    describe PlayCurrentRoundCommand do
+      let(:command) { play_current_round_command }
+
+      it_behaves_like "an event publisher" do
+        before do
+          dispatch(create_game_command)
+          dispatch(start_game_command)
+          dispatch(program_robot_command)
+        end
+
+        let(:expected_events) do
+          [
             RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
             RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
             RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
@@ -146,54 +214,76 @@ describe GameCommandHandler, type: :command_handlers do
         end
       end
 
-      context "when trying to program an instruction that is not dealt to player" do
-        before do
-          dispatch(create_game_command)
-          dispatch(start_game_command)
-
-          command.instruction_cards[0] = InstructionCard.move_3(790)
-        end
-
-        specify do
-          expect { dispatch(command) }.to raise_error(IllegalInstructionCardError)
-        end
-      end
-
-      context "when robot is already programmed" do
-        before do
-          dispatch(create_game_command)
-          dispatch(start_game_command)
-          dispatch(program_robot_command)
-        end
-
-        pending do
-          expect { dispatch(command) }.to raise_error(RobotAlreadyProgrammedError)
-        end
-      end
-
-      context "when game not yet started" do
-        before { dispatch(create_game_command) }
-
-        specify do
-          expect { dispatch(command) }.to raise_error(GameNotRunningError)
-        end
-      end
-
-      context "when player not in game" do
-        before do
-          dispatch(create_game_command)
-          dispatch(start_game_command)
-
-          command.player_id = steven
-        end
-
-        specify do
-          expect { dispatch(command) }.to raise_error(PlayerNotInGameError)
-        end
-      end
-
-      context "when game finished" do
+      context "given not programmed robots" do
         pending
+      end
+
+      context "given game is not running" do
+        pending
+      end
+
+      context "given a winning player" do
+        let(:deck) do
+          InstructionDeck.compose
+        end
+
+        let(:tiles) do
+          Board.compose
+        end
+
+        before do
+          given_events(
+            GameCreatedEvent.new(id, GameState::LOBBYING, bob),
+            PlayerJoinedGameEvent.new(id, bob),
+            GameStartedEvent.new(id, GameState::RUNNING, deck, tiles),
+            SpawnPlacedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+            GoalPlacedEvent.new(id, Goal.new(0, 0, 1)),
+            RobotSpawnedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+            GameRoundStartedEvent.new(id, GameRound.new(1)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(40)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(60)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(90)),
+            InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110)),
+            RobotProgrammedEvent.new(id, bob, [
+              InstructionCard.u_turn(10),
+              InstructionCard.u_turn(20),
+              InstructionCard.u_turn(30),
+              InstructionCard.u_turn(40),
+              InstructionCard.u_turn(50)
+            ]),
+            AllRobotsProgrammedEvent.new(id)
+          )
+        end
+
+        it_behaves_like "an event publisher" do
+          let(:expected_events) do
+            [
+              RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+              RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+              RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+              RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+              RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+              GoalTouchedEvent.new(id, bob, Goal.new(0, 0, 1)),
+              PlayerWonGameEvent.new(id, bob),
+              SpawnReplacedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(10)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(20)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(30)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(40)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(50)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(60)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(70)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(90)),
+              InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(110)),
+              GameEndedEvent.new(id, GameState::ENDED)
+            ]
+          end
+        end
       end
     end
   end
@@ -229,7 +319,7 @@ describe GameCommandHandler, type: :command_handlers do
       end
     end
 
-    context "when game finished" do
+    context "when game ended" do
       pending
     end
 
@@ -272,7 +362,7 @@ describe GameCommandHandler, type: :command_handlers do
       end
     end
 
-    context "when game finished" do
+    context "when game ended" do
       pending
     end
   end
