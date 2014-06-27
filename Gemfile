@@ -5,6 +5,7 @@ gem 'require_all'
 gem 'mongoid', '~> 4.0.0.rc1', github: 'mongoid/mongoid'
 gem 'bson_ext'
 gem 'devise'
+gem 'puma'
 
 # frontend
 gem 'sass-rails'
