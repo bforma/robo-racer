@@ -1,7 +1,7 @@
 $(function () {
   $("#toggle_board").on("click", function() {
     $("#board").toggle();
-  })
+  });
 
   $("#remove_robots").on("click", function() {
     $("#robot_4").remove();
@@ -9,9 +9,9 @@ $(function () {
     $("#robot_6").remove();
     $("#robot_7").remove();
     $("#robot_8").remove();
-  })
+  });
 
-  var delay = 1000
+  var delay = 1000;
 
   $("#play_sequence_01").on("click", function(e) {
 
@@ -35,7 +35,7 @@ $(function () {
       $("#robot_3").addClass("face_90");
     }, 2 * delay);
 
-  })
+  });
 
   $("#play_sequence_02").on("click", function(e) {
 
