@@ -1,0 +1,110 @@
+.mod-game
+  %h1 This is the game show
+
+  .viewport
+    %header
+      .round Round 3
+      .status Playing 2nd cards...
+      .current_event RoboBoob: move 2
+
+    .body
+      .left
+        %ol.opponents
+          %li
+            %h3 RoboBoob
+            %p.status.pending
+            %ul.slots
+              - 5.times do
+                %li.slot
+                  %span.card_empty
+
+          %li
+            %h3 Hetty-D-80
+            %p.status.programmed
+            %ul.slots
+              %li.slot
+                %span.card_M_3 3
+              %li.slot
+                %span.card_R_U U
+              %li.slot
+                %span.card_R_L L
+              %li.slot
+                %span.card_M_-1 -1
+              %li.slot
+                %span.card_M_2 2
+
+          %li
+            %h3 Droid-OK-KE
+            %p.status.pending
+            %ul.slots
+              - 5.times do
+                %li.slot
+                  %span.card_empty
+
+          %li
+            %h3 Frankie
+            %p.status.pending
+            %ul.slots
+              - 5.times do
+                %li.slot
+                  %span.card_empty
+
+          %li
+            %h3 Alaaaan
+            %p.status.programmed
+            %ul.slots
+              %li.slot
+                %span.card_M_3 3
+              %li.slot
+                %span.card_R_U U
+              %li.slot
+                %span.card_R_L L
+              %li.slot
+                %span.card_M_-1 -1
+              %li.slot
+                %span.card_M_2 2
+
+          %li
+            %h3 VONK
+            %p.status.programmed
+            %ul.slots
+              %li.slot
+                %span.card_M_3 3
+              %li.slot
+                %span.card_R_U U
+              %li.slot
+                %span.card_R_L L
+              %li.slot
+                %span.card_M_-1 -1
+              %li.slot
+                %span.card_M_2 2
+
+          %li
+            %h3 D[0]
+            %p.status.pending
+            %ul.slots
+              - 5.times do
+                %li.slot
+                  %span.card_empty
+
+      .right
+        .table
+          .board
+            - 12.times do |y_pos|
+              .row
+                - 12.times do |x_pos|
+                  %b{class: "tile x_#{x_pos} y_#{y_pos}"}
+
+            - colors = %w(red yellow orange pink green brown grey lightblue)
+            - 8.times do |n|
+              %div{class: "robot x_#{n} y_0 #{colors[n]}"} R#{n + 1}
+
+        .player_area
+          instruction slots
+
+  %footer
+    = link_to "Sequence 1", class: "button"
+
+    = link_to "Sequence 2", class: "button"
+
+    = link_to "Sequence 3", class: "button"

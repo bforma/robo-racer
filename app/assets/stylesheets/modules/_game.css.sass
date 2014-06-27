@@ -1,0 +1,156 @@
+$border: 2px solid gray
+
+.mod-game
+  .viewport
+    width: 1024px
+    height: 768px
+    margin-bottom: 40px
+    border: $border
+    border-color: red
+    overflow-y: scroll
+
+  .body
+    width: 100%
+    display: table
+    overflow: hidden
+
+  .left,
+  .right
+    position: relative
+    display: table-cell
+    vertical-align: top
+
+  .left
+    width: 200px
+    border-right: $border
+    background: rgba(black,.1)
+
+  .right
+    background: rgba(green,.1)
+
+  header
+    height: 64px
+    border-bottom: $border
+
+    div
+      float: left
+      width: 33.3333%
+      padding: 0 20px
+      line-height: 64px
+
+    .round
+      background: rgba(blue,.1)
+      border-right: $border
+
+    .status
+      background: rgba(yellow,.2)
+      border-right: $border
+
+    .current_event
+      background: rgba(orange,.1)
+
+  .opponents
+    > li
+      @extend %clearfix
+      position: relative
+      height: 100px
+      padding: 15px
+      border-bottom: $border
+
+      &:last-child
+        border-bottom: none
+
+    .status
+      position: absolute
+      top: 10px
+      right: 10px
+      width: 20px
+      height: 20px
+
+      &.pending
+        background: transparent image-url("loading.gif") no-repeat center
+        background-size: 100%
+
+      &.programmed
+        background: transparent image-url("tick.png") no-repeat center
+        background-size: 110%
+
+    .slots
+      width: 100%
+      float: left
+
+    .slot
+      width: 20%
+      float: left
+
+      [class^="card"]
+        display: block
+        float: left
+        width: 90%
+        height: 30px
+        text-align: center
+        line-height: 30px
+        border: $border
+        border-radius: 3px
+
+      [class^="card_M"]
+        background: rgba(green,.2)
+
+      [class^="card_R"]
+        background: rgba(blue,.2)
+
+  .table
+    padding: 40px
+
+  .board
+    position: relative
+    width: 482px
+    height: 482px
+    margin: 0 auto
+    border: $border
+    border-width: 1px
+    background: rgba(black,.3)
+
+    .row
+      @extend %clearfix
+      height: 40px
+
+    b
+      display: block
+      float: left
+      width: 40px
+      height: 40px
+      border: $border
+
+    .robot
+      position: absolute
+      left: 0
+      top: 0
+      width: 40px
+      height: 40px
+      font-size: 120%
+      border: $border
+      background: yellow
+      text-align: center
+      line-height: 40px
+
+      @each $color in red, yellow, orange, pink, green, brown, grey, lightblue
+        &.#{$color}
+          background: $color
+
+      @each $position in 0,1,2,3,4,5,6,7
+        &.x_#{$position}
+          left: ($position * 40) * 1px
+
+      @each $position in 0,1,2,3,4,5,6,7
+        &.y_#{$position}
+          top: ($position * 40) * 1px
+
+  .player_area
+    position: absolute
+    bottom: 0
+    left: 0
+    right: 0
+    height: 140px
+    background: rgba(blue,.5)
+

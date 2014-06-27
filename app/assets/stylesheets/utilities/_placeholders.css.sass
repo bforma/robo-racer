@@ -1,0 +1,15 @@
+%clearfix
+  *display: inline-block
+
+  &:before,
+  &:after
+    content: ""
+    display: table
+
+  &:after
+    clear: both
+
+%abbreviate // only works with block elements
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
