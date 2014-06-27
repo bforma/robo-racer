@@ -12,6 +12,7 @@ gem 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml'
+gem 'react-rails'
 
 # event sourcing & CQRS
 gem 'fountain', github: 'ianunruh/fountain'
@@ -29,6 +30,7 @@ group :development, :test do
   gem 'coveralls', require: false
   gem 'capybara'
   gem 'capybara-webkit'
+  gem 'capybara-screenshot'
   gem 'database_cleaner'
   gem 'factory_girl_rails', '~> 4.0', require: false
 end

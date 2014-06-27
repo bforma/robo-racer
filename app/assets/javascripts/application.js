@@ -9,7 +9,16 @@
 //
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
-//
+
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require lodash
+//= require backbone
+//= require react
+
+//= require class
+//= require robo_racer
+
+//= require_tree ./models
+//= require_tree ./views
+

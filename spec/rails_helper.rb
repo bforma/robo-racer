@@ -5,6 +5,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 require 'database_cleaner'
 require_all 'spec/support/rails'
 
@@ -31,6 +32,8 @@ RSpec.configure do |config|
 
   config.before { DatabaseCleaner.start }
   config.after { DatabaseCleaner.clean }
+
+  Capybara.javascript_driver = :webkit
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and

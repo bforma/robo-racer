@@ -3,7 +3,7 @@ require 'rails_helper'
 describe GamesController do
   before { login_player }
 
-  it "creates a new game" do
+  xit "creates a new game", :js do
     visit root_path
 
     click_on I18n.t("home.index.new_game")
