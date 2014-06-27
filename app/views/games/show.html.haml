@@ -89,7 +89,7 @@
 
       .right
         .table
-          .board
+          .board#board
             - 12.times do |y_pos|
               .row
                 - 12.times do |x_pos|
@@ -97,15 +97,17 @@
 
             - colors = %w(red yellow orange pink green brown grey lightblue)
             - 8.times do |n|
-              %div{class: "robot x_#{n} y_0 #{colors[n]}"} R#{n + 1}
+              %div{class: "robot x_#{n} y_0 #{colors[n]} face_180", id: "robot_#{n + 1}"} R#{n + 1}
 
         .player_area
           instruction slots
 
   %footer
-    = link_to "Sequence 1", class: "button"
+    = link_to "Toggle Board", "javacript: void(0)", id: "show_board"
 
-    = link_to "Sequence 2", class: "button"
+    = link_to "Remove robots", "javacript: void(0)", id: "remove_robots"
 
-    = link_to "Sequence 3", class: "button"
+    = link_to "Play first slot", "javacript: void(0)", id: "play_sequence_01"
+
+    = link_to "Play second slot", "javacript: void(0)", id: "play_sequence_02"
 
