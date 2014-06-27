@@ -5,6 +5,13 @@
 
 ## Getting started
 
+### Prerequisites
+
+Redis (`brew install redis`)
+Mongodb (`brew install mongodb`)
+
+### Installation
+
 ```
 git clone git@github.com:bforma/robo-racer.git
 bundle install
