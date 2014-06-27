@@ -6,8 +6,8 @@ describe PlayerEventListener do
     listener.call(Fountain::Envelope.as_envelope(event))
   end
 
-  describe PlayerCreated do
-    let(:event) { build(:player_created) }
+  describe PlayerCreatedEvent do
+    let(:event) { build(:player_created_event) }
 
     specify do
       expect { handle_event }.to change { Player.count }.by(1)

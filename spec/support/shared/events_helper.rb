@@ -1,4 +1,4 @@
-module DomainHelper
+module EventsHelper
   def new_uuid
     SecureRandom.uuid
   end
