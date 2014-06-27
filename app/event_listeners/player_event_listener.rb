@@ -1,7 +1,10 @@
-class PlayerEventListener
-  include Fountain::Event::Listener
+class PlayerEventListener < BaseEventListener
 
-  route PlayerCreated do |event|
+  inheritable_accessor :router do
+    Fountain::Router.create_router
+  end
+
+  route PlayerCreatedEvent do |event|
     player = Player.create(
       _id: event.id,
       name: event.name,

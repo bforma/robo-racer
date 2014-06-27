@@ -11,11 +11,18 @@ end
 require 'factory_girl'
 FactoryGirl.reload
 
+require 'support/shared/events_helper'
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
+  config.include EventsHelper
 
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
+
+  config.after :each do
+    Fountain::Session::UnitStack.clear_all
+  end
 
   # Many RSpec users commonly either run the entire suite or an individual
   # file, and it's useful to allow more verbose output when running an

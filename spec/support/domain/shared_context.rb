@@ -1,6 +1,6 @@
 RSpec.shared_context "CommandHandlers", type: :command_handlers do
   let(:event_store) { SpecEventStore.new }
-  let(:command_bus) { RoboRacer::Configuration.wire_up(event_store) }
+  let(:gateway) { RoboRacer::Gateway.new(event_store) }
   let(:journal) { Fountain::Domain::Journal.new }
 
   before do
@@ -11,10 +11,7 @@ RSpec.shared_context "CommandHandlers", type: :command_handlers do
   end
 
   def dispatch(command)
-    command_bus.dispatch(
-      Fountain::Envelope.as_envelope(command),
-      DefaultCommandCallback.new
-    )
+    gateway.dispatch(command)
   end
 
   def given_events(*events)

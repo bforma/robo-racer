@@ -9,6 +9,5 @@ require 'rspec/its'
 I18n.enforce_available_locales = false
 
 RSpec.configure do |config|
-  config.include DomainHelper
 end
 

@@ -1,2 +1,2 @@
-class PlayerCreated < Struct.new(:id, :name, :email, :password)
+class PlayerCreatedEvent < Struct.new(:id, :name, :email, :password)
 end

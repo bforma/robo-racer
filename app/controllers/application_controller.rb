@@ -5,26 +5,15 @@ class ApplicationController < ActionController::Base
 
 private
 
+  def new_uuid
+    SecureRandom.uuid
+  end
+
   def execute(command)
-    envelope = Fountain::Envelope.as_envelope(command)
-    gateway.dispatch(envelope, command_callback)
-  end
-
-  def command_callback
-    @command_callback ||= DefaultCommandCallback.new(Rails.logger)
-  end
-
-  def event_store
-    @event_store ||= Fountain::EventStore::RedisEventStore.build
-  end
-
-  def event_listeners
-    @event_listeners ||= [
-      PlayerEventListener.new
-    ]
+    gateway.dispatch(command)
   end
 
   def gateway
-    @gateway ||= RoboRacer::Configuration.wire_up(event_store, event_listeners)
+    @gateway ||= RoboRacer::Gateway.build
   end
 end
