@@ -21,6 +21,7 @@ describe PlayerEventListener do
       its(:name) { should eq(event.name) }
       its(:email) { should eq(event.email) }
       its(:encrypted_password) { should eq(event.password) }
+      its(:access_token) { should eq(event.access_token) }
     end
   end
 end

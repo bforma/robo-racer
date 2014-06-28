@@ -1,10 +1,11 @@
 class PlayerCommandHandler < BaseCommandHandler
-  route CreatePlayer do |command|
+  route CreatePlayerCommand do |command|
     player = PlayerAggregate.new(
       command.id,
       command.name,
       command.email,
-      command.password
+      command.password,
+      command.access_token
     )
     repository.add(player)
   end

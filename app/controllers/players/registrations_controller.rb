@@ -1,11 +1,11 @@
 class Players::RegistrationsController < Devise::RegistrationsController
   def new
-    self.resource = CreatePlayer.new
+    self.resource = CreatePlayerCommand.new
   end
 
   def create
-    self.resource = command = CreatePlayer.new(
-      sign_up_params.merge(id: new_uuid)
+    self.resource = command = CreatePlayerCommand.new(
+      sign_up_params.merge(id: new_uuid, access_token: new_uuid)
     )
     if command.valid?
       execute(command)

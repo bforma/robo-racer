@@ -20,7 +20,7 @@ module RoboRacer
         listeners.each { |listener| event_bus.subscribe(listener) }
 
         wire_commands(PlayerAggregate, PlayerCommandHandler, [
-          CreatePlayer
+          CreatePlayerCommand
         ])
 
         wire_commands(GameAggregate, GameCommandHandler, [

@@ -8,11 +8,12 @@ FactoryGirl.define do
     name "Bob"
     email "bob@localhost.local"
     password "secret"
+    access_token { generate(:id) }
   end
 
   factory :game_created_event do
     id
     state { GameState::LOBBYING }
-    host_id { id }
+    host_id { generate(:id) }
   end
 end

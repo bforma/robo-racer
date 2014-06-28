@@ -2,15 +2,17 @@ require 'domain_helper'
 
 describe PlayerCommandHandler, type: :command_handlers do
   let(:uuid) { new_uuid }
+  let(:access_token) { new_uuid }
 
-  describe CreatePlayer do
+  describe CreatePlayerCommand do
     let(:command) do
-      CreatePlayer.new(
+      CreatePlayerCommand.new(
         id: uuid,
         name: "Bob",
         email: "bob@localhost.local",
         password: "secret",
-        password_confirmation: "secret"
+        password_confirmation: "secret",
+        access_token: access_token
       )
     end
 
@@ -20,6 +22,7 @@ describe PlayerCommandHandler, type: :command_handlers do
       it { should validate_presence_of :email }
       it { should validate_presence_of :password }
       it { should validate_presence_of :password_confirmation }
+      it { should validate_presence_of :access_token }
 
       context "passwords" do
         subject { command }
@@ -47,7 +50,9 @@ describe PlayerCommandHandler, type: :command_handlers do
     describe "dispatch" do
       it_behaves_like "an event publisher" do
         let(:expected_events) do
-          [PlayerCreatedEvent.new(uuid, "Bob", "bob@localhost.local", "secret")]
+          [PlayerCreatedEvent.new(
+             uuid, "Bob", "bob@localhost.local", "secret", access_token
+           )]
         end
       end
     end

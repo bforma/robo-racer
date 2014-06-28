@@ -13,6 +13,7 @@ class Player
   )
 
   field :name, type: String
+  field :access_token, type: String
 
   ## Database authenticatable
   field :email,              type: String, default: ""

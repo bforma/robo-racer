@@ -1,7 +1,8 @@
-class CreatePlayer < BaseCommand
-  attr_accessor :name, :email, :password, :password_confirmation
+class CreatePlayerCommand < BaseCommand
+  attr_accessor :name, :email, :password, :password_confirmation, :access_token
 
-  validates_presence_of :name, :email, :password, :password_confirmation
+  validates_presence_of :name, :email, :password, :password_confirmation,
+                        :access_token
   validate :password_equal_to_confirmation
 
   after_validation :encrypt_passwords, :clear_passwords

@@ -1,2 +1,1 @@
-class PlayerCreatedEvent < Struct.new(:id, :name, :email, :password)
-end
+PlayerCreatedEvent = Struct.new(:id, :name, :email, :password, :access_token)
