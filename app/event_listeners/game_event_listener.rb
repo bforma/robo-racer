@@ -8,7 +8,13 @@ class GameEventListener < BaseEventListener
     Game.create!(
       _id: event.id,
       state: event.state,
-      host_id: event.host_id
+      host_id: event.host_id,
+      player_ids: []
     )
+  end
+
+  route PlayerJoinedGameEvent do |event|
+    game = Game.find(event.id)
+    game.push(player_ids: event.player_id)
   end
 end

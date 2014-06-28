@@ -16,4 +16,9 @@ FactoryGirl.define do
     state { GameState::LOBBYING }
     host_id { generate(:id) }
   end
+
+  factory :player_joined_game_event do
+    id
+    player_id { generate(:id) }
+  end
 end
