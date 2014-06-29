@@ -1,13 +1,21 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Opponents = React.createClass({
+  mixins: [ ModelMixin ],
+
+  getBackboneModels: function() {
+    return [ this.props.collection ];
+  },
+
   render: function() {
-    var opponents = _.range(7).map(function(n) {
-      return new RoboRacer.Views.Opponent({key: n});
+    var opponents = this.props.collection.map(function(opponent) {
+      return new RoboRacer.Views.Opponent(
+        {key: opponent, model: opponent}
+      );
     });
 
     return (
       <ol className="opponents">
-      { opponents }
+        { opponents }
       </ol>
     );
   }

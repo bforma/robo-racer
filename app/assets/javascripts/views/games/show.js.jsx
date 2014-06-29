@@ -1,29 +1,37 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Game = React.createClass({
+  mixins: [ ModelMixin ],
+
+  getBackboneModels: function() {
+    return [ this.props.model ];
+  },
+
   render: function() {
+    var game = this.props.model;
+
     return (
       <div className="mod-game">
-        <h1>It's a game!</h1>
-
         <div className="viewport">
           <header>
-            <div className="round">Round 3</div>
-            <div className="status">Playing slot 2 cards</div>
-            <div className="current_event">RoboBoob: move 2</div>
+            <div className="round"></div>
+            <div className="status"></div>
+            <div className="current_event"></div>
           </header>
 
           <div className="body">
             <div className="left">
-              {RoboRacer.Views.Opponents()}
+              {RoboRacer.Views.Opponents({collection: game.get('opponents')})}
             </div>
 
             <div className="right">
+            {/*
               <div className="table">
                 {RoboRacer.Views.Board()}
               </div>
               <div className="player_area">
                 instruction slots
               </div>
+             */}
             </div>
           </div>
         </div>

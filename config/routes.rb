@@ -11,6 +11,8 @@ Rails.application.routes.draw do
         resources :players, only: %i(show) do
           get 'me', on: :collection
         end
+
+        resources :games, only: %i(show)
       end
     end
   end

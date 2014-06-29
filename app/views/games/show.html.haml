@@ -1,5 +1,10 @@
+#game
+
 :javascript
   $(function() {
-    window.app = new RoboRacer.App("#{current_player.access_token}", "#{@game.id}");
+    window.app = new RoboRacer.App(
+      "#{current_player.access_token}",
+      "#{@game._id}"
+     );
   });
 

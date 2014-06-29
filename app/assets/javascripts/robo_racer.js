@@ -1,15 +1,16 @@
 window.RoboRacer = {
   Models: {},
-  Views: {}
+  Collections: {},
+  Views: {},
+  Controllers: {}
 };
 
 RoboRacer.App = Class.extend({
   initialize: function(accessToken, gameId) {
     this.socket = window.socket = new RoboRacer.Socket(accessToken, gameId);
 
-    React.renderComponent(
-      new RoboRacer.Views.Game(),
-      document.body
-    );
+    var game = new RoboRacer.Models.Game({_id: gameId});
+    this.gameController = new RoboRacer.Controllers.GameController(game);
+    this.gameController.show();
   }
 });
