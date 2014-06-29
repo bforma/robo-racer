@@ -26,5 +26,8 @@ module RoboRacer
     # config.i18n.default_locale = :de
 
     config.assets.initialize_on_precompile = false
+
+    # Autoload some extra directories
+    config.autoload_paths += %W(#{config.root}/lib)
   end
 end

@@ -8,7 +8,7 @@ FactoryGirl.define do
     name "Bob"
     email "bob@localhost.local"
     password "secret"
-    access_token { generate(:id) }
+    access_token { SecureRandom.hex }
   end
 
   factory :game_created_event do

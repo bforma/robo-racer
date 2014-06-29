@@ -1,4 +1,4 @@
-RSpec.shared_context "Capybara", type: :feature do
+RSpec.shared_context "Given events", type: %r(controller|feature) do
   let!(:gateway) { RoboRacer::Gateway.build }
   let(:event_store) { gateway.event_store }
   let(:event_bus) { gateway.event_bus }
@@ -14,5 +14,19 @@ RSpec.shared_context "Capybara", type: :feature do
 
       event_bus.publish(events)
     end
+  end
+end
+
+RSpec.shared_context "API Controllers", file_path: %r(controllers/api) do
+  def get(action, *args)
+    params = args.first || {}
+    token = case
+              when defined?(access_token) then access_token
+              when defined?(player) then player.access_token
+              else nil
+            end
+    params = params.merge(access_token: token) if token
+    params = params.merge(format: :json)
+    super(action, params)
   end
 end

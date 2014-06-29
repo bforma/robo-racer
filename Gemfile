@@ -6,6 +6,7 @@ gem 'mongoid', '~> 4.0.0.rc1', github: 'mongoid/mongoid'
 gem 'bson_ext'
 gem 'devise'
 gem 'puma'
+gem 'memoist'
 
 # frontend
 gem 'sass-rails'
@@ -38,5 +39,6 @@ end
 
 group :test do
   gem 'shoulda-matchers', require: false
+  gem 'json_spec'
 end
 

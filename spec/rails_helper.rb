@@ -19,8 +19,12 @@ require_all 'spec/support/rails'
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
-  config.include Warden::Test::Helpers
+  config.include Warden::Test::Helpers, type: :feature
+  config.include Devise::TestHelpers, type: :controller
+
   config.include AuthenticationHelper
+  config.include AuthenticationHelper::Feature, type: :feature
+  config.include AuthenticationHelper::Controller, type: :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
