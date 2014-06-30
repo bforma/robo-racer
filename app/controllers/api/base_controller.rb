@@ -13,11 +13,8 @@ module Api
     end
 
     def current_player
-      Player.where(
-        :access_token => params[:access_token],
-        :access_token.nin => [nil, ""],
-        :access_token.exists => true
-      ).first
+      access_token = params[:access_token]
+      Player.where(:access_token => access_token).first if access_token.present?
     end
     memoize :current_player
 

@@ -1,17 +1,9 @@
 /** @jsx React.DOM */
-RoboRacer.Views.Opponent = React.createClass({
-  mixins: [ ModelMixin ],
-
-  getBackboneModels: function() {
-    return [ this.props.model ];
-  },
-
+RoboRacer.Views.Opponent = React.createBackboneClass({
   render: function() {
-    var player = this.props.model;
-
     return (
       <li>
-        <h3>{ player.get('name') }</h3>
+        <h3>{ this.getModel().get('name') }</h3>
 
         <ul className="slots">
           <li className="slot"><span className="card_empty" /></li>

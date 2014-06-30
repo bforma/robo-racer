@@ -15,9 +15,9 @@
 //= require lodash
 //= require backbone
 //= require react
+//= require react.backbone
 //= require socket.io
 
-//= require mixins
 //= require class
 //= require robo_racer
 //= require socket
@@ -26,4 +26,3 @@
 //= require_tree ./models
 //= require_tree ./views
 //= require_tree ./controllers
-

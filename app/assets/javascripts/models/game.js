@@ -2,7 +2,6 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   idAttribute: "_id",
   urlRoot: "/api/games",
   defaults: {
-    player_ids: [],
     opponents: new RoboRacer.Collections.Opponents()
   },
 
@@ -11,11 +10,12 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   },
 
   updateOpponents: function() {
-    var allPlayers = this.get('player_ids');
-    allPlayers.forEach(function(player_id) {
-      var player = new RoboRacer.Models.Player({_id: player_id});
-      player.fetch();
-      this.get('opponents').add(player)
+    _.each(this.get('player_ids'), function(player_id) {
+      if (player_id != this.get('currentPlayerId')) {
+        var player = new RoboRacer.Models.Player({_id: player_id});
+        this.get('opponents').add(player);
+        player.fetch();
+      }
     }.bind(this));
   }
 });
