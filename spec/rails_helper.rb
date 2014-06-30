@@ -32,7 +32,9 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   DatabaseCleaner[:mongoid].strategy = :truncation
-  DatabaseCleaner[:redis].strategy = :truncation
+  DatabaseCleaner[
+    :redis, {connection: Redis::Configuration.url}
+  ].strategy = :truncation
 
   config.before { DatabaseCleaner.start }
   config.after { DatabaseCleaner.clean }
