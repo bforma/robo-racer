@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PlayersController do
+describe Players::RegistrationsController do
   it "registers a new player account" do
     visit root_path
 
