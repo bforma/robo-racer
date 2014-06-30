@@ -11,6 +11,7 @@
     = flash[:notice] if flash[:notice]
 
     - if current_player
+      = current_player.name
       = link_to "Logout", destroy_player_session_path, method: :delete
     - else
       = link_to "Login", new_player_session_path
