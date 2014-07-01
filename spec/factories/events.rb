@@ -21,4 +21,9 @@ FactoryGirl.define do
     id
     player_id { generate(:id) }
   end
+
+  factory :player_left_game_event do
+    id
+    player_id { generate(:id) }
+  end
 end

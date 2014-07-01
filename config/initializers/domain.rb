@@ -20,7 +20,8 @@ module RoboRacer
 
       DEFAULT_EVENT_LISTENERS = [
         PlayerEventListener.new,
-        GameEventListener.new
+        GameEventListener.new,
+        EventBroadcaster.new
       ]
 
       def build(opts = {})

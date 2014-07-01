@@ -12,11 +12,16 @@ RoboRacer.Socket = Class.extend({
     }.bind(this));
 
     connection.on("disconnect", function() {
-      console.log("disconnected");
+      console.log("disconnected", arguments);
     }.bind(this));
 
     connection.on("authenticated", function() {
       connection.emit("join", gameId);
     });
+
+    connection.on("event", function(event) {
+      event = JSON.parse(event);
+      this.trigger(event.type, event.payload);
+    }.bind(this));
   }
 });

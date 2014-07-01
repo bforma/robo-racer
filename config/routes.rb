@@ -12,7 +12,12 @@ Rails.application.routes.draw do
           get 'me', on: :collection
         end
 
-        resources :games, only: %i(show)
+        resources :games, only: %i(show) do
+          member do
+            put 'join'
+            put 'leave'
+          end
+        end
       end
     end
   end

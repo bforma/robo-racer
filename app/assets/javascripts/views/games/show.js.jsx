@@ -1,33 +1,39 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Game = React.createBackboneClass({
+  changeOptions: "change change:player_ids",
+
   render: function() {
+    var game = this.getModel();
+    if (game.currentPlayerInGame()) {
+      var leaveGameButton = RoboRacer.Views.LeaveGame({onClick: this.leaveGame});
+    } else {
+      var joinGameButton = RoboRacer.Views.JoinGame({onClick: this.joinGame});
+    }
+
     return (
       <div className="mod-game">
         <div className="viewport">
-          <header>
-            <div className="round"></div>
-            <div className="status"></div>
-            <div className="current_event"></div>
-          </header>
-
           <div className="body">
             <div className="left">
-              { RoboRacer.Views.Opponents({collection: this.getModel().get('opponents')}) }
+              { RoboRacer.Views.Opponents({collection: game.get('opponents')}) }
             </div>
 
-            {/*
             <div className="right">
-              <div className="table">
-                {RoboRacer.Views.Board()}
-              </div>
-              <div className="player_area">
-                instruction slots
-              </div>
+              { joinGameButton }
+              { leaveGameButton }
             </div>
-            */}
           </div>
         </div>
       </div>
     );
+  },
+
+  joinGame: function() {
+    this.getModel().join();
+  },
+
+  leaveGame: function() {
+    this.getModel().leave();
+    document.location.href = "/";
   }
 });

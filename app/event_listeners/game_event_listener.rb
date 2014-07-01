@@ -17,4 +17,9 @@ class GameEventListener < BaseEventListener
     game = Game.find(event.id)
     game.push(player_ids: event.player_id)
   end
+
+  route PlayerLeftGameEvent do |event|
+    game = Game.find(event.id)
+    game.pull(player_ids: event.player_id)
+  end
 end
