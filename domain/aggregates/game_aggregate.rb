@@ -29,8 +29,8 @@ class GameAggregate < BaseAggregate
     apply GameStartedEvent.new(
       id,
       GameState::RUNNING,
-      InstructionDeck.compose,
-      Board.compose
+      InstructionDeckComposer.compose,
+      BoardComposer.compose
     )
 
     place_spawns
@@ -203,7 +203,7 @@ GameNotRunningError = Class.new(StandardError)
 IllegalInstructionCardError = Class.new(StandardError)
 RobotAlreadyProgrammedError = Class.new(StandardError)
 
-class InstructionDeck
+class InstructionDeckComposer
   DECK_COMPOSITION = [
     {type: :u_turn, count: 6, start: 10, step: 10},
     {type: :rotate_left, count: 18, start: 70, step: 20},
@@ -226,7 +226,7 @@ class InstructionDeck
   end
 end
 
-class Board
+class BoardComposer
   DEFAULT_WIDTH = 12
   DEFAULT_HEIGHT = 12
 

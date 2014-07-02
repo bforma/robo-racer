@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails'
 gem 'require_all'
-gem 'mongoid', '~> 4.0.0.rc1', github: 'mongoid/mongoid'
+gem 'mongoid'
 gem 'bson_ext'
 gem 'devise'
 gem 'puma'

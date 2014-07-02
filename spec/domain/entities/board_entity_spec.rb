@@ -1,7 +1,7 @@
 require 'domain_helper'
 
 describe BoardEntity, type: :entities do
-  let(:tiles) { Board.compose(2, 2) }
+  let(:tiles) { BoardComposer.compose(2, 2) }
   let(:board) { BoardEntity.new(tiles) }
   let(:entity) { board }
 
@@ -108,7 +108,7 @@ describe BoardEntity, type: :entities do
   end
 
   describe "#instruct_robot" do
-    let(:tiles) { Board.compose(3, 5) }
+    let(:tiles) { BoardComposer.compose(3, 5) }
     subject { board.instruct_robot(robot, instruction) }
 
     context "given a spawned robot" do

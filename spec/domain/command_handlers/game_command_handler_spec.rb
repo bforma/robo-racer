@@ -47,8 +47,8 @@ describe GameCommandHandler, type: :command_handlers do
           allow_any_instance_of(Array).to receive(:shuffle!)
         end
 
-        let(:instruction_deck) { InstructionDeck.compose }
-        let(:board) { Board.compose }
+        let(:instruction_deck) { InstructionDeckComposer.compose }
+        let(:board) { BoardComposer.compose }
         let(:expected_events) do
           [
             GameStartedEvent.new(
@@ -224,11 +224,11 @@ describe GameCommandHandler, type: :command_handlers do
 
       context "given a winning player" do
         let(:deck) do
-          InstructionDeck.compose
+          InstructionDeckComposer.compose
         end
 
         let(:tiles) do
-          Board.compose
+          BoardComposer.compose
         end
 
         before do
