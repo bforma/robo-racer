@@ -16,6 +16,7 @@ Rails.application.routes.draw do
           member do
             put 'join'
             put 'leave'
+            put 'start'
           end
         end
       end

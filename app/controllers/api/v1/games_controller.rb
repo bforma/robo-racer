@@ -23,6 +23,15 @@ module Api
         head :accepted
       end
 
+      def start
+        execute StartGameCommand.new(
+          id: current_game.id,
+          player_id: current_player.id
+        )
+
+        head :accepted
+      end
+
     private
 
       def current_game
