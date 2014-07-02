@@ -66,7 +66,7 @@ describe GameEventListener do
 
       its(:size) { is_expected.to eq(4) }
 
-      [[0, 0], [0, 1], [1, 0], [1, 1]].each_with_index do |pos, n|
+      [[0, 0], [1, 0], [0, 1], [1, 1]].each_with_index do |pos, n|
         context pos do
           subject { game.reload.board.tiles[n] }
           its(:x) { is_expected.to eq(pos[0]) }

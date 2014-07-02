@@ -231,8 +231,8 @@ class BoardComposer
   DEFAULT_HEIGHT = 12
 
   def self.compose(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT)
-    (0..width - 1).reduce({}) do |memo, x|
-      (0..height - 1).each do |y|
+    (0..height - 1).reduce({}) do |memo, y|
+      (0..width - 1).each do |x|
         memo["#{x},#{y}"] = BoardTile.new(x, y)
       end
       memo
