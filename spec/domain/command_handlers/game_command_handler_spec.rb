@@ -24,6 +24,10 @@ describe GameCommandHandler, type: :command_handlers do
   let(:join_game_command) { JoinGameCommand.new(id: id, player_id: steven) }
   let(:leave_game_command) { LeaveGameCommand.new(id: id, player_id: steven) }
 
+  before do
+    allow_any_instance_of(Array).to receive(:shuffle!)
+  end
+
   context "given a single player" do
     describe CreateGameCommand do
       let(:command) { create_game_command }
@@ -43,10 +47,6 @@ describe GameCommandHandler, type: :command_handlers do
       before { dispatch(create_game_command) }
 
       it_behaves_like "an event publisher" do
-        before do
-          allow_any_instance_of(Array).to receive(:shuffle!)
-        end
-
         let(:instruction_deck) { InstructionDeckComposer.compose }
         let(:board) { BoardComposer.compose }
         let(:expected_events) do

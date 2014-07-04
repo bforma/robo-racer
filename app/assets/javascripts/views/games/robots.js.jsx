@@ -10,7 +10,7 @@ RoboRacer.Views.Robots = React.createBackboneClass({
 
   render: function() {
     return (
-      <div>
+      <div className="robots">
         { this.getCollection().map(this.createRobot) }
       </div>
     );

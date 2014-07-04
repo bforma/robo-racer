@@ -10,7 +10,7 @@ RoboRacer.Views.Spawns = React.createBackboneClass({
 
   render: function() {
     return (
-      <div>
+      <div className="spawns">
         { this.getCollection().map(this.createSpawn) }
       </div>
     );

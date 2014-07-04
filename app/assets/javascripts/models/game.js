@@ -4,6 +4,9 @@ RoboRacer.Models.Game = Backbone.Model.extend({
 
   initialize: function() {
     this.set('board', new RoboRacer.Models.Board());
+    var hand = new RoboRacer.Collections.Hand();
+    hand.meta('current_player_id', this.get('current_player_id'));
+    this.set('hand', hand);
 
     RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
     RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
@@ -18,8 +21,9 @@ RoboRacer.Models.Game = Backbone.Model.extend({
       host_id: model.host_id,
       player_ids: model.player_ids,
       state: model.state,
+      opponents: this.parseOpponents(model),
       board: this.parseBoard(model),
-      opponents: this.parseOpponents(model)
+      hand: this.parseHand(model)
     };
   },
 
@@ -42,6 +46,19 @@ RoboRacer.Models.Game = Backbone.Model.extend({
       return {_id: playerId};
     }));
     return opponents;
+  },
+
+  parseHand: function(model) {
+    var hand = this.get('hand');
+    if(model.hands) {
+      // TODO let the API return a projection of the current game from the
+      // player's perspective (ie. not exposing other player's hands etc.)
+      var currentPlayerHand = _.find(model.hands, function(hand) {
+        return hand.player_id === this.get('current_player_id');
+      }.bind(this));
+      hand.add(currentPlayerHand.instruction_cards);
+    }
+    return hand;
   },
 
   currentPlayerInGame: function() {

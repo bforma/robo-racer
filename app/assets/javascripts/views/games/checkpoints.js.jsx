@@ -9,7 +9,7 @@ RoboRacer.Views.Checkpoints = React.createBackboneClass({
 
   render: function() {
     return (
-      <div>
+      <div className="checkpoints">
         { this.getCollection().map(this.createCheckpoint) }
       </div>
     );

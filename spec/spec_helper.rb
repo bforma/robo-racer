@@ -8,19 +8,13 @@ SimpleCov.start do
   add_filter "spec/"
 end
 
-require 'factory_girl'
 require 'support/shared/events_helper'
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
   config.include EventsHelper
 
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
-
-  config.before :suite do
-    FactoryGirl.reload
-  end
 
   config.after :each do
     Fountain::Session::UnitStack.clear_all

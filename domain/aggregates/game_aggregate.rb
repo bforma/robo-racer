@@ -26,10 +26,13 @@ class GameAggregate < BaseAggregate
     raise PlayerNotGameHostError if @host_id != player_id
     raise GameAlreadyStartedError if game_running?
 
+    instruction_cards = InstructionDeckComposer.compose
+    instruction_cards.shuffle!
+
     apply GameStartedEvent.new(
       id,
       GameState::RUNNING,
-      InstructionDeckComposer.compose,
+      instruction_cards.dup,
       BoardComposer.compose
     )
 

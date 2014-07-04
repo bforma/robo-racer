@@ -6,7 +6,8 @@ class EventBroadcaster < BaseEventListener
     PlayerLeftGameEvent,
     SpawnPlacedEvent,
     GoalPlacedEvent,
-    RobotSpawnedEvent
+    RobotSpawnedEvent,
+    InstructionCardDealtEvent
   ]
 
   inheritable_accessor :router do

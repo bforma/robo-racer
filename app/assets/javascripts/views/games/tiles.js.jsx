@@ -9,7 +9,7 @@ RoboRacer.Views.Tiles = React.createBackboneClass({
 
   render: function() {
     return (
-      <div>
+      <div className="tiles">
         { this.getCollection().map(this.createTile) }
       </div>
     );

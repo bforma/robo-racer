@@ -17,13 +17,15 @@ RoboRacer.Views.Game = React.createBackboneClass({
           <button className="button" onClick={ this.startGame }>Start game</button>
       }
     } else if(game.running()) {
-      var board = RoboRacer.Views.Board({model: game.get('board')})
+      var board = RoboRacer.Views.Board({model: game.get('board')});
+      var hand = RoboRacer.Views.Hand({collection: game.get('hand')});
     }
 
     return (
       <div className="mod-game">
         <div className="viewport">
           <header>{ game.get('state') }</header>
+
           <div className="body">
             <div className="left">
               { RoboRacer.Views.Opponents({collection: game.get('opponents')}) }
@@ -33,7 +35,11 @@ RoboRacer.Views.Game = React.createBackboneClass({
               { joinGameButton }
               { leaveGameButton }
               { startGameButton }
-              { board }
+
+              <div className="table">
+                { board }
+                { hand }
+              </div>
             </div>
           </div>
         </div>

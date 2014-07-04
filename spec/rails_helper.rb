@@ -8,6 +8,7 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'database_cleaner'
 require_all 'spec/support/rails'
+require 'factory_girl'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -19,6 +20,8 @@ require_all 'spec/support/rails'
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+
   config.include Warden::Test::Helpers, type: :feature
   config.include Devise::TestHelpers, type: :controller
 
@@ -26,15 +29,15 @@ RSpec.configure do |config|
   config.include AuthenticationHelper::Feature, type: :feature
   config.include AuthenticationHelper::Controller, type: :controller
 
+  config.before(:suite) { FactoryGirl.reload }
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = false
 
   DatabaseCleaner[:mongoid].strategy = :truncation
-  DatabaseCleaner[
-    :redis, {connection: Redis::Configuration.url}
-  ].strategy = :truncation
+  DatabaseCleaner[:redis, {connection: Redis::Configuration.url}].strategy = :truncation
 
   config.before { DatabaseCleaner.start }
   config.after { DatabaseCleaner.clean }
