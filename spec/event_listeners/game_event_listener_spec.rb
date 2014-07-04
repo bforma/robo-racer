@@ -14,7 +14,7 @@ describe GameEventListener do
     let(:event) { build(:game_created_event) }
 
     specify do
-      expect { handle_event }.to change { Game.count }.by(1)
+      expect { handle_event }.to change { Projections::Mongo::Game.count }.by(1)
     end
   end
 
@@ -151,7 +151,14 @@ describe GameEventListener do
       before { handle_event }
 
       its(:player_id) { is_expected.to eq(event.player_id) }
-      its(:size) { is_expected.to eq(1) }
+
+      context "instruction card" do
+        subject { game.reload.hands.last.instruction_cards.last }
+
+        its(:action) { is_expected.to eq(InstructionCard::ROTATE) }
+        its(:amount) { is_expected.to eq(InstructionCard::U_TURN) }
+        its(:priority) { is_expected.to eq(10) }
+      end
     end
 
     context "given a hand with cards" do

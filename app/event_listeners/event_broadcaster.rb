@@ -1,5 +1,6 @@
 class EventBroadcaster < BaseEventListener
   GAME_CHANNEL_FORMAT = "robo_racer.%s.games.%s"
+
   UNFILTERED_EVENTS = [
     PlayerJoinedGameEvent,
     PlayerLeftGameEvent,

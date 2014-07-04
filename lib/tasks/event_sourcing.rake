@@ -8,7 +8,9 @@ namespace :es do
   desc "Drops the current view model and replays all recorded events to build a new one"
   task replay: ["environment", "db:mongoid:purge"] do
     started_at = Time.current
-    gateway = RoboRacer::Gateway.build
+    gateway = RoboRacer::Gateway.build(
+      event_listeners: RoboRacer::Gateway::REPLAYABLE
+    )
     n = 0
     gateway.event_store.each_event do |event|
       gateway.event_bus.publish(event)

@@ -1,11 +1,11 @@
 FactoryGirl.define do
-  factory :board do
+  factory :board, class: Projections::Mongo::Board do
     tiles do
       [
-        Tile.new(x: 0, y: 0),
-        Tile.new(x: 1, y: 0),
-        Tile.new(x: 0, y: 1),
-        Tile.new(x: 1, y: 1),
+        Projections::Mongo::Tile.new(x: 0, y: 0),
+        Projections::Mongo::Tile.new(x: 1, y: 0),
+        Projections::Mongo::Tile.new(x: 0, y: 1),
+        Projections::Mongo::Tile.new(x: 1, y: 1),
       ]
     end
   end

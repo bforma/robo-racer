@@ -9,8 +9,6 @@ SimpleCov.start do
 end
 
 require 'factory_girl'
-FactoryGirl.reload
-
 require 'support/shared/events_helper'
 
 RSpec.configure do |config|
@@ -19,6 +17,10 @@ RSpec.configure do |config|
 
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
+
+  config.before :suite do
+    FactoryGirl.reload
+  end
 
   config.after :each do
     Fountain::Session::UnitStack.clear_all

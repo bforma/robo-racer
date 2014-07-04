@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :game do
+  factory :game, class: Projections::Mongo::Game do
     state { GameState::LOBBYING }
     host_id { generate(:id) }
     player_ids { Array.new }

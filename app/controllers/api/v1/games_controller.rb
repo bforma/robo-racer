@@ -35,7 +35,7 @@ module Api
     private
 
       def current_game
-        Game.find(params[:id])
+        Projections::Mongo::Game.find(params[:id])
       end
       memoize :current_game
     end

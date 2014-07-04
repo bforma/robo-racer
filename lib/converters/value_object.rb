@@ -7,7 +7,7 @@ module Converters
   private
 
     def to_board_tile(tile)
-      Tile.new(x: tile.x, y: tile.y)
+      Projections::Mongo::Tile.new(x: tile.x, y: tile.y)
     end
   end
 end
