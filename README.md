@@ -7,17 +7,26 @@
 
 ### Prerequisites
 
-Redis (`brew install redis`)
-Mongodb (`brew install mongodb`)
+```
+brew install redis   # Key-Value Store
+brew install mongodb # Document database
+gem install bundler  # Ruby gem dependency manager
+gem install foreman  # Process manager
+```
 
 ### Installation
 
 ```
+git clone git@github.com:bforma/event-pusher.git
 git clone git@github.com:bforma/robo-racer.git
-bundle install
-rails server
-```
 
+cd event-pusher
+npm install
+
+cd ../robo-racer
+bundle install
+foreman start
+```
 And point your browser to http://localhost:3000
 
 ## Running tests
