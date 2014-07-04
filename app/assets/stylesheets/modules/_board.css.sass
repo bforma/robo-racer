@@ -1,62 +1,87 @@
-.mod-board
-  position: relative
-  margin: 0 auto
-  width: 482px
-  height: 482px
-  border: $border
-  border-width: 1px
-  background: rgba(black,.3)
+$size: 20px
+$max_x: 9
+$max_y: 9
 
-  .row
-    @extend %clearfix
-    height: 40px
+@mixin block($l,$w,$h,$lo:0,$wo:0,$ho:0)
+  height: $l
+  width: $w
+  -webkit-transform: translateZ(($h + $ho))
+  -webkit-transform-style: preserve-3d
+  -webkit-transition: .25s
 
-  b
-    display: block
-    float: left
-    width: 40px
-    height: 40px
-    border: $border
-
-  .robot, .spawn, .checkpoint
+  &,
+  &:before,
+  &:after
     position: absolute
-    left: 0
-    top: 0
-    width: 40px
-    height: 40px
-    font-size: 120%
-    text-align: center
-    line-height: 40px
-    transition: all 1s
-    -webkit-transition: all 1s
+    background-color: #999
+    content: ''
 
-    $positions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
-    @each $position in $positions
-      &.x_#{$position}
-        left: ($position * 40) * 1px
+  &:before // right facing
+    height: $l
+    width: $h
+    -webkit-transform: rotateY(90deg) translateX(($w + $wo))
+    -webkit-transform-origin: (($w+$wo)/$h * 100%) 0
 
-    @each $position in $positions
-      &.y_#{$position}
-        top: ($position * 40) * 1px
+  &:after // left facing
+    height: $h
+    width: $w
+    -webkit-transform: rotateX(-90deg) translateY(($l + $lo))
+    -webkit-transform-origin: (($l+$lo)/($w+$wo) * 100%) (($l+$lo)/$h * 100%)
 
-    $facings: 0 90 180 270
-    @each $facing in $facings
-      &.face_#{$facing}
-        transform: rotate($facing * 1deg)
-        -webkit-transform: rotate($facing + 180 * 1deg)
+.mod-board
+  position: absolute
+  top: 50%
+  left: 50%
+  margin: -7.5em
+  padding: $size
+  height: ($max_y * $size)
+  width: ($max_x * $size)
 
-  .robot
-    border-bottom: 2px solid black
-    border-radius: 0 0 25px 25px
+  background-color: #000
+  -webkit-transform: rotateX(45deg) rotateZ(45deg)
+  -webkit-transform-style: preserve-3d
+  -webkit-transition: .25s
 
-    @each $color in $player_colors
-      &.#{$color}
-        background: $color
+  @for $position from 0 through $max_x
+    .x#{$position}
+      left: ($position * $size)
 
-  .spawn
-    @each $color in $player_colors
-      &.#{$color}
-        border: 2px solid $color
+  @for $position from 0 through $max_y
+    .y#{$position}
+      top: ($position * $size)
 
-  .checkpoint
-    background-color: green
+  .floor
+    @include block(20px, 20px, 5px)
+    box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
+    border-radius: 1px
+
+    &:before
+      box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2)
+
+    &:after
+      box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2)
+
+  .block
+    @include block(20px, 20px, 20px)
+
+    &,
+    &:after,
+    &:before
+      background: green
+      box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
+
+  .lwall
+    @include block(20px, 5px, 10px,0,10px,5px)
+    &,
+    &:after,
+    &:before
+      background: blue
+      box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
+
+  .twall
+    @include block(5px, 20px, 10px,10px,0,5px)
+    &,
+    &:after,
+    &:before
+      background: blue
+      box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
