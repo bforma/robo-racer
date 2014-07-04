@@ -366,27 +366,5 @@ describe GameCommandHandler, type: :command_handlers do
       pending
     end
   end
-
-  describe MoveRobotCommand do
-    let(:command) { MoveRobotCommand.new(id: id, speed: 1) }
-
-    describe "validations" do
-      it do
-        should ensure_inclusion_of(:speed).in_array(MoveRobotCommand::SPEEDS)
-      end
-    end
-
-    describe "dispatch" do
-      it_behaves_like "an event publisher" do
-        before do
-          dispatch(build(:create_game_command, id: id))
-        end
-
-        let(:expected_events) do
-          [RobotMovedEvent.new(id, GameUnit.new(1, 0, GameUnit::RIGHT))]
-        end
-      end
-    end
-  end
 end
 

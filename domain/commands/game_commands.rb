@@ -20,11 +20,3 @@ end
 
 class PlayCurrentRoundCommand < BaseCommand
 end
-
-class MoveRobotCommand < Command
-  SPEEDS = [-1, 1]
-
-  attr_accessor :speed
-
-  validates_inclusion_of :speed, in: SPEEDS
-end

@@ -29,8 +29,7 @@ module RoboRacer
           LeaveGameCommand,
           StartGameCommand,
           ProgramRobotCommand,
-          PlayCurrentRoundCommand,
-          MoveRobotCommand
+          PlayCurrentRoundCommand
         ])
       end
     end

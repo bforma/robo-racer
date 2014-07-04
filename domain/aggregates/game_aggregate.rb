@@ -66,10 +66,6 @@ class GameAggregate < BaseAggregate
     start_new_round if game_running?
   end
 
-  def move_robot(speed)
-    apply RobotMovedEvent.new(id, @robot.move(speed))
-  end
-
   class Dealer
     def initialize(deck, players)
       @deck = deck
