@@ -2,7 +2,7 @@
 RoboRacer.Views.Robots = React.createBackboneClass({
   createRobot: function(robot, n) {
     return new RoboRacer.Views.Robot({
-      key: robot.get('_id').$oid,
+      key: n,
       number: n,
       model: robot
     });

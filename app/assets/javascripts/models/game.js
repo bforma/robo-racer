@@ -3,6 +3,8 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   urlRoot: '/api/games',
 
   initialize: function() {
+    this.set('board', new RoboRacer.Models.Board());
+
     RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
     RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
     RoboRacer.App.socket.on('game_started_event', this.gameStarted, this);
@@ -22,9 +24,11 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   },
 
   parseBoard: function(model) {
-    var board = new RoboRacer.Models.Board();
+    var board = this.get('board');
     if (model.board) {
       board.set('tiles', new RoboRacer.Collections.Tiles(model.board.tiles));
+      board.set('spawns', new RoboRacer.Collections.Spawns(model.board.spawns));
+      board.set('checkpoints', new RoboRacer.Collections.Checkpoints(model.board.checkpoints));
       board.set('robots', new RoboRacer.Collections.Robots(model.board.robots));
     }
     return board;
@@ -100,7 +104,6 @@ RoboRacer.Models.Game = Backbone.Model.extend({
         return tile;
       })
     ));
-    board.set('robots', new RoboRacer.Collections.Robots());
 
     this.set('instruction_deck_size', event.instruction_deck_size);
     this.set('state', event.state);

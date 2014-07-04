@@ -1,12 +1,20 @@
 class EventBroadcaster < BaseEventListener
   GAME_CHANNEL_FORMAT = "robo_racer.%s.games.%s"
+  UNFILTERED_EVENTS = [
+    PlayerJoinedGameEvent,
+    PlayerLeftGameEvent,
+    SpawnPlacedEvent,
+    GoalPlacedEvent,
+    RobotSpawnedEvent
+  ]
 
   inheritable_accessor :router do
     Fountain::Router.create_router
   end
 
-  route(PlayerJoinedGameEvent) { |event| publish(event) }
-  route(PlayerLeftGameEvent) { |event| publish(event) }
+  UNFILTERED_EVENTS.each do |event_class|
+    route(event_class) { |event| publish(event) }
+  end
 
   route(GameStartedEvent) do |event|
     publish(event, ->(payload) do
@@ -17,7 +25,7 @@ class EventBroadcaster < BaseEventListener
   end
 
 private
-  
+
   def redis
     Redis.new(
       host: Redis::Configuration.host,
