@@ -4,15 +4,26 @@ RoboRacer.Views.Game = React.createBackboneClass({
 
   render: function() {
     var game = this.getModel();
-    if (game.currentPlayerInGame()) {
-      var leaveGameButton = RoboRacer.Views.LeaveGame({onClick: this.leaveGame});
-    } else {
-      var joinGameButton = RoboRacer.Views.JoinGame({onClick: this.joinGame});
+
+    if(game.lobbying()) {
+      if (game.currentPlayerInGame()) {
+        var leaveGameButton = RoboRacer.Views.LeaveGame({onClick: this.leaveGame});
+      } else {
+        var joinGameButton = RoboRacer.Views.JoinGame({onClick: this.joinGame});
+      }
+
+      if (game.currentPlayerIsHost()) {
+        var startGameButton =
+          <button className="button" onClick={ this.startGame }>Start game</button>
+      }
+    } else if(game.running()) {
+      var board = RoboRacer.Views.Board({model: game.get('board')})
     }
 
     return (
       <div className="mod-game">
         <div className="viewport">
+          <header>{ game.get('state') }</header>
           <div className="body">
             <div className="left">
               { RoboRacer.Views.Opponents({collection: game.get('opponents')}) }
@@ -21,6 +32,8 @@ RoboRacer.Views.Game = React.createBackboneClass({
             <div className="right">
               { joinGameButton }
               { leaveGameButton }
+              { startGameButton }
+              { board }
             </div>
           </div>
         </div>
@@ -35,5 +48,9 @@ RoboRacer.Views.Game = React.createBackboneClass({
   leaveGame: function() {
     this.getModel().leave();
     document.location.href = "/";
+  },
+
+  startGame: function() {
+    this.getModel().start();
   }
 });

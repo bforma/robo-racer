@@ -1,47 +1,84 @@
 RoboRacer.Models.Game = Backbone.Model.extend({
-  idAttribute: "_id",
-  urlRoot: "/api/games",
-  defaults: {
-    opponents: new RoboRacer.Collections.Opponents()
-  },
+  idAttribute: '_id',
+  urlRoot: '/api/games',
 
   initialize: function() {
-    RoboRacer.App.socket.on("player_joined_game_event", this.playerJoinedGame, this);
-    RoboRacer.App.socket.on("player_left_game_event", this.playerLeftGame, this);
+    RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
+    RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
+    RoboRacer.App.socket.on('game_started_event', this.gameStarted, this);
+  },
 
-    // player_ids change after .fetch()
-    this.on("change:player_ids", function() {
-      _.each(this.get('player_ids'), function(player_id) {
-        if (player_id != this.get('current_player_id')) {
-          this.addOpponent(player_id);
-        }
-      }.bind(this));
-    }.bind(this));
+  parse: function(model) {
+    console.log("parse", model);
+
+    return {
+      _id: model._id,
+      host_id: model.host_id,
+      player_ids: model.player_ids,
+      state: model.state,
+      board: this.parseBoard(model),
+      opponents: this.parseOpponents(model)
+    };
+  },
+
+  parseBoard: function(model) {
+    var board = new RoboRacer.Models.Board();
+    if (model.board) {
+      board.set('tiles', new RoboRacer.Collections.Tiles(model.board.tiles));
+      board.set('robots', new RoboRacer.Collections.Robots(model.board.robots));
+    }
+    return board;
+  },
+
+  parseOpponents: function(model) {
+    var opponents = new RoboRacer.Collections.Opponents();
+    opponents.add(_.filter(model.player_ids, function(playerId) {
+      return playerId !== this.get('current_player_id');
+    }.bind(this)).map(function(playerId) {
+      return {_id: playerId};
+    }));
+    return opponents;
   },
 
   currentPlayerInGame: function() {
-    return _.include(this.get('player_ids'), this.get("current_player_id"));
+    return _.include(this.get('player_ids'), this.get('current_player_id'));
+  },
+
+  currentPlayerIsHost: function() {
+    return this.get('current_player_id') === this.get('host_id');
+  },
+
+  lobbying: function() {
+    return this.get('state') === 'lobbying';
+  },
+
+  running: function() {
+    return this.get('state') === 'running';
   },
 
   join: function() {
-    this.execute("join");
+    this.execute('join');
   },
 
   leave: function() {
-    this.execute("leave");
+    this.execute('leave');
+  },
+
+  start: function() {
+    this.execute('start');
   },
 
   execute: function(command) {
     $.ajax({
-      url: this.url() + "/" + command,
+      url: this.url() + '/' + command,
       type: 'PUT'
     });
   },
 
   playerJoinedGame: function(event) {
     this.get('player_ids').push(event.player_id);
-    if(event.player_id !== this.get('current_player_id')) {
-      this.addOpponent(event.player_id)
+    if (event.player_id !== this.get('current_player_id')) {
+      this.get('opponents').add({_id: event.player_id});
     }
     this.trigger('change:player_ids');
   },
@@ -50,21 +87,22 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     _.remove(this.get('player_ids'), function(player_id) {
       return player_id == event.player_id;
     });
-    if(event.player_id !== this.get('current_player_id')) {
-      this.removeOpponent(event.player_id);
+    if (event.player_id !== this.get('current_player_id')) {
+      this.get('opponents').remove(event.player_id);
     }
     this.trigger('change:player_ids');
   },
 
-  addOpponent: function(player_id) {
-    var player = new RoboRacer.Models.Player({_id: player_id});
-    player.fetch();
-    this.get('opponents').add(player);
-  },
+  gameStarted: function(event) {
+    var board = this.get('board');
+    board.set('tiles', new RoboRacer.Collections.Tiles(
+      _.map(event.tiles, function(tile, _) {
+        return tile;
+      })
+    ));
+    board.set('robots', new RoboRacer.Collections.Robots());
 
-  removeOpponent: function(player_id) {
-    this.get('opponents').remove(
-      new RoboRacer.Models.Player({_id: player_id})
-    );
+    this.set('instruction_deck_size', event.instruction_deck_size);
+    this.set('state', event.state);
   }
 });

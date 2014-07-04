@@ -12,7 +12,7 @@ RoboRacer.App = Class.extend({
 
     RoboRacer.App.socket = window.socket = new RoboRacer.Socket(accessToken, gameId);
 
-    var game = new RoboRacer.Models.Game({
+    var game = window.game = new RoboRacer.Models.Game({
       _id: gameId,
       current_player_id: currentPlayerId
     });

@@ -1,31 +1,12 @@
 /** @jsx React.DOM */
-RoboRacer.Views.Board = React.createClass({
-  COLORS: [
-    "red",
-    "yellow",
-    "orange",
-    "pink",
-    "green",
-    "brown",
-    "grey",
-    "lightblue"
-  ],
-
+RoboRacer.Views.Board = React.createBackboneClass({
   render: function() {
-    var rows = _.range(12).map(function(row) {
-      return new RoboRacer.Views.BoardRow({key: row, y: row});
-    });
-
-    var robots = this.COLORS.map(function(color, index) {
-      return new RoboRacer.Views.Robot(
-        {key: color, x: index, y: 0, color: color}
-      );
-    });
+    var board = this.getModel();
 
     return (
       <div className="board">
-        { rows }
-        { robots }
+        { RoboRacer.Views.Tiles({collection: board.get('tiles')}) }
+        { RoboRacer.Views.Robots({collection: board.get('robots')}) }
       </div>
     );
   }

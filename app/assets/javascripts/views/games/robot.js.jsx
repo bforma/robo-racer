@@ -1,12 +1,25 @@
 /** @jsx React.DOM */
-RoboRacer.Views.Robot = React.createClass({
+RoboRacer.Views.Robot = React.createBackboneClass({
+  COLORS: [
+    "red",
+    "yellow",
+    "orange",
+    "pink",
+    "green",
+    "brown",
+    "grey",
+    "lightblue"
+  ],
+
   render: function() {
-    var x = this.props.x;
-    var y = this.props.y;
-    var color = this.props.color;
+    var className = "robot" +
+      " x_" + this.getModel().get('x') +
+      " y_" + this.getModel().get('y') +
+      " " + this.COLORS[this.props.number] +
+      " face_180";
 
     return (
-      <div className={ "robot x_" + x + " y_" + y + " " + color + " face_180" }></div>
+      <div className={ className }></div>
     );
   }
 });
