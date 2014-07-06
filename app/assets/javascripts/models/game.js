@@ -12,6 +12,7 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
     RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
     RoboRacer.App.socket.on('game_started_event', this.gameStarted, this);
+    RoboRacer.App.socket.on('game_round_started_event', this.gameRoundStarted, this);
   },
 
   // load state
@@ -19,15 +20,11 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   parse: function(model) {
     console.log("parse", model);
 
-    return {
-      _id: model._id,
-      host_id: model.host_id,
-      player_ids: model.player_ids,
-      state: model.state,
+    return _.merge(model, {
       opponents: this.parseOpponents(model),
       board: this.parseBoard(model),
       hand: this.parseHand(model)
-    };
+    });
   },
 
   parseBoard: function(model) {
@@ -143,6 +140,10 @@ RoboRacer.Models.Game = Backbone.Model.extend({
 
     this.set('instruction_deck_size', event.instruction_deck_size);
     this.set('state', event.state);
+  },
+
+  gameRoundStarted: function(event) {
+    this.set('round_number', event.game_round.number);
   },
 
   // other

@@ -17,6 +17,7 @@ RoboRacer.Views.Game = React.createBackboneClass({
           <button className="button" onClick={ this.startGame }>Start game</button>
       }
     } else if(game.running()) {
+      var round = "Round " + game.get('round_number');
       var board = RoboRacer.Views.Board({model: game.get('board')});
       var hand = RoboRacer.Views.Hand({
         collection: game.get('hand'),
@@ -33,7 +34,10 @@ RoboRacer.Views.Game = React.createBackboneClass({
     return (
       <div className="mod-game">
         <div className="viewport">
-          <header>{ game.get('state') }</header>
+          <header>
+            <p>Game is { game.get('state') }</p>
+            <p>{ round }</p>
+          </header>
 
           <div className="body">
             <div className="left">

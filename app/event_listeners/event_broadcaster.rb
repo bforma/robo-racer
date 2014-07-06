@@ -4,6 +4,7 @@ class EventBroadcaster < BaseEventListener
   UNFILTERED_EVENTS = [
     PlayerJoinedGameEvent,
     PlayerLeftGameEvent,
+    GameRoundStartedEvent,
     SpawnPlacedEvent,
     GoalPlacedEvent,
     RobotSpawnedEvent,
