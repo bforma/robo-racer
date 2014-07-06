@@ -17,9 +17,13 @@ Rails.application.routes.draw do
             put 'join'
             put 'leave'
             put 'start'
+            put 'program_robot'
           end
         end
       end
     end
   end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web, at: '/sidekiq'
 end

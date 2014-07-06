@@ -8,6 +8,11 @@ gem 'devise'
 gem 'puma'
 gem 'memoist'
 
+# background jobs
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim'
+
 # frontend
 gem 'sass-rails'
 gem 'uglifier'

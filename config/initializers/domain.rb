@@ -23,6 +23,7 @@ module RoboRacer
     ]
 
     NON_REPLAYABLE = [
+      AsyncEventListener.new,
       EventBroadcaster.new
     ]
 

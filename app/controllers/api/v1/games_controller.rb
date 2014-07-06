@@ -32,6 +32,26 @@ module Api
         head :accepted
       end
 
+      def program_robot
+        instruction_cards = params[:instruction_cards].map do |_, param|
+          InstructionCard.new(
+            param[:action],
+            param[:amount].to_i, # TODO fix this silly to_i
+            param[:priority].to_i
+          )
+        end
+
+        command = ProgramRobotCommand.new(
+          id: current_game.id,
+          player_id: current_player.id,
+          instruction_cards: instruction_cards
+        )
+        raise InvalidCommandError if command.invalid?
+        execute command
+
+        head :accepted
+      end
+
     private
 
       def current_game

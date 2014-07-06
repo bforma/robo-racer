@@ -17,3 +17,5 @@ private
     @gateway ||= RoboRacer::Gateway.build
   end
 end
+
+InvalidCommandError = Class.new(StandardError)

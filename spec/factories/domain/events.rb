@@ -61,4 +61,8 @@ FactoryGirl.define do
     player_id "bob"
     instruction_card { InstructionCard.u_turn(10) }
   end
+
+  factory :all_robots_programmed_event do
+    id
+  end
 end

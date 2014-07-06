@@ -9,6 +9,7 @@ require 'capybara-screenshot/rspec'
 require 'database_cleaner'
 require_all 'spec/support/rails'
 require 'factory_girl'
+require 'sidekiq/testing'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -43,6 +44,22 @@ RSpec.configure do |config|
   config.after { DatabaseCleaner.clean }
 
   Capybara.javascript_driver = :webkit
+
+  config.before(:each) do
+    Sidekiq::Worker.clear_all
+  end
+
+  config.around(:each) do |example|
+    if example.metadata[:sidekiq] == :fake
+      Sidekiq::Testing.fake!(&example)
+    elsif example.metadata[:sidekiq] == :inline
+      Sidekiq::Testing.inline!(&example)
+    elsif example.metadata[:type] == :feature
+      Sidekiq::Testing.inline!(&example)
+    else
+      Sidekiq::Testing.fake!(&example)
+    end
+  end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
