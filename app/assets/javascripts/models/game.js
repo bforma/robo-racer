@@ -7,11 +7,14 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     var hand = new RoboRacer.Collections.Hand();
     hand.meta('current_player_id', this.get('current_player_id'));
     this.set('hand', hand);
+    this.set('registers', new RoboRacer.Collections.Registers());
 
     RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
     RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
     RoboRacer.App.socket.on('game_started_event', this.gameStarted, this);
   },
+
+  // load state
 
   parse: function(model) {
     console.log("parse", model);
@@ -61,6 +64,8 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     return hand;
   },
 
+  // queries
+
   currentPlayerInGame: function() {
     return _.include(this.get('player_ids'), this.get('current_player_id'));
   },
@@ -77,6 +82,8 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     return this.get('state') === 'running';
   },
 
+  // commands
+
   join: function() {
     this.execute('join');
   },
@@ -89,12 +96,24 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     this.execute('start');
   },
 
-  execute: function(command) {
+  programRobot: function() {
+    var instructionCards = _.map(this.get('registers').models, function(register) {
+      return register.get('instruction_card').attributes;
+    });
+
+    this.execute('program_robot', {instruction_cards: instructionCards});
+  },
+
+  execute: function(command, data) {
+    data = data || {};
     $.ajax({
       url: this.url() + '/' + command,
-      type: 'PUT'
+      type: 'PUT',
+      data: data
     });
   },
+
+  // events
 
   playerJoinedGame: function(event) {
     this.get('player_ids').push(event.player_id);
@@ -124,5 +143,36 @@ RoboRacer.Models.Game = Backbone.Model.extend({
 
     this.set('instruction_deck_size', event.instruction_deck_size);
     this.set('state', event.state);
+  },
+
+  // other
+
+  programRegister: function(registerIndex, instructionCard) {
+    var cardInHand = this.get('hand').findWhere({
+      priority: instructionCard.get('priority')
+    });
+    this.get('hand').remove(cardInHand);
+
+    var replaced = this.get('registers').program(registerIndex, instructionCard);
+    if (replaced) {
+      this.get('hand').add(replaced);
+    }
+  },
+
+  programNextEmptyRegister: function(instructionCard) {
+    var registers = this.get('registers');
+    var nextEmpty = registers.find(function(register) {
+      return register.isEmpty();
+    });
+
+    if (nextEmpty) {
+      var index = registers.indexOf(nextEmpty);
+      this.programRegister(index, instructionCard);
+    }
+  },
+
+  unprogramRegister: function(registerIndex, instructionCard) {
+    this.get('registers').unprogram(registerIndex);
+    this.get('hand').add(instructionCard);
   }
 });

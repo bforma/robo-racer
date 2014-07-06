@@ -100,7 +100,8 @@ $border: 2px solid gray
         background: rgba(blue,.2)
 
   .table
-    padding: 70px 40px
+    @extend %clearfix
+    padding: 40px
 
   .board
     position: relative
@@ -110,7 +111,8 @@ $border: 2px solid gray
     border: $border
     border-width: 1px
     background: rgba(black,.3)
-    box-shadow: 0 0 0 40px rgba(black,.7)
+    //box-shadow: 0 0 0 40px rgba(black,.7)
+    //margin-right: 30px
 
     .row
       @extend %clearfix
@@ -163,19 +165,44 @@ $border: 2px solid gray
           border: 2px solid $color
 
     .checkpoint
-      border: 2px solid blue
+      background-color: green
 
   .hand
-    font-family: Times New Roman
     position: relative
     float: right
+    width: 258px
+    padding: 0 0 0 40px
 
-  .player_area
-    position: absolute
-    bottom: 0
-    left: 0
-    right: 0
-    height: 80px
+    li
+      float: left
+
+    .instruction_card
+      margin: 0 10px 10px 0
+      cursor: move
+
+  .instruction_card
+    width: 60px
+    height: 100px
+    padding: 5px
+    border: 1px solid black
+    background-color: white
+
+  .register
+    float: left
+    width: 72px
+    height: 112px
+    padding: 5px
+    margin-right: 10px
+    border: 1px dashed black
+    list-style-type: none
+
+    .instruction_card
+      cursor: pointer
+
+  .program
+    position: relative
+    height: 138px
+    padding: 14px
     background: rgba(blue,.5)
 
   footer
