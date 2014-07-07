@@ -20,6 +20,7 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml'
 gem 'react-rails'
+gem 'font-awesome-rails'
 
 # event sourcing & CQRS
 gem 'fountain', github: 'ianunruh/fountain'

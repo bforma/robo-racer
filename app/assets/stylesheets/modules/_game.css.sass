@@ -111,8 +111,6 @@ $border: 2px solid gray
     border: $border
     border-width: 1px
     background: rgba(black,.3)
-    //box-shadow: 0 0 0 40px rgba(black,.7)
-    //margin-right: 30px
 
     .row
       @extend %clearfix
@@ -181,11 +179,29 @@ $border: 2px solid gray
       cursor: move
 
   .instruction_card
+    position: relative
     width: 60px
     height: 100px
     padding: 5px
     border: 1px solid black
     background-color: white
+    text-align: center
+
+    .icon
+      font-size: 175%
+      margin-bottom: 10px
+
+    .text
+      font-size: 90%
+
+    .priority
+      font-size: 75%
+
+    .priority
+      position: absolute
+      bottom: 5px
+      left: 0
+      right: 0
 
   .register
     float: left
