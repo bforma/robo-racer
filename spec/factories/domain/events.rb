@@ -82,4 +82,16 @@ FactoryGirl.define do
     player_id "bob"
     robot { GameUnit.new(0, 1, GameUnit::LEFT) }
   end
+
+  factory :robot_pushed_event do
+    id
+    player_id "bob"
+    robot { GameUnit.new(0, 1, GameUnit::DOWN) }
+  end
+
+  factory :robot_died_event do
+    id
+    player_id "bob"
+    robot { GameUnit.new(0, 2, GameUnit::DOWN) }
+  end
 end

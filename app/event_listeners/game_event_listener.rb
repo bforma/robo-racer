@@ -82,12 +82,15 @@ class GameEventListener < BaseEventListener
     hand.save!
   end
 
-  route RobotMovedEvent do |event|
+  move_robot = Proc.new do |event|
     game = Projections::Mongo::Game.find(event.id)
     game.board.robots.
       where(player_id: event.player_id).
       update(x: event.robot.x, y: event.robot.y)
   end
+
+  route RobotMovedEvent, &move_robot
+  route RobotPushedEvent, &move_robot
 
   route RobotRotatedEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
@@ -96,8 +99,8 @@ class GameEventListener < BaseEventListener
       update(facing: event.robot.facing)
   end
 
-  # route GameEndedEvent do |event|
-  #   game = Projections::Mongo::Game.find(event.id)
-  #   game.update_attributes!(state: event.state)
-  # end
+  route RobotDiedEvent do |event|
+    game = Projections::Mongo::Game.find(event.id)
+    game.board.robots.where(player_id: event.player_id).delete_all
+  end
 end

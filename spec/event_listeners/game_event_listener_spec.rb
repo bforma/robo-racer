@@ -178,42 +178,55 @@ describe GameEventListener do
     let(:game) { create(:game, _id: game_id, board: board) }
     let(:board) { build(:board, robots: [robot]) }
     subject { robot.reload }
-    before { handle_event }
 
-    describe RobotMovedEvent do
-      let(:event) do
-        build(:robot_moved_event, id: game._id, robot: GameUnit.new(
-          new_x, new_y, GameUnit::DOWN
-        ))
-      end
+    [RobotMovedEvent, RobotPushedEvent].each do |event_class|
+      describe event_class do
+        before { handle_event }
+        let(:event) do
+          build(event_class.to_s.underscore, id: game._id, robot: GameUnit.new(
+            new_x, new_y, GameUnit::DOWN
+          ))
+        end
 
-      context "x-movement" do
-        let(:robot) { build(:robot, x: 0, y: 0) }
-        let(:new_x) { 1 }
-        let(:new_y) { 0 }
+        context "x-movement" do
+          let(:robot) { build(:robot, x: 0, y: 0) }
+          let(:new_x) { 1 }
+          let(:new_y) { 0 }
 
-        its(:x) { is_expected.to eq(1) }
-        its(:y) { is_expected.to eq(0) }
-      end
+          its(:x) { is_expected.to eq(1) }
+          its(:y) { is_expected.to eq(0) }
+        end
 
-      context "y-movement" do
-        let(:robot) { build(:robot, x: 0, y: 0) }
-        let(:new_x) { 0 }
-        let(:new_y) { 1 }
+        context "y-movement" do
+          let(:robot) { build(:robot, x: 0, y: 0) }
+          let(:new_x) { 0 }
+          let(:new_y) { 1 }
 
-        its(:x) { is_expected.to eq(0) }
-        its(:y) { is_expected.to eq(1) }
+          its(:x) { is_expected.to eq(0) }
+          its(:y) { is_expected.to eq(1) }
+        end
       end
     end
 
     describe RobotRotatedEvent do
+      before { handle_event }
       let(:event) do
         build(:robot_rotated_event, id: game._id, robot: GameUnit.new(
           0, 0, GameUnit::LEFT
         ))
       end
       let(:robot) { build(:robot, facing: GameUnit::DOWN) }
+
       its(:facing) { is_expected.to eq(GameUnit::LEFT) }
+    end
+
+    describe RobotDiedEvent do
+      let(:robot) { build(:robot, x: 0, y: 0) }
+      let(:event) { build(:robot_died_event, id: game._id) }
+
+      specify do
+        expect { handle_event }.to change { game.reload.board.robots }.to([])
+      end
     end
   end
 end
