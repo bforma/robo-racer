@@ -8,11 +8,16 @@ FactoryGirl.define do
       player_ids { ["bob"] }
     end
 
-    trait :started do
+    trait :starting do
       state { GameState::RUNNING }
       with_player
       board { build(:board) }
       instruction_deck_size 84
+    end
+
+    trait :started do
+      board { build(:board, :round_1) }
+      hands { [build(:hand, :with_card)] }
     end
   end
 end

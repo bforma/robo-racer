@@ -8,6 +8,7 @@ module Projections
       field :player_id, type: String
       field :x, type: Integer
       field :y, type: Integer
+      field :facing, type: Integer
     end
   end
 end

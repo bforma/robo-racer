@@ -65,4 +65,21 @@ FactoryGirl.define do
   factory :all_robots_programmed_event do
     id
   end
+
+  factory :instruction_card_discarded_event do
+    id
+    instruction_card { InstructionCard.u_turn(10) }
+  end
+
+  factory :robot_moved_event do
+    id
+    player_id "bob"
+    robot { GameUnit.new(0, 1, GameUnit::DOWN) }
+  end
+
+  factory :robot_rotated_event do
+    id
+    player_id "bob"
+    robot { GameUnit.new(0, 1, GameUnit::LEFT) }
+  end
 end

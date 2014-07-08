@@ -58,13 +58,17 @@ class GameEventListener < BaseEventListener
     game.board.robots.push(Projections::Mongo::Robot.new(
       player_id: event.player_id,
       x: event.robot.x,
-      y: event.robot.y
+      y: event.robot.y,
+      facing: event.robot.facing
     ))
   end
 
   route GameRoundStartedEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
-    game.update_attributes!(round_number: event.game_round.number)
+    game.update_attributes!(
+      round_number: event.game_round.number,
+      hands: []
+    )
   end
 
   route InstructionCardDealtEvent do |event|
@@ -77,4 +81,23 @@ class GameEventListener < BaseEventListener
     ))
     hand.save!
   end
+
+  route RobotMovedEvent do |event|
+    game = Projections::Mongo::Game.find(event.id)
+    game.board.robots.
+      where(player_id: event.player_id).
+      update(x: event.robot.x, y: event.robot.y)
+  end
+
+  route RobotRotatedEvent do |event|
+    game = Projections::Mongo::Game.find(event.id)
+    game.board.robots.
+      where(player_id: event.player_id).
+      update(facing: event.robot.facing)
+  end
+
+  # route GameEndedEvent do |event|
+  #   game = Projections::Mongo::Game.find(event.id)
+  #   game.update_attributes!(state: event.state)
+  # end
 end

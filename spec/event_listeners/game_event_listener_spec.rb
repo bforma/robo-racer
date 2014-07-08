@@ -8,6 +8,7 @@ describe GameEventListener do
   end
 
   let(:game_id) { new_uuid }
+  let(:starting_game) { create(:game, :starting, _id: game_id) }
   let(:started_game) { create(:game, :started, _id: game_id) }
 
   describe GameCreatedEvent do
@@ -77,7 +78,7 @@ describe GameEventListener do
   end
 
   describe SpawnPlacedEvent do
-    let!(:game) { started_game }
+    let!(:game) { starting_game }
     let(:event) { build(:spawn_placed_event, id: game_id) }
 
     specify { expect { handle_event }.to change { game.reload.board.spawns } }
@@ -94,7 +95,7 @@ describe GameEventListener do
   end
 
   describe GoalPlacedEvent do
-    let!(:game) { started_game }
+    let!(:game) { starting_game }
     let(:event) { build(:goal_placed_event, id: game_id) }
 
     specify { expect { handle_event }.to change { game.reload.board.checkpoints } }
@@ -110,7 +111,7 @@ describe GameEventListener do
   end
 
   describe RobotSpawnedEvent do
-    let!(:game) { started_game }
+    let!(:game) { starting_game }
     let(:event) { build(:robot_spawned_event, id: game_id) }
 
     specify { expect { handle_event }.to change { game.reload.board.robots } }
@@ -126,20 +127,27 @@ describe GameEventListener do
   end
 
   describe GameRoundStartedEvent do
-    let!(:game) { started_game }
     let(:event) { build(:game_round_started_event, id: game_id) }
 
-    specify do
-      expect { handle_event }.to change { game.reload.round_number }.to(1)
+    context "given a started game" do
+      let!(:game) { starting_game }
+
+      specify do
+        expect { handle_event }.to change { game.reload.round_number }.to(1)
+      end
     end
 
     context "given a previous round" do
-      pending "perform cleanup"
+      let!(:game) { started_game }
+
+      it "empties all hands" do
+        expect { handle_event }.to change { game.reload.hands }.to([])
+      end
     end
   end
 
   describe InstructionCardDealtEvent do
-    let!(:game) { started_game }
+    let!(:game) { starting_game }
     let(:event) { build(:instruction_card_dealt_event, id: game_id) }
 
     specify do
@@ -163,6 +171,49 @@ describe GameEventListener do
 
     context "given a hand with cards" do
       pending
+    end
+  end
+
+  context "given a board with a robot" do
+    let(:game) { create(:game, _id: game_id, board: board) }
+    let(:board) { build(:board, robots: [robot]) }
+    subject { robot.reload }
+    before { handle_event }
+
+    describe RobotMovedEvent do
+      let(:event) do
+        build(:robot_moved_event, id: game._id, robot: GameUnit.new(
+          new_x, new_y, GameUnit::DOWN
+        ))
+      end
+
+      context "x-movement" do
+        let(:robot) { build(:robot, x: 0, y: 0) }
+        let(:new_x) { 1 }
+        let(:new_y) { 0 }
+
+        its(:x) { is_expected.to eq(1) }
+        its(:y) { is_expected.to eq(0) }
+      end
+
+      context "y-movement" do
+        let(:robot) { build(:robot, x: 0, y: 0) }
+        let(:new_x) { 0 }
+        let(:new_y) { 1 }
+
+        its(:x) { is_expected.to eq(0) }
+        its(:y) { is_expected.to eq(1) }
+      end
+    end
+
+    describe RobotRotatedEvent do
+      let(:event) do
+        build(:robot_rotated_event, id: game._id, robot: GameUnit.new(
+          0, 0, GameUnit::LEFT
+        ))
+      end
+      let(:robot) { build(:robot, facing: GameUnit::DOWN) }
+      its(:facing) { is_expected.to eq(GameUnit::LEFT) }
     end
   end
 end
