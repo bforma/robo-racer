@@ -1,6 +1,6 @@
 RSpec.shared_context "CommandHandlers", type: :command_handlers do
   let(:event_store) { SpecEventStore.new }
-  let(:gateway) { RoboRacer::Gateway.new(event_store) }
+  let(:gateway) { Gateway.new(event_store) }
   let(:journal) { Fountain::Domain::Journal.new }
 
   before do

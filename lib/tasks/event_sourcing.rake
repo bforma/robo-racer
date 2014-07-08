@@ -1,15 +1,15 @@
 namespace :es do
   desc "Drops all recorded events and the current view model"
   task drop: ["environment", "db:mongoid:purge"] do
-    gateway = RoboRacer::Gateway.build
+    gateway = GatewayBuilder.build
     gateway.event_store.clear
   end
 
   desc "Drops the current view model and replays all recorded events to build a new one"
   task replay: ["environment", "db:mongoid:purge"] do
     started_at = Time.current
-    gateway = RoboRacer::Gateway.build(
-      event_listeners: RoboRacer::Gateway::REPLAYABLE
+    gateway = GatewayBuilder.build(
+      event_listeners: GatewayBuilder::REPLAYABLE
     )
     n = 0
     gateway.event_store.each_event do |event|

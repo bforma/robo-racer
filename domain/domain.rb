@@ -12,6 +12,6 @@ require_all 'domain/entities'
 require_all 'domain/aggregates'
 require_all 'domain/command_handlers'
 
-require_relative 'configuration'
+require_relative 'gateway'
 require_relative 'default_command_callback'
 

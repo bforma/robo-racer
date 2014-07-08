@@ -1,5 +1,5 @@
 RSpec.shared_context "Given events", type: %r(controller|feature) do
-  let!(:gateway) { RoboRacer::Gateway.build }
+  let!(:gateway) { GatewayBuilder.build }
   let(:event_store) { gateway.event_store }
   let(:event_bus) { gateway.event_bus }
 

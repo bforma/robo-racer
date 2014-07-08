@@ -14,7 +14,7 @@ private
   end
 
   def gateway
-    @gateway ||= RoboRacer::Gateway.build
+    @gateway ||= GatewayBuilder.build
   end
 end
 
