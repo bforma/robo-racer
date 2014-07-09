@@ -4,6 +4,7 @@ RoboRacer.Collections.Hand = Backbone.Collection.extend({
   initialize: function() {
     this._meta = {};
 
+    RoboRacer.App.socket.on('game_round_started_event', this.clearHand, this);
     RoboRacer.App.socket.on('instruction_card_dealt_event', this.instructionCardDealt, this);
   },
 
@@ -13,6 +14,10 @@ RoboRacer.Collections.Hand = Backbone.Collection.extend({
     } else {
       this._meta[prop] = value;
     }
+  },
+
+  clearHand: function() {
+    this.reset();
   },
 
   instructionCardDealt: function(event) {

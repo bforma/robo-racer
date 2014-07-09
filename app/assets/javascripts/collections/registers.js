@@ -5,6 +5,14 @@ RoboRacer.Collections.Registers = Backbone.Collection.extend({
     _.range(5).forEach(function() {
       this.add(new RoboRacer.Models.Register());
     }.bind(this));
+
+    RoboRacer.App.socket.on('game_round_started_event', this.clearRegisters, this);
+  },
+
+  clearRegisters: function() {
+    _.each(this.models, function(register) {
+      register.set('instruction_card', undefined);
+    });
   },
 
   program: function(index, card) {
