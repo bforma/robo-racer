@@ -16,7 +16,7 @@ RoboRacer.Views.Robot = React.createBackboneClass({
       " x_" + this.getModel().get('x') +
       " y_" + this.getModel().get('y') +
       " " + this.COLORS[this.props.number] +
-      " face_180";
+      " face_" + this.getModel().get('facing');
 
     return (
       <div className={ className }></div>

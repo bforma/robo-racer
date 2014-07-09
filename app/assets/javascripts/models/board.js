@@ -7,7 +7,6 @@ RoboRacer.Models.Board = Backbone.Model.extend({
 
     RoboRacer.App.socket.on('spawn_placed_event', this.spawnPlaced, this);
     RoboRacer.App.socket.on('goal_placed_event', this.checkpointPlaced, this);
-    RoboRacer.App.socket.on('robot_spawned_event', this.robotSpawned, this);
   },
 
   spawnPlaced: function(event) {
@@ -21,14 +20,5 @@ RoboRacer.Models.Board = Backbone.Model.extend({
 
   checkpointPlaced: function(event) {
     this.get('checkpoints').add(new RoboRacer.Models.Checkpoint(event.goal));
-  },
-
-  robotSpawned: function(event) {
-    this.get('robots').add(new RoboRacer.Models.Robot({
-      player_id: event.player_id,
-      x: event.robot.x,
-      y: event.robot.y,
-      facing: event.robot.facing
-    }));
   }
 });
