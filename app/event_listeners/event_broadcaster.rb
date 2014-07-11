@@ -8,7 +8,9 @@ class EventBroadcaster < BaseEventListener
     SpawnPlacedEvent,
     GoalPlacedEvent,
     RobotSpawnedEvent,
-    InstructionCardDealtEvent,
+    InstructionCardDealtEvent, # TODO filter cards
+    RobotProgrammedEvent, # TODO filter cards
+    AllRobotsProgrammedEvent,
     RobotMovedEvent,
     RobotRotatedEvent,
     RobotPushedEvent,

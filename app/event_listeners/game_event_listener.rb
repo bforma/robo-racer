@@ -67,19 +67,34 @@ class GameEventListener < BaseEventListener
     game = Projections::Mongo::Game.find(event.id)
     game.update_attributes!(
       round_number: event.game_round.number,
-      hands: []
+      hands: [],
+      programs: []
     )
   end
 
   route InstructionCardDealtEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
     hand = game.hands.where(player_id: event.player_id).first_or_initialize
-    hand.instruction_cards.push(Projections::Mongo::InstructionCard.new(
-      action: event.instruction_card.action,
-      amount: event.instruction_card.amount,
-      priority: event.instruction_card.priority
-    ))
+    hand.instruction_cards.push(to_model(event.instruction_card))
     hand.save!
+  end
+
+  route RobotProgrammedEvent do |event|
+    game = Projections::Mongo::Game.find(event.id)
+    instruction_cards = to_models(event.instruction_cards)
+
+    # TODO wrap in transaction
+    hand = game.hands.where(player_id: event.player_id).first
+    hand.instruction_cards.
+      any_in(priority: event.instruction_cards.map(&:priority)).
+      delete_all
+    hand.save!
+
+    program = game.programs.where(player_id: event.player_id).first_or_initialize
+    instruction_cards.each do |instruction_card|
+      program.registers.build(instruction_card: instruction_card)
+    end
+    program.save!
   end
 
   move_robot = Proc.new do |event|

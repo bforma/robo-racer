@@ -174,6 +174,14 @@ describe GameEventListener do
     end
   end
 
+  describe RobotProgrammedEvent do
+    let(:event) { build(:robot_programmed_event, id: game_id) }
+    let!(:game) { started_game }
+
+    specify { expect { handle_event }.to change { game.reload.programs.first } }
+    specify { expect { handle_event }.to change { game.reload.hands.first.instruction_cards } }
+  end
+
   context "given a board with a robot" do
     let(:game) { create(:game, _id: game_id, board: board) }
     let(:board) { build(:board, robots: [robot]) }
