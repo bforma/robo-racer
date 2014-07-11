@@ -1,0 +1,54 @@
+.mod-opponents
+  > li
+    @extend %clearfix
+    position: relative
+    height: 100px
+    padding: 15px
+    margin-bottom: 20px
+    border-bottom: $border
+    color: rgba($blue,.8)
+    background: rgba(#fff,.2)
+
+    &:last-child
+      margin-bottom: 0
+      border-bottom: none
+
+  .status
+    position: absolute
+    top: 10px
+    right: 10px
+    width: 20px
+    height: 20px
+
+    &.pending
+      background: transparent image-url("loading.gif") no-repeat center
+      background-size: 100%
+
+    &.programmed
+      background: transparent image-url("tick.png") no-repeat center
+      background-size: 110%
+
+  .slots
+    width: 100%
+    float: left
+
+  .slot
+    width: 20%
+    float: left
+
+    [class^="card"]
+      display: block
+      float: left
+      width: 90%
+      height: 30px
+      text-align: center
+      line-height: 30px
+      border: $border
+      border-radius: 3px
+
+    [class^="card_M"]
+      background: rgba(green,.2)
+
+    [class^="card_R"]
+      background: rgba(blue,.2)
+

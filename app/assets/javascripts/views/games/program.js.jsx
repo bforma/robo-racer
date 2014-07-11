@@ -12,14 +12,14 @@ RoboRacer.Views.Program = React.createBackboneClass({
     });
 
     return (
-      <div className="program">
+      <div className="mod-program">
         { registers }
 
         <button
-          className="button"
+          className="button-program-robot"
           disabled={ !enabled }
           onClick={ this.props.onProgramRobotClick }>
-          Program robot
+          GO!
         </button>
       </div>
     );

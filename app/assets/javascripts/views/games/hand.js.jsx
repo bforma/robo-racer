@@ -20,7 +20,7 @@ RoboRacer.Views.Hand = React.createBackboneClass({
 
   render: function() {
     return (
-      <ul className="hand">
+      <ul className="mod-hand">
         { this.getCollection().map(this.createInstructionCard) }
       </ul>
     );

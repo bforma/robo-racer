@@ -8,12 +8,20 @@
     = csrf_meta_tags
 
   %body
-    = flash[:notice] if flash[:notice]
+    .mod-header
+      %h1 8oo8's Robo Racer
 
-    - if current_player
-      = current_player.name
-      = link_to "Logout", destroy_player_session_path, method: :delete
-    - else
-      = link_to "Login", new_player_session_path
+      - if current_player
+        %span.player-name= "current player: #{current_player.name}"
+        = link_to destroy_player_session_path, method: :delete do
+          log out
+          %span.icon.fa.fa-sign-out
+
+      - else
+        = link_to new_player_session_path do
+          log in
+          %span.icon.fa.fa-sign-in
+
+    = flash[:notice] if flash[:notice]
 
     = yield
