@@ -1,87 +1,57 @@
-$size: 20px
-$max_x: 9
-$max_y: 9
-
-@mixin block($l,$w,$h,$lo:0,$wo:0,$ho:0)
-  height: $l
-  width: $w
-  -webkit-transform: translateZ(($h + $ho))
-  -webkit-transform-style: preserve-3d
-  -webkit-transition: .25s
-
-  &,
-  &:before,
-  &:after
-    position: absolute
-    background-color: #999
-    content: ''
-
-  &:before // right facing
-    height: $l
-    width: $h
-    -webkit-transform: rotateY(90deg) translateX(($w + $wo))
-    -webkit-transform-origin: (($w+$wo)/$h * 100%) 0
-
-  &:after // left facing
-    height: $h
-    width: $w
-    -webkit-transform: rotateX(-90deg) translateY(($l + $lo))
-    -webkit-transform-origin: (($l+$lo)/($w+$wo) * 100%) (($l+$lo)/$h * 100%)
-
 .mod-board
-  position: absolute
-  top: 50%
-  left: 50%
-  margin: -7.5em
-  padding: $size
-  height: ($max_y * $size)
-  width: ($max_x * $size)
-
-  background-color: #000
-  -webkit-transform: rotateX(45deg) rotateZ(45deg)
+  position: relative
+  top: 250px
+  left: 150px
+  max-height: 100%
+  max-width: 100%
+  -webkit-transform: rotateX(60deg) rotateZ(45deg)
   -webkit-transform-style: preserve-3d
-  -webkit-transition: .25s
+
+  %relative
+    position: relative
 
   @for $position from 0 through $max_x
     .x#{$position}
+      @extend %relative
       left: ($position * $size)
 
   @for $position from 0 through $max_y
     .y#{$position}
+      @extend %relative
       top: ($position * $size)
 
-  .floor
-    @include block(20px, 20px, 5px)
-    box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
-    border-radius: 1px
+  floor
+    position: absolute
+    display: inline
+    @include block($tile, $tile, $floor)
+    @include block_color(rgba(0, 228, 228, 1), 10%)
 
-    &:before
-      box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2)
+    .top
+      border-left: $tile/2 solid transparent
+      border-right: $tile/2 solid transparent
+      border-top: $robot-size solid grey
 
-    &:after
-      box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2)
+  wall-top, wall-left
+    @include block_color(white, 10%)
 
-  .block
-    @include block(20px, 20px, 20px)
+  wall-top
+    @include block($wall, $size - $wall, $height)
+    top: - $wall
 
-    &,
-    &:after,
-    &:before
-      background: green
-      box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
+  wall-left
+    @include block($size - $wall, $wall, $height)
+    left: - $wall
 
-  .lwall
-    @include block(20px, 5px, 10px,0,10px,5px)
-    &,
-    &:after,
-    &:before
-      background: blue
-      box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
+  goal
+    @include block($tile, $tile, $floor * 2)
+    @include block_color(rgba(255, 255, 255, 0.3), 0)
 
-  .twall
-    @include block(5px, 20px, 10px,10px,0,5px)
-    &,
-    &:after,
-    &:before
-      background: blue
-      box-shadow: inset 0 0 0 2px hsla(0,0%,0%,.2)
+    -webkit-transform: translateZ($floor * 3)
+    box-shadow: inset 0 0 0 $tile/6 rgba(255, 255, 255, 0.4)
+
+    &.current
+      @include block_color(rgba(0, 255, 0, 0.7), 0)
+
+  @for $i from 0 through $goals
+    .goal#{$i}
+      @extend %goal

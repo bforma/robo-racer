@@ -1,0 +1,15 @@
+robot
+  @include block($robot-size, $robot-size, $robot-size)
+  @include block_color(rgb(228, 0, 0), 2px)
+  position: absolute
+  top: ($tile - $robot-size)/2
+  left: ($tile - $robot-size)/2
+  -webkit-transform: translateZ($robot-size + $floor)
+
+  .head
+    position: absolute
+    height: 0px
+    width: 0px
+    border-left: $robot-size/2 solid transparent
+    border-right: $robot-size/2 solid transparent
+    border-top: $robot-size solid blue

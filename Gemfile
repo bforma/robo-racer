@@ -15,6 +15,7 @@ gem 'slim'
 
 # frontend
 gem 'sass-rails'
+gem 'compass-rails'
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
