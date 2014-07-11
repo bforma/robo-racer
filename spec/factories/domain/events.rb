@@ -62,13 +62,19 @@ FactoryGirl.define do
     instruction_card { InstructionCard.u_turn(10) }
   end
 
+  factory :instruction_card_discarded_event do
+    id
+    instruction_card { InstructionCard.u_turn(10) }
+  end
+
   factory :all_robots_programmed_event do
     id
   end
 
-  factory :instruction_card_discarded_event do
+  factory :robot_programmed_event do
     id
-    instruction_card { InstructionCard.u_turn(10) }
+    player_id "bob"
+    instruction_cards { [InstructionCard.u_turn(10)] }
   end
 
   factory :robot_moved_event do

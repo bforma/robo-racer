@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     trait :started do
       board { build(:board, :round_1) }
-      hands { [build(:hand, :with_card)] }
+      hands { [build(:hand, :with_cards)] }
     end
   end
 end

@@ -209,6 +209,19 @@ describe BoardEntity, type: :entities do
             RobotDiedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN))
           )
         end
+
+        context "and it moved and died" do
+          before do
+            given_events(
+              RobotMovedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN)),
+              RobotDiedEvent.new(id, steven, GameUnit.new(1, 5, GameUnit::DOWN))
+            )
+          end
+
+          it "fizzles" do
+            expect_no_events
+          end
+        end
       end
     end
 

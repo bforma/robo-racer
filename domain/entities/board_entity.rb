@@ -38,10 +38,12 @@ class BoardEntity < BaseEntity
   end
 
   def instruct_robot(player_id, instruction_card)
-    if instruction_card.move?
-      move_robot(player_id, instruction_card)
-    elsif instruction_card.rotate?
-      rotate_robot(player_id, instruction_card)
+    if @robots[player_id]
+      if instruction_card.move?
+        move_robot(player_id, instruction_card)
+      elsif instruction_card.rotate?
+        rotate_robot(player_id, instruction_card)
+      end
     end
   end
 
