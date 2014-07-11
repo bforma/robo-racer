@@ -75,7 +75,7 @@ class GameEventListener < BaseEventListener
   route InstructionCardDealtEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
     hand = game.hands.where(player_id: event.player_id).first_or_initialize
-    hand.instruction_cards.push(to_model(event.instruction_card))
+    hand.instruction_cards.build(to_model(event.instruction_card).attributes)
     hand.save!
   end
 
@@ -92,7 +92,7 @@ class GameEventListener < BaseEventListener
 
     program = game.programs.where(player_id: event.player_id).first_or_initialize
     instruction_cards.each do |instruction_card|
-      program.registers.build(instruction_card: instruction_card)
+      program.instruction_cards.build(instruction_card.attributes)
     end
     program.save!
   end

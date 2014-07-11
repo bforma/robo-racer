@@ -7,7 +7,7 @@ module Projections
 
       field :player_id, type: String
 
-      embeds_many :registers, class_name: 'Projections::Mongo::Register'
+      embeds_many :instruction_cards, class_name: 'Projections::Mongo::InstructionCard'
     end
   end
 end
