@@ -43,8 +43,6 @@ RSpec.configure do |config|
   config.before { DatabaseCleaner.start }
   config.after { DatabaseCleaner.clean }
 
-  Capybara.javascript_driver = :webkit
-
   config.before(:each) do
     Sidekiq::Worker.clear_all
   end
@@ -58,6 +56,13 @@ RSpec.configure do |config|
       Sidekiq::Testing.inline!(&example)
     else
       Sidekiq::Testing.fake!(&example)
+    end
+  end
+
+  Capybara.javascript_driver = :webkit
+  config.after :each, :js do
+    page.driver.error_messages.each do |message|
+      puts message
     end
   end
 
