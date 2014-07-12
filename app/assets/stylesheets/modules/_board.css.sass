@@ -30,11 +30,12 @@
     transition: all 1s
     -webkit-transition: all 1s
 
-    @each $position in 0,1,2,3,4,5,6,7,8,9,10,11
+    $positions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+    @each $position in $positions
       &.x_#{$position}
         left: ($position * 40) * 1px
 
-    @each $position in 0,1,2,3,4,5,6,7,8,9,10,11
+    @each $position in $positions
       &.y_#{$position}
         top: ($position * 40) * 1px
 
