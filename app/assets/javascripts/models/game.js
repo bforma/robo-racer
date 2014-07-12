@@ -40,9 +40,9 @@ RoboRacer.Models.Game = Backbone.Model.extend({
 
   parseOpponents: function(model) {
     var opponents = new RoboRacer.Collections.Opponents();
-    opponents.add(_.map(model.player_ids, function(playerId) {
-      return {_id: playerId};
-    }));
+    _.each(model.player_ids, function(playerId) {
+      opponents.addOpponent(playerId);
+    });
     return opponents;
   },
 
@@ -112,7 +112,7 @@ RoboRacer.Models.Game = Backbone.Model.extend({
 
   playerJoinedGame: function(event) {
     this.get('player_ids').push(event.player_id);
-    this.get('opponents').add({_id: event.player_id});
+    this.get('opponents').addOpponent(event.player_id);
     this.trigger('change:player_ids');
   },
 

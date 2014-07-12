@@ -13,6 +13,10 @@
       margin-bottom: 0
       border-bottom: none
 
+    @each $color in $player_colors
+      &.#{$color}
+        color: $color
+
   .status
     position: absolute
     top: 10px
