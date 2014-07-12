@@ -1,13 +1,14 @@
 .mod-opponents
   > li
     @extend %clearfix
-    position: relative
-    height: 100px
     padding: 15px
     margin-bottom: 20px
     border-bottom: $border
-    color: rgba($blue,.8)
     background: rgba(#fff,.2)
+    font-size: 120%
+
+    &:before
+      display: inline-block
 
     &:last-child
       margin-bottom: 0
