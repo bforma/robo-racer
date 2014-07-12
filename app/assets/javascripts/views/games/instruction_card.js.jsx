@@ -2,10 +2,6 @@
 RoboRacer.Views.InstructionCard = React.createBackboneClass({
   render: function() {
     var card = this.getModel();
-    var text = card.get('action') +
-      ' ' + card.get('amount') +
-      ' (' + card.get('priority') + ')';
-
     var draggable = this.props.onDragStart !== undefined;
 
     return (
