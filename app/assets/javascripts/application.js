@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require lodash
 //= require backbone
-//= require react
+//= require react-with-addons
 //= require react.backbone
 //= require socket.io
 

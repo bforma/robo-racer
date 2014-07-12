@@ -19,7 +19,7 @@ gem 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml'
-gem 'react-rails'
+gem 'react-rails', github: 'reactjs/react-rails'
 gem 'font-awesome-rails'
 
 # event sourcing & CQRS

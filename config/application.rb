@@ -29,5 +29,8 @@ module RoboRacer
 
     # Autoload some extra directories
     config.autoload_paths += %W(#{config.root}/lib)
+
+    # React config
+    config.react.addons = true
   end
 end

@@ -15,6 +15,16 @@ GIT
       equalizer
       thread_safe
 
+GIT
+  remote: git://github.com/reactjs/react-rails.git
+  revision: e440628071bf0ae99b687d3c32795f049ecd3f2c
+  specs:
+    react-rails (1.0.0.pre)
+      connection_pool
+      execjs
+      rails (>= 3.1)
+      react-source (= 0.10.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -163,10 +173,6 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.2)
-    react-rails (0.10.0.0)
-      execjs
-      rails (>= 3.1)
-      react-source (= 0.10.0)
     react-source (0.10.0)
     redis (3.1.0)
     redis-namespace (1.5.0)
@@ -278,7 +284,7 @@ DEPENDENCIES
   mongoid
   puma
   rails
-  react-rails
+  react-rails!
   redis
   require_all
   rspec-its
