@@ -71,8 +71,9 @@ RoboRacer.Views.Game = React.createBackboneClass({
   },
 
   leaveGame: function() {
-    this.getModel().leave();
-    document.location.href = "/";
+    this.getModel().leave({success: function() {
+      document.location.href = "/";
+    }});
   },
 
   startGame: function() {

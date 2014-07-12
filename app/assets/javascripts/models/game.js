@@ -83,8 +83,8 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     this.execute('join');
   },
 
-  leave: function() {
-    this.execute('leave');
+  leave: function(options) {
+    this.execute('leave', options);
   },
 
   start: function() {
@@ -99,12 +99,14 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     this.execute('program_robot', {instruction_cards: instructionCards});
   },
 
-  execute: function(command, data) {
+  execute: function(command, data, options) {
+    options = options || {};
     data = data || {};
     $.ajax({
       url: this.url() + '/' + command,
       type: 'PUT',
-      data: data
+      data: data,
+      success: options.success
     });
   },
 
