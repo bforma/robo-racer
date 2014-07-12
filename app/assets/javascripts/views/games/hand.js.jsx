@@ -1,10 +1,9 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Hand = React.createBackboneClass({
   createInstructionCard: function(instructionCard, n) {
-    return <li>
+    return <li key={n}>
       {
         new RoboRacer.Views.InstructionCard({
-          key: n,
           model: instructionCard,
           onDragStart: function(event) {
             event.dataTransfer.setData(
