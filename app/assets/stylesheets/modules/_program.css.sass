@@ -45,7 +45,7 @@
     background: linear-gradient($blue, darken($blue, 10%))
     border: none
     border-radius: 50%
-    box-shadow: 0 5px 0 0 darken($blue,25%)
+    box-shadow: 0 5px 0 0 darken($blue, 25%)
     cursor: pointer
     vertical-align: bottom
     -webkit-appearance: none
@@ -54,10 +54,12 @@
     &:focus
       background: darken($blue, 10%)
 
-    &:active
+    &:active:enabled
       top: -13px
       background: darken($blue, 15%)
       box-shadow: none
 
-
-
+    &:disabled
+      cursor: not-allowed
+      background: $grey
+      box-shadow: 0 5px 0 0 darken($grey, 25%)
