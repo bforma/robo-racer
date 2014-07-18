@@ -1,7 +1,5 @@
 .mod-board
   position: relative
-  top: 250px
-  left: 150px
   max-height: 100%
   max-width: 100%
   -webkit-transform: rotateX(60deg) rotateZ(45deg)
@@ -24,18 +22,18 @@
     position: absolute
     display: inline
     @include block($tile, $tile, $floor)
-    @include block_color(rgba(0, 228, 228, 1), 10%)
+    @include block_color(rgba(0, 230, 230, 1), 10%)
 
-  wall-top, wall-left
+  wall
     @include block_color(white, 10%)
 
-  wall-top
-    @include block($wall, $size - $wall, $height)
-    top: - $wall
+    &[top]
+      @include block($wall, $size - $wall, $height)
+      top: - $wall
 
-  wall-left
-    @include block($size - $wall, $wall, $height)
-    left: - $wall
+    &[left]
+      @include block($size - $wall, $wall, $height)
+      left: - $wall
 
   goal
     @include block($tile, $tile, $floor * 2)
