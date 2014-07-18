@@ -71,6 +71,10 @@ class GameEventListener < BaseEventListener
     event.hands.each do |player_id, instruction_cards|
       player = game.players.where(player_id: player_id).first
       player.hand.instruction_cards = instruction_cards
+    end
+
+    event.programs.each do |player_id, instruction_cards|
+      player = game.players.where(player_id: player_id).first
       player.program.instruction_cards = instruction_cards
     end
 
