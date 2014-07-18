@@ -21,7 +21,7 @@ RoboRacer.Socket = Class.extend({
 
     connection.on("event", function(event) {
       event = JSON.parse(event);
-      console.log("Received " + event.type);
+      console.log("Received " + event.type, event.payload);
       this.trigger(event.type, event.payload);
     }.bind(this));
   }
