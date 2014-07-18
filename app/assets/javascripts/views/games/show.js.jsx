@@ -1,15 +1,15 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Game = React.createBackboneClass({
-  changeOptions: "change change:player_ids",
+  changeOptions: "change change:players",
 
   render: function() {
     var game = this.getModel();
 
     if(game.lobbying()) {
       if (game.currentPlayerInGame()) {
-        var leaveGameButton = RoboRacer.Views.LeaveGame({onClick: this.leaveGame});
+        var leaveGameButton = <button className="button" onClick={this.leaveGame}>Leave game</button>
       } else {
-        var joinGameButton = RoboRacer.Views.JoinGame({onClick: this.joinGame});
+        var joinGameButton = <button className="button" onClick={this.joinGame}>Join game</button>
       }
 
       if (game.currentPlayerIsHost()) {
@@ -20,11 +20,11 @@ RoboRacer.Views.Game = React.createBackboneClass({
       var round = "Round " + game.get('round_number');
       var board = RoboRacer.Views.Board({model: game.get('board')});
       var hand = RoboRacer.Views.Hand({
-        collection: game.get('hand'),
+        collection: game.currentPlayer().get('hand'),
         onInstructionCardInHandClick: this.onInstructionCardInHandClick
       });
       var program = RoboRacer.Views.Program({
-        collection: game.get('registers'),
+        collection: game.currentPlayer().get('program'),
         onCardDrop: this.onCardDrop,
         onProgramRobotClick: this.programRobot,
         onInstructionCardInRegisterClick: this.onInstructionCardInRegisterClick
@@ -43,7 +43,7 @@ RoboRacer.Views.Game = React.createBackboneClass({
               <p>Game is { game.get('state') }</p>
               <p>{ round }</p>
             </div>
-            { RoboRacer.Views.Opponents({collection: game.get('opponents')}) }
+            { RoboRacer.Views.Players({collection: game.get('players')}) }
           </div>
         </div>
 

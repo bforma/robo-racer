@@ -23,24 +23,24 @@ describe GameEventListener do
     let(:event) { build(:player_joined_game_event, id: game_id) }
     let(:game) { create(:game, _id: game_id) }
 
-    specify do
-      expect { handle_event }.to change { game.reload.player_ids }.
-        from([]).
-        to([event.player_id])
+    it "adds the joined player" do
+      expect { handle_event }.to change { game.reload.players.count }.
+        from(0).
+        to(1)
     end
   end
 
   describe PlayerLeftGameEvent do
-    let(:joined_player_id) { new_uuid }
     let(:event) do
-      build(:player_left_game_event, id: game_id, player_id: joined_player_id)
+      build(:player_left_game_event, id: game_id, player_id: contestant.player_id)
     end
-    let(:game) { create(:game, _id: game_id, player_ids: [joined_player_id]) }
+    let(:contestant) { build(:contestant) }
+    let(:game) { create(:game, _id: game_id, players: [contestant]) }
 
-    specify do
-      expect { handle_event }.to change { game.reload.player_ids }.
-        from(game.player_ids).
-        to([])
+    it "removes the left player" do
+      expect { handle_event }.to change { game.reload.players.count }.
+       from(1).
+       to(0)
     end
   end
 
@@ -127,59 +127,60 @@ describe GameEventListener do
   end
 
   describe GameRoundStartedEvent do
-    let(:event) { build(:game_round_started_event, id: game_id) }
+    let!(:game) { create(:game, _id: game_id, players: [bob]) }
+    let(:bob) { build(:contestant, hand: hand, program: program) }
+    let(:hand) { build(:hand) }
+    let(:program) { build(:program) }
+    let(:event) { build(:game_round_started_event, id: game.id) }
 
-    context "given a started game" do
-      let!(:game) { starting_game }
-
-      specify do
-        expect { handle_event }.to change { game.reload.round_number }.to(1)
-      end
+    it "updates the game round number" do
+      expect { handle_event }.to change { game.reload.round_number }.to(1)
     end
 
     context "given a previous round" do
-      let!(:game) { started_game }
+      let(:hand) { build(:hand, :with_cards) }
+      let(:program) { build(:program, :with_cards) }
 
-      it "empties all hands" do
-        expect { handle_event }.to change { game.reload.hands }.to([])
+      it "clears all hands" do
+        expect { handle_event }.to change { hand.reload.instruction_cards }.
+          from(hand.instruction_cards).
+          to([])
+      end
+
+      it "clears all programs" do
+        expect { handle_event }.to change { program.reload.instruction_cards }.
+          from(program.instruction_cards).
+          to([])
       end
     end
   end
 
   describe InstructionCardDealtEvent do
-    let!(:game) { starting_game }
-    let(:event) { build(:instruction_card_dealt_event, id: game_id) }
+    let!(:game) { create(:game, _id: game_id, players: [bob]) }
+    let(:bob) { build(:contestant, hand: hand) }
+    let(:hand) { build(:hand) }
+    let(:event) { build(:instruction_card_dealt_event, id: game.id) }
 
-    specify do
-      expect { handle_event }.to change { game.reload.hands }
+    it "adds the instruction card to the player's hand" do
+      expect { handle_event }.to change { hand.reload.instruction_cards.count }.
+        from(0).to(1)
     end
 
-    context "attributes" do
-      subject { game.reload.hands.last }
+    context "added instruction card" do
       before { handle_event }
+      subject { hand.reload.instruction_cards.last }
 
-      its(:player_id) { is_expected.to eq(event.player_id) }
-
-      context "instruction card" do
-        subject { game.reload.hands.last.instruction_cards.last }
-
-        its(:action) { is_expected.to eq(InstructionCard::ROTATE) }
-        its(:amount) { is_expected.to eq(InstructionCard::U_TURN) }
-        its(:priority) { is_expected.to eq(10) }
-      end
-    end
-
-    context "given a hand with cards" do
-      pending
+      its(:action) { is_expected.to eq(InstructionCard::ROTATE) }
+      its(:amount) { is_expected.to eq(InstructionCard::U_TURN) }
+      its(:priority) { is_expected.to eq(10) }
     end
   end
 
   describe RobotProgrammedEvent do
-    let!(:game) do
-      create(:game, _id: game_id, hands: [hand], programs: [program])
-    end
-    let(:hand) { build(:hand, :with_cards, player_id: "bob") }
-    let(:program) { build(:program, player_id: "bob") }
+    let!(:game) { create(:game, _id: game_id, players: [bob]) }
+    let(:bob) { build(:contestant, hand: hand, program: program) }
+    let(:hand) { build(:hand, :with_cards) }
+    let(:program) { build(:program) }
     let(:event) { build(:robot_programmed_event, id: game._id) }
 
     it "adds the instruction cards to the player's program" do

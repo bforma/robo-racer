@@ -45,7 +45,7 @@ class GameAggregate < BaseAggregate
   def program_robot(player_id, instruction_cards)
     raise PlayerNotInGameError unless @player_ids.include?(player_id)
     raise GameNotRunningError unless game_running?
-    raise RobotAlreadyProgrammedError if @robot_programs.key?(player_id)
+    raise RobotAlreadyProgrammedError if @robot_programs[player_id].size != 0
 
     hand = @hands[player_id]
     instruction_cards.each do |instruction_card|
@@ -54,7 +54,7 @@ class GameAggregate < BaseAggregate
 
     apply RobotProgrammedEvent.new(id, player_id, instruction_cards)
 
-    if @robot_programs.size == @player_ids.size
+    if @robot_programs.all? { |_, program| program.size != 0 }
       apply AllRobotsProgrammedEvent.new(id)
     end
   end
@@ -87,7 +87,17 @@ class GameAggregate < BaseAggregate
 private
 
   def start_new_round
-    apply GameRoundStartedEvent.new(id, GameRound.new(@game_round_number + 1))
+    hands = programs = @player_ids.reduce({}) do |memo, player_id|
+      memo[player_id] = []
+      memo
+    end
+
+    apply GameRoundStartedEvent.new(
+      id,
+      GameRound.new(@game_round_number + 1),
+      hands,
+      programs
+    )
 
     dealer = Dealer.new(@instruction_deck, @player_ids)
     dealer.deal(MAX_HAND_SIZE)
@@ -134,6 +144,10 @@ private
     @state == GameState::RUNNING
   end
 
+  def deep_copy(object)
+    Marshal.load(Marshal.dump(object))
+  end
+
   route_event GameCreatedEvent do |event|
     @id = event.id
     @state = event.state
@@ -159,14 +173,14 @@ private
   end
 
   route_event GameRoundStartedEvent do |event|
-    @hands = Hash.new
-    @robot_programs = Hash.new
+    @hands = deep_copy(event.hands)
+    @robot_programs = deep_copy(event.programs)
     @registers = Array.new
     @game_round_number = event.game_round.number
   end
 
   route_event InstructionCardDealtEvent do |event|
-    @hands[event.player_id] ||= Array.new
+    # @hands[event.player_id] ||= Array.new
     @hands[event.player_id] << event.instruction_card
   end
 

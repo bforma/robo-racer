@@ -4,9 +4,7 @@ module Projections
       include Mongoid::Document
 
       embeds_one :board, class_name: 'Projections::Mongo::Board'
-
-      embeds_many :hands, class_name: 'Projections::Mongo::Hand'
-      embeds_many :programs, class_name: 'Projections::Mongo::Program'
+      embeds_many :players, class_name: 'Projections::Mongo::Contestant'
 
       field :state, type: String
       field :host_id, type: String

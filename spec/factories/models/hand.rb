@@ -1,7 +1,5 @@
 FactoryGirl.define do
   factory :hand, class: Projections::Mongo::Hand do
-    player_id "bob"
-
     trait :with_cards do
       instruction_cards do
         [

@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
-RoboRacer.Views.Opponent = React.createBackboneClass({
+RoboRacer.Views.Player = React.createBackboneClass({
   render: function() {
     var className = "opponent " +
-      RoboRacer.Collections.Opponents.color(this.getModel().get('_id'));
+      RoboRacer.Collections.Players.color(this.getModel().get('_id'));
 
     return (
       <li className={ className }>

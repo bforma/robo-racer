@@ -3,15 +3,13 @@ GameCreatedEvent = Struct.new(:id, :state, :host_id)
 PlayerJoinedGameEvent = Struct.new(:id, :player_id)
 PlayerLeftGameEvent = Struct.new(:id, :player_id)
 
-GameStartedEvent = Struct.new(
-  :id, :state, :instruction_deck, :tiles
-)
+GameStartedEvent = Struct.new(:id, :state, :instruction_deck, :tiles)
 SpawnPlacedEvent = Struct.new(:id, :player_id, :spawn)
 SpawnReplacedEvent = Struct.new(:id, :player_id, :spawn)
 GoalPlacedEvent = Struct.new(:id, :goal)
 RobotSpawnedEvent = Struct.new(:id, :player_id, :robot)
 
-GameRoundStartedEvent = Struct.new(:id, :game_round)
+GameRoundStartedEvent = Struct.new(:id, :game_round, :hands, :programs)
 
 InstructionCardDealtEvent = Struct.new(:id, :player_id, :instruction_card)
 InstructionCardDiscardedEvent = Struct.new(:id, :instruction_card)

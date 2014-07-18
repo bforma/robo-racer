@@ -61,7 +61,9 @@ describe GameCommandHandler, type: :command_handlers do
             GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
             GoalPlacedEvent.new(id, Goal.new(10, 7, 2)),
             RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-            GameRoundStartedEvent.new(id, GameRound.new(1)),
+            GameRoundStartedEvent.new(
+              id, GameRound.new(1), {'bob' => []}, {'bob' => []}
+            ),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
@@ -200,7 +202,9 @@ describe GameCommandHandler, type: :command_handlers do
             InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(70)),
             InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(90)),
             InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(110)),
-            GameRoundStartedEvent.new(id, GameRound.new(2)),
+            GameRoundStartedEvent.new(
+              id, GameRound.new(2), {'bob' => []}, {'bob' => []}
+            ),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(130)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(150)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(170)),
@@ -239,7 +243,9 @@ describe GameCommandHandler, type: :command_handlers do
             SpawnPlacedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
             GoalPlacedEvent.new(id, Goal.new(0, 0, 1)),
             RobotSpawnedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
-            GameRoundStartedEvent.new(id, GameRound.new(1)),
+            GameRoundStartedEvent.new(
+              id, GameRound.new(1), {'bob' => []}, {'bob' => []}
+            ),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
             InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),

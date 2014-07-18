@@ -54,6 +54,8 @@ FactoryGirl.define do
   factory :game_round_started_event do
     id
     game_round { GameRound.new(1) }
+    hands { {"bob" => []} }
+    programs { {"bob" => []} }
   end
 
   factory :instruction_card_dealt_event do

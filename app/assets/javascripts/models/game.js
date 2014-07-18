@@ -4,10 +4,7 @@ RoboRacer.Models.Game = Backbone.Model.extend({
 
   initialize: function() {
     this.set('board', new RoboRacer.Models.Board());
-    var hand = new RoboRacer.Collections.Hand();
-    hand.meta('current_player_id', this.get('current_player_id'));
-    this.set('hand', hand);
-    this.set('registers', new RoboRacer.Collections.Registers());
+    this.set('players', new RoboRacer.Collections.Players());
 
     RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
     RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
@@ -21,9 +18,8 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     console.log("parse", model);
 
     return _.merge(model, {
-      opponents: this.parseOpponents(model),
+      players: this.parsePlayers(model),
       board: this.parseBoard(model),
-      hand: this.parseHand(model)
     });
   },
 
@@ -38,31 +34,37 @@ RoboRacer.Models.Game = Backbone.Model.extend({
     return board;
   },
 
-  parseOpponents: function(model) {
-    var opponents = new RoboRacer.Collections.Opponents();
-    _.each(model.player_ids, function(playerId) {
-      opponents.addOpponent(playerId);
-    });
-    return opponents;
+  parsePlayers: function(model) {
+    var players = this.get('players');
+    _.each(model.players, function(player) {
+      players.add(this.parsePlayer(player));
+    }.bind(this));
+    return players;
   },
 
-  parseHand: function(model) {
-    var hand = this.get('hand');
-    if(model.hands) {
-      // TODO let the API return a projection of the current game from the
-      // player's perspective (ie. not exposing other player's hands etc.)
-      var currentPlayerHand = _.find(model.hands, function(hand) {
-        return hand.player_id === this.get('current_player_id');
-      }.bind(this));
-      hand.add(currentPlayerHand.instruction_cards);
-    }
-    return hand;
+  parsePlayer: function(model) {
+    var hand = new RoboRacer.Collections.Hand(model.hand.instruction_cards);
+    var program = new RoboRacer.Collections.Program();
+    _.each(model.program.instruction_cards, function(instructionCard, index) {
+      program.program(index, new RoboRacer.Models.InstructionCard(instructionCard));
+    });
+
+    var player = {
+      '_id': model.player_id,
+      'hand': hand,
+      'program': program
+    };
+    return player;
   },
 
   // queries
 
+  currentPlayer: function() {
+    return this.get('players').findWhere({'_id': this.get('current_player_id')});
+  },
+
   currentPlayerInGame: function() {
-    return _.include(this.get('player_ids'), this.get('current_player_id'));
+    return _.include(this.get('players').pluck("_id"), this.get('current_player_id'));
   },
 
   currentPlayerIsHost: function() {
@@ -92,9 +94,12 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   },
 
   programRobot: function() {
-    var instructionCards = _.map(this.get('registers').models, function(register) {
-      return register.get('instruction_card').attributes;
-    });
+    var instructionCards = _.map(
+      this.currentPlayer().get('program').models,
+      function(register) {
+        return register.get('instruction_card').attributes;
+      }
+    );
 
     this.execute('program_robot', {instruction_cards: instructionCards});
   },
@@ -113,19 +118,11 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   // events
 
   playerJoinedGame: function(event) {
-    this.get('player_ids').push(event.player_id);
-    this.get('opponents').addOpponent(event.player_id);
-    this.trigger('change:player_ids');
+    this.trigger("change:players");
   },
 
   playerLeftGame: function(event) {
-    _.remove(this.get('player_ids'), function(player_id) {
-      return player_id == event.player_id;
-    });
-    if (event.player_id !== this.get('current_player_id')) {
-      this.get('opponents').remove(event.player_id);
-    }
-    this.trigger('change:player_ids');
+    this.trigger("change:players");
   },
 
   gameStarted: function(event) {
@@ -147,31 +144,35 @@ RoboRacer.Models.Game = Backbone.Model.extend({
   // other
 
   programRegister: function(registerIndex, instructionCard) {
-    var cardInHand = this.get('hand').findWhere({
+    var hand = this.currentPlayer().get('hand');
+    var cardInHand = hand.findWhere({
       priority: instructionCard.get('priority')
     });
-    this.get('hand').remove(cardInHand);
+    hand.remove(cardInHand);
 
-    var replaced = this.get('registers').program(registerIndex, instructionCard);
+    var replaced = this.currentPlayer().get('program').program(
+      registerIndex,
+      instructionCard
+    );
     if (replaced) {
-      this.get('hand').add(replaced);
+      hand.add(replaced);
     }
   },
 
   programNextEmptyRegister: function(instructionCard) {
-    var registers = this.get('registers');
-    var nextEmpty = registers.find(function(register) {
+    var program = this.currentPlayer().get('program');
+    var nextEmpty = program.find(function(register) {
       return register.isEmpty();
     });
 
     if (nextEmpty) {
-      var index = registers.indexOf(nextEmpty);
+      var index = program.indexOf(nextEmpty);
       this.programRegister(index, instructionCard);
     }
   },
 
   unprogramRegister: function(registerIndex, instructionCard) {
-    this.get('registers').unprogram(registerIndex);
-    this.get('hand').add(instructionCard);
+    this.currentPlayer().get('program').unprogram(registerIndex);
+    this.currentPlayer().get('hand').add(instructionCard);
   }
 });

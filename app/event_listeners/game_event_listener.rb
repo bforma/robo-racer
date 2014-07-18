@@ -9,19 +9,20 @@ class GameEventListener < BaseEventListener
     Projections::Mongo::Game.create!(
       _id: event.id,
       state: event.state,
-      host_id: event.host_id,
-      player_ids: []
+      host_id: event.host_id
     )
   end
 
   route PlayerJoinedGameEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
-    game.push(player_ids: event.player_id)
+    game.players.build(player_id: event.player_id)
+    game.save!
   end
 
   route PlayerLeftGameEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
-    game.pull(player_ids: event.player_id)
+    game.players.where(player_id: event.player_id).delete_all
+    game.save!
   end
 
   route GameStartedEvent do |event|
@@ -65,36 +66,37 @@ class GameEventListener < BaseEventListener
 
   route GameRoundStartedEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
-    game.update_attributes!(
-      round_number: event.game_round.number,
-      hands: [],
-      programs: []
-    )
+    game.round_number = event.game_round.number
+
+    event.hands.each do |player_id, instruction_cards|
+      player = game.players.where(player_id: player_id).first
+      player.hand.instruction_cards = instruction_cards
+      player.program.instruction_cards = instruction_cards
+    end
+
+    game.save!
   end
 
   route InstructionCardDealtEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
-    hand = game.hands.where(player_id: event.player_id).first_or_initialize
-    hand.instruction_cards.build(to_model(event.instruction_card).attributes)
-    hand.save!
+    hand = game.players.where(player_id: event.player_id).first.hand
+    hand.instruction_cards.push(to_model(event.instruction_card))
   end
 
   route RobotProgrammedEvent do |event|
     game = Projections::Mongo::Game.find(event.id)
+    player = game.players.where(player_id: event.player_id).first
     instruction_cards = to_models(event.instruction_cards)
 
-    # TODO wrap in transaction
-    hand = game.hands.where(player_id: event.player_id).first
-    hand.instruction_cards.
-      any_in(priority: event.instruction_cards.map(&:priority)).
+    player.hand.instruction_cards.
+      any_in(priority: instruction_cards.map(&:priority)).
       delete_all
-    hand.save!
 
-    program = game.programs.where(player_id: event.player_id).first_or_initialize
     instruction_cards.each do |instruction_card|
-      program.instruction_cards.build(instruction_card.attributes)
+      player.program.instruction_cards = instruction_cards
     end
-    program.save!
+
+    game.save!
   end
 
   move_robot = Proc.new do |event|

@@ -8,6 +8,10 @@ FactoryGirl.define do
       player_ids { ["bob"] }
     end
 
+    trait :with_contestant do
+      contestants { build_list(:contestant, 1) }
+    end
+
     trait :starting do
       state { GameState::RUNNING }
       with_player

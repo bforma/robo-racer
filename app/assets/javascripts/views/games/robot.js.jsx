@@ -4,7 +4,7 @@ RoboRacer.Views.Robot = React.createBackboneClass({
     var className = "robot" +
       " x_" + this.getModel().get('x') +
       " y_" + this.getModel().get('y') +
-      " " + RoboRacer.Collections.Opponents.color(this.getModel().get('player_id')) +
+      " " + RoboRacer.Collections.Players.color(this.getModel().get('player_id')) +
       " face_" + this.getModel().get('facing');
 
     return (
