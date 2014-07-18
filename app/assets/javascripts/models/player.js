@@ -9,7 +9,7 @@ RoboRacer.Models.Player = Backbone.Model.extend({
 
     var program = this.get('program') || new RoboRacer.Collections.Program();
     program.meta('player', this);
-    this.set('program', program)
+    this.set('program', program);
   }
 
 });

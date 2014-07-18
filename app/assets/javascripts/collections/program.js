@@ -9,6 +9,7 @@ RoboRacer.Collections.Program = Backbone.Collection.extend({
     }.bind(this));
 
     RoboRacer.App.socket.on('game_round_started_event', this.gameRoundStarted, this);
+    RoboRacer.App.socket.on('robot_programmed_event', this.robotProgrammed, this);
   },
 
   meta: function(prop, value) {
@@ -24,6 +25,20 @@ RoboRacer.Collections.Program = Backbone.Collection.extend({
     _.each(this.models, function(register, index) {
       register.set('instruction_card', instructionCardsInProgram[index]);
     });
+
+    this.trigger("program:reset");
+  },
+
+  robotProgrammed: function(event) {
+    if(this.meta('player').get('_id') === event.player_id) {
+      _.each(this.models, function(register, index) {
+        register.set('instruction_card', new RoboRacer.Models.InstructionCard(
+          event.instruction_cards[index])
+        );
+      });
+
+      this.trigger("program:committed");
+    }
   },
 
   program: function(index, card) {
@@ -40,5 +55,11 @@ RoboRacer.Collections.Program = Backbone.Collection.extend({
 
   unprogram: function(index) {
     this.program(index, undefined);
+  },
+
+  isCommitted: function() {
+    return _.every(this.models, function(register) {
+      return register.get('instruction_card');
+    });
   }
 });
