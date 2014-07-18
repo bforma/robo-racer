@@ -1,5 +1,5 @@
 MongoDB:       mongod run --config /usr/local/etc/mongod.conf
 Redis:         redis-server ./config/redis.conf
-Rails:         rails s
+Rails:         ./bin/rails server
 Event-Pusher:  node ../event-pusher/index.js
-Sidekiq:       sidekiq -C config/sidekiq.yml
+Sidekiq:       ./bin/sidekiq -C config/sidekiq.yml
