@@ -11,8 +11,8 @@ RoboRacer.Views.Player = React.createBackboneClass({
 
     var playerStatus = React.addons.classSet({
       'status': true,
-      'pending': !this.props.program.isCommitted(),
-      'programmed': this.props.program.isCommitted()
+      'pending fa fa-clock-o': !this.props.program.isCommitted(),
+      'committed fa fa-check': this.props.program.isCommitted()
     });
 
     return (
