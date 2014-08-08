@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Api::V1::PlayersController do
-  let!(:player) { login_player }
+  let(:player) { login_player }
 
   describe "/:id" do
     let(:request) { get :show, id: player._id }
