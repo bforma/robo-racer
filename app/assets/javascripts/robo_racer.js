@@ -10,19 +10,23 @@ RoboRacer.App = Class.extend({
     // add access_token to all AJAX requests
     $.ajaxSetup({data: {access_token: accessToken}});
 
-    RoboRacer.App.socket = window.socket = new RoboRacer.Socket(accessToken, gameId);
+    var gameRepository = new RoboRacer.GameRepository();
+    var gameEventListener = new RoboRacer.GameEventListener(gameRepository);
+    RoboRacer.App.socket = window.socket = new RoboRacer.Socket(
+      gameEventListener,
+      accessToken,
+      gameId
+    );
 
-    var game = window.game = new RoboRacer.Models.Game({
-      _id: gameId,
-      current_player_id: currentPlayerId
-    });
+    $.get('/api/games/' + gameId + '/events', function(events) {
+      gameEventListener.handleEvents(events);
+      var game = window.game = gameRepository.find(gameId);
+      game.set('current_player_id', currentPlayerId);
 
-    // TODO perhaps render game state inline in games/show.html.haml?
-    game.fetch({success: function() {
       React.renderComponent(
         new RoboRacer.Views.Game({model: game}),
         $("#game").get(0)
       );
-    }});
+    });
   }
 });
