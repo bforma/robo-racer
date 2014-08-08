@@ -33,6 +33,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'pry'
   gem 'rspec-rails'
   gem 'rspec-its'
   gem 'coveralls', require: false
