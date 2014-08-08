@@ -3,12 +3,17 @@ RSpec.shared_context "Given events", type: %r(controller|feature) do
   let(:event_store) { gateway.event_store }
   let(:event_bus) { gateway.event_bus }
 
-  let(:journal) { Fountain::Domain::Journal.new }
+  let(:journals) { Hash.new }
 
   def given_events(events_per_aggregate_type)
     events_per_aggregate_type.each do |aggregate_type, events|
       stream_id = events.first.id
 
+      journal = journals[stream_id]
+      unless journal
+        journal = Fountain::Domain::Journal.new
+        journals[stream_id] = journal
+      end
       events = events.map { |event| journal.push(event, {}) }
       event_store.append(aggregate_type.to_s, stream_id, events)
 

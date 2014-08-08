@@ -1,6 +1,19 @@
 module Api
   module V1
     class GamesController < Api::BaseController
+
+      def events
+        events = gateway.event_store.load_all(GameAggregate.name, params[:id])
+        respond_with(events.map do |event|
+          {
+            payload_type: event.payload_type.name,
+            payload: event.payload
+          }
+        end)
+      rescue Fountain::EventStore::StreamNotFoundError
+        head :not_found
+      end
+
       def show
         respond_with current_game
       end
