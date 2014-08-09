@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Api::V1::GamesController do
   let!(:player) { login_player }
 
-  describe '/events' do
+  describe 'GET #events' do
     let(:request) { get :events, id: 1 }
     subject { request }
 
