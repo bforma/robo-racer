@@ -11,7 +11,6 @@ class GatewayBuilder
 
   REPLAYABLE = [
     PlayerEventListener.new,
-    GameEventListener.new,
   ]
 
   NON_REPLAYABLE = [

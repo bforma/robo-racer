@@ -6,8 +6,4 @@ class GamesController < ApplicationController
     execute(CreateGameCommand.new(id: game_id, player_id: current_player.id))
     redirect_to action: :show, id: game_id
   end
-
-  def show
-    @game = Projections::Mongo::Game.find(params[:id])
-  end
 end

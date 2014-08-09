@@ -14,13 +14,9 @@ module Api
         head :not_found
       end
 
-      def show
-        respond_with current_game
-      end
-
       def join
         execute JoinGameCommand.new(
-          id: current_game.id,
+          id: params[:id],
           player_id: current_player.id
         )
 
@@ -29,7 +25,7 @@ module Api
 
       def leave
         execute LeaveGameCommand.new(
-          id: current_game.id,
+          id: params[:id],
           player_id: current_player.id
         )
 
@@ -38,7 +34,7 @@ module Api
 
       def start
         execute StartGameCommand.new(
-          id: current_game.id,
+          id: params[:id],
           player_id: current_player.id
         )
 
@@ -55,7 +51,7 @@ module Api
         end
 
         command = ProgramRobotCommand.new(
-          id: current_game.id,
+          id: params[:id],
           player_id: current_player.id,
           instruction_cards: instruction_cards
         )
@@ -64,13 +60,6 @@ module Api
 
         head :accepted
       end
-
-    private
-
-      def current_game
-        Projections::Mongo::Game.find(params[:id])
-      end
-      memoize :current_game
     end
   end
 end
