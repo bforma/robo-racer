@@ -1,0 +1,1 @@
+DomainError = Class.new(StandardError)

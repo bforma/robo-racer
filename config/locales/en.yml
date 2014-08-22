@@ -20,7 +20,15 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  activemodel:
+    errors:
+      models:
+        create_player_command:
+          attributes:
+            password:
+              unequal_to_confirmation: 'Passwords must be equal'
   home:
     index:
       new_player: "Register account"
       new_game: "Create new game"
+

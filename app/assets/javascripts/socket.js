@@ -1,5 +1,5 @@
 RoboRacer.Socket = Class.extend({
-  initialize: function(accessToken, gameId) {
+  initialize: function(gameEventListener, accessToken, gameId) {
     var url =
       window.location.protocol +
       "//" +
@@ -9,7 +9,7 @@ RoboRacer.Socket = Class.extend({
     var connection = io(url);
     connection.on("connect", function() {
       connection.emit("authenticate", accessToken);
-    }.bind(this));
+    });
 
     connection.on("disconnect", function() {
       console.log("disconnected", arguments);
@@ -20,9 +20,7 @@ RoboRacer.Socket = Class.extend({
     });
 
     connection.on("event", function(event) {
-      event = JSON.parse(event);
-      console.log("Received " + event.type, event.payload);
-      this.trigger(event.type, event.payload);
-    }.bind(this));
+      gameEventListener.handleEvent(JSON.parse(event));
+    });
   }
 });

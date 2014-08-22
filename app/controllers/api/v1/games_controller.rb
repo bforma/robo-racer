@@ -1,13 +1,19 @@
 module Api
   module V1
     class GamesController < Api::BaseController
-      def show
-        respond_with current_game
+      def events
+        events = gateway.event_store.load_all(GameAggregate.name, params[:id])
+        respond_with(events.map do |event|
+          {
+            payload_type: event.payload_type.name,
+            payload: event.payload
+          }
+        end)
       end
 
       def join
-        execute JoinGameCommand.new(
-          id: current_game.id,
+        dispatch_command! JoinGameCommand.new(
+          id: params[:id],
           player_id: current_player.id
         )
 
@@ -15,8 +21,8 @@ module Api
       end
 
       def leave
-        execute LeaveGameCommand.new(
-          id: current_game.id,
+        dispatch_command! LeaveGameCommand.new(
+          id: params[:id],
           player_id: current_player.id
         )
 
@@ -24,8 +30,8 @@ module Api
       end
 
       def start
-        execute StartGameCommand.new(
-          id: current_game.id,
+        dispatch_command! StartGameCommand.new(
+          id: params[:id],
           player_id: current_player.id
         )
 
@@ -33,7 +39,7 @@ module Api
       end
 
       def program_robot
-        instruction_cards = params[:instruction_cards].map do |_, param|
+        instruction_cards = params.require(:instruction_cards).map do |_, param|
           InstructionCard.new(
             param[:action],
             param[:amount].to_i, # TODO fix this silly to_i
@@ -42,22 +48,14 @@ module Api
         end
 
         command = ProgramRobotCommand.new(
-          id: current_game.id,
+          id: params[:id],
           player_id: current_player.id,
           instruction_cards: instruction_cards
         )
-        raise InvalidCommandError if command.invalid?
-        execute command
+        dispatch_command! command
 
         head :accepted
       end
-
-    private
-
-      def current_game
-        Projections::Mongo::Game.find(params[:id])
-      end
-      memoize :current_game
     end
   end
 end

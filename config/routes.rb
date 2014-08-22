@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
         resources :games, only: %i(show) do
           member do
+            get 'events'
             put 'join'
             put 'leave'
             put 'start'

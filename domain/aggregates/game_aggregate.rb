@@ -208,13 +208,13 @@ private
   end
 end
 
-PlayerAlreadyInGameError = Class.new(StandardError)
-PlayerNotInGameError = Class.new(StandardError)
-PlayerNotGameHostError = Class.new(StandardError)
-GameAlreadyStartedError = Class.new(StandardError)
-GameNotRunningError = Class.new(StandardError)
-IllegalInstructionCardError = Class.new(StandardError)
-RobotAlreadyProgrammedError = Class.new(StandardError)
+PlayerAlreadyInGameError = Class.new(DomainError)
+PlayerNotInGameError = Class.new(DomainError)
+PlayerNotGameHostError = Class.new(DomainError)
+GameAlreadyStartedError = Class.new(DomainError)
+GameNotRunningError = Class.new(DomainError)
+IllegalInstructionCardError = Class.new(DomainError)
+RobotAlreadyProgrammedError = Class.new(DomainError)
 
 class InstructionDeckComposer
   DECK_COMPOSITION = [

@@ -1,60 +1,9 @@
 RoboRacer.Models.Game = Backbone.Model.extend({
-  idAttribute: '_id',
   urlRoot: '/api/games',
 
   initialize: function() {
     this.set('board', new RoboRacer.Models.Board());
     this.set('players', new RoboRacer.Collections.Players());
-
-    RoboRacer.App.socket.on('player_joined_game_event', this.playerJoinedGame, this);
-    RoboRacer.App.socket.on('player_left_game_event', this.playerLeftGame, this);
-    RoboRacer.App.socket.on('game_started_event', this.gameStarted, this);
-    RoboRacer.App.socket.on('game_round_started_event', this.gameRoundStarted, this);
-  },
-
-  // load state
-
-  parse: function(model) {
-    console.log("parse", model);
-
-    return _.merge(model, {
-      players: this.parsePlayers(model),
-      board: this.parseBoard(model),
-    });
-  },
-
-  parseBoard: function(model) {
-    var board = this.get('board');
-    if (model.board) {
-      board.set('tiles', new RoboRacer.Collections.Tiles(model.board.tiles));
-      board.set('spawns', new RoboRacer.Collections.Spawns(model.board.spawns));
-      board.set('checkpoints', new RoboRacer.Collections.Checkpoints(model.board.checkpoints));
-      board.set('robots', new RoboRacer.Collections.Robots(model.board.robots));
-    }
-    return board;
-  },
-
-  parsePlayers: function(model) {
-    var players = this.get('players');
-    _.each(model.players, function(player) {
-      players.add(this.parsePlayer(player));
-    }.bind(this));
-    return players;
-  },
-
-  parsePlayer: function(model) {
-    var hand = new RoboRacer.Collections.Hand(model.hand.instruction_cards);
-    var program = new RoboRacer.Collections.Program();
-    _.each(model.program.instruction_cards, function(instructionCard, index) {
-      program.program(index, new RoboRacer.Models.InstructionCard(instructionCard));
-    });
-
-    var player = {
-      '_id': model.player_id,
-      'hand': hand,
-      'program': program
-    };
-    return player;
   },
 
   // queries
@@ -113,32 +62,6 @@ RoboRacer.Models.Game = Backbone.Model.extend({
       data: data,
       success: options.success
     });
-  },
-
-  // events
-
-  playerJoinedGame: function(event) {
-    this.trigger("change:players");
-  },
-
-  playerLeftGame: function(event) {
-    this.trigger("change:players");
-  },
-
-  gameStarted: function(event) {
-    var board = this.get('board');
-    board.set('tiles', new RoboRacer.Collections.Tiles(
-      _.map(event.tiles, function(tile, _) {
-        return tile;
-      })
-    ));
-
-    this.set('instruction_deck_size', event.instruction_deck_size);
-    this.set('state', event.state);
-  },
-
-  gameRoundStarted: function(event) {
-    this.set('round_number', event.game_round.number);
   },
 
   // other

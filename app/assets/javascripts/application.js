@@ -20,6 +20,8 @@
 
 //= require class
 //= require robo_racer
+//= require game_repository
+//= require game_event_listener
 //= require socket
 
 //= require_tree ./models

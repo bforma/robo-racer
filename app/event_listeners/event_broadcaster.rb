@@ -46,7 +46,7 @@ private
   def publish(event, payload_filter = ->(payload) { payload })
     channel = format(GAME_CHANNEL_FORMAT, Rails.env, event.id)
     redis.publish(channel, {
-      type: event.class.to_s.underscore,
+      payload_type: event.class.name,
       payload: payload_filter.call(event)
     }.to_json)
   end
