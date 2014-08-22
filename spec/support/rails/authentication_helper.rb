@@ -15,7 +15,7 @@ module AuthenticationHelper
 
   module Feature
     def login_player
-      do_login_player { |player| login_as(player, :scope => :player) }
+      do_login_player { |player| login_as(player, scope: :player) }
     end
   end
 

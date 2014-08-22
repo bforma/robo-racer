@@ -3,7 +3,7 @@ class GamesController < ApplicationController
 
   def create
     game_id = new_uuid
-    execute(CreateGameCommand.new(id: game_id, player_id: current_player.id))
+    dispatch_command!(CreateGameCommand.new(id: game_id, player_id: current_player.id))
     redirect_to action: :show, id: game_id
   end
 end

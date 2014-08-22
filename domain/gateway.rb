@@ -9,6 +9,17 @@ class Gateway
   end
 
   def dispatch(command)
+    return false if command.invalid?
+    do_dispatch(command)
+    true
+  end
+
+  def dispatch!(command)
+    raise InvalidCommandError.new(command) if command.invalid?
+    do_dispatch(command)
+  end
+
+  def do_dispatch(command)
     envelope = Fountain::Envelope.as_envelope(command)
     command_bus.dispatch(envelope, command_callback)
   end
@@ -53,5 +64,13 @@ private
       handler = handler_class.new(repository)
       commands.each { |command| @commands.subscribe(command, handler) }
     end
+  end
+end
+
+class InvalidCommandError < StandardError
+  attr_reader :command
+
+  def initialize(command)
+    @command = command
   end
 end

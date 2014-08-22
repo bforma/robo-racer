@@ -6,6 +6,11 @@ class BaseCommand
   attr_accessor :id
 
   validates_presence_of :id
+
+  def ==(other)
+    return false if other.nil?
+    self.instance_values == other.instance_values
+  end
 end
 
 class Command < BaseCommand

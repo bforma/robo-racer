@@ -4,6 +4,8 @@ require 'active_support/core_ext/numeric/time'
 require 'fountain'
 require 'require_all'
 
+require_relative 'domain_error'
+
 require_all 'domain/helpers'
 require_all 'domain/value_objects'
 require_all 'domain/commands'

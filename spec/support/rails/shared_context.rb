@@ -24,14 +24,29 @@ end
 
 RSpec.shared_context "API Controllers", file_path: %r(controllers/api) do
   def get(action, *args)
+    super(action, enrich_request(args))
+  end
+
+  def post(action, *args)
+    super(action, enrich_request(args))
+  end
+
+  def put(action, *args)
+    super(action, enrich_request(args))
+  end
+
+  def delete(action, *args)
+    super(action, enrich_request(args))
+  end
+
+  def head(action, *args)
+    super(action, enrich_request(args))
+  end
+
+  def enrich_request(args)
     params = args.first || {}
-    token = case
-              when defined?(access_token) then access_token
-              when defined?(player) then player.access_token
-              else nil
-            end
-    params = params.merge(access_token: token) if token
-    params = params.merge(format: :json)
-    super(action, params)
+    params = params.merge(access_token: access_token) if defined?(access_token)
+    params = params.merge(access_token: player.access_token) if defined?(player)
+    params.merge(format: :json)
   end
 end

@@ -47,7 +47,7 @@ class InstructionDeckEntity < BaseEntity
 
 end
 
-OutOfCardsError = Class.new(StandardError)
-UnknownCardError = Class.new(StandardError)
-CardNotYetDealtError = Class.new(StandardError)
-CardAlreadyDiscardedError = Class.new(StandardError)
+OutOfCardsError = Class.new(DomainError)
+UnknownCardError = Class.new(DomainError)
+CardNotYetDealtError = Class.new(DomainError)
+CardAlreadyDiscardedError = Class.new(DomainError)

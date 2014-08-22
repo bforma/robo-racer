@@ -7,8 +7,7 @@ class Players::RegistrationsController < Devise::RegistrationsController
     self.resource = command = CreatePlayerCommand.new(
       sign_up_params.merge(id: new_uuid, access_token: SecureRandom.hex)
     )
-    if command.valid?
-      execute(command)
+    if dispatch_command(command)
       redirect_to root_path, notice: "Your account has been created successfully."
     else
       render "new"

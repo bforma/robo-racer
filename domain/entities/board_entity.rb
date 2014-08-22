@@ -184,6 +184,6 @@ private
 
 end
 
-IllegalLocationError = Class.new(StandardError)
-SpawnAlreadyPlacedError = Class.new(StandardError)
-GoalAlreadyPlacedError = Class.new(StandardError)
+IllegalLocationError = Class.new(DomainError)
+SpawnAlreadyPlacedError = Class.new(DomainError)
+GoalAlreadyPlacedError = Class.new(DomainError)

@@ -1,10 +1,16 @@
 module Api
   class BaseController < ApplicationController
-    extend Memoist
+    NOT_FOUND_ERRORS = [
+      Mongoid::Errors::DocumentNotFound,
+      Fountain::EventStore::StreamNotFoundError,
+      Fountain::Repository::AggregateNotFoundError,
+    ]
 
     respond_to :json
     before_action :restrict_access
-    rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found
+    rescue_from *NOT_FOUND_ERRORS, with: :not_found
+    rescue_from DomainError, with: :domain_error
+    rescue_from InvalidCommandError, with: :invalid_command_error
 
   private
 
@@ -20,6 +26,26 @@ module Api
 
     def not_found
       head :not_found
+    end
+
+    def domain_error(error)
+      errors = [
+        {
+          code: error.class.name.underscore,
+          title: error.class.name.underscore.humanize
+        }
+      ]
+      render json: {errors: errors}, status: 422
+    end
+
+    def invalid_command_error(error)
+      errors = error.command.errors.map do |attribute, error|
+        {
+          code: attribute,
+          title: error
+        }
+      end
+      render json: {errors: errors}, status: 422
     end
   end
 end

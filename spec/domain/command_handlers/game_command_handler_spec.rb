@@ -89,7 +89,7 @@ describe GameCommandHandler, type: :command_handlers do
         before { dispatch(command) }
 
         specify do
-          expect { dispatch(command) }.to raise_error(GameAlreadyStartedError)
+          expect { dispatch(command.dup) }.to raise_error(GameAlreadyStartedError)
         end
       end
 
@@ -146,7 +146,7 @@ describe GameCommandHandler, type: :command_handlers do
         end
 
         specify do
-          expect { dispatch(command) }.to raise_error(RobotAlreadyProgrammedError)
+          expect { dispatch(command.dup) }.to raise_error(RobotAlreadyProgrammedError)
         end
       end
 
@@ -310,7 +310,7 @@ describe GameCommandHandler, type: :command_handlers do
       end
 
       specify do
-        expect { dispatch(command) }.to raise_error(PlayerAlreadyInGameError)
+        expect { dispatch(command.dup) }.to raise_error(PlayerAlreadyInGameError)
       end
     end
 
