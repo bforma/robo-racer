@@ -27,10 +27,6 @@ describe BoardEntity, type: :entities do
       specify { expect { subject }.to raise_error(IllegalLocationError) }
     end
 
-    context "when placed on a goal" do
-      pending
-    end
-
     context "when a spawn is already placed for a player" do
       before { given_events(SpawnPlacedEvent.new(id, bob, spawn_bob)) }
 
@@ -50,10 +46,6 @@ describe BoardEntity, type: :entities do
       let(:goal) { Goal.new(-1, -1, 1) }
 
       specify { expect { subject }.to raise_error(IllegalLocationError) }
-    end
-
-    context "when placed on a spawn" do
-      pending
     end
 
     context "when a goal is already placed" do
@@ -100,10 +92,6 @@ describe BoardEntity, type: :entities do
           RobotSpawnedEvent.new(id, steven, robot_steven)
         )
       end
-    end
-
-    context "given no spawns" do
-      pending
     end
   end
 
@@ -289,10 +277,6 @@ describe BoardEntity, type: :entities do
           )
         end
       end
-    end
-
-    context "when not spawned" do
-      pending
     end
   end
 

@@ -92,10 +92,6 @@ describe GameCommandHandler, type: :command_handlers do
           expect { dispatch(command.dup) }.to raise_error(GameAlreadyStartedError)
         end
       end
-
-      context "when game ended" do
-        pending
-      end
     end
 
     describe ProgramRobotCommand do
@@ -170,10 +166,6 @@ describe GameCommandHandler, type: :command_handlers do
           expect { dispatch(command) }.to raise_error(PlayerNotInGameError)
         end
       end
-
-      context "when game ended" do
-        pending
-      end
     end
 
     describe PlayCurrentRoundCommand do
@@ -216,14 +208,6 @@ describe GameCommandHandler, type: :command_handlers do
             InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(290))
           ]
         end
-      end
-
-      context "given not programmed robots" do
-        pending
-      end
-
-      context "given game is not running" do
-        pending
       end
 
       context "given a winning player" do
@@ -324,14 +308,6 @@ describe GameCommandHandler, type: :command_handlers do
         expect { dispatch(command) }.to raise_error(GameAlreadyStartedError)
       end
     end
-
-    context "when game ended" do
-      pending
-    end
-
-    context "when game is full" do
-      pending
-    end
   end
 
   describe LeaveGameCommand do
@@ -366,10 +342,6 @@ describe GameCommandHandler, type: :command_handlers do
       specify do
         expect { dispatch(command) }.to raise_error(GameAlreadyStartedError)
       end
-    end
-
-    context "when game ended" do
-      pending
     end
   end
 end
