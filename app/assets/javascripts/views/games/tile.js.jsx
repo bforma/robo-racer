@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Tile = React.createBackboneClass({
   render: function() {
-    var className = "tile" +
-      " x_" + this.getModel().get('x') +
-      " y_" + this.getModel().get('y');
+    var className =
+      " x" + this.getModel().get('x') +
+      " y" + this.getModel().get('y');
 
-    return <b className={className} />;
+    return <div className={className}><b className="floor"></b></div>;
   }
 });
