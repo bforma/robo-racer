@@ -20,24 +20,24 @@
       @extend %relative
       top: ($position * $size)
 
-  floor
+  .floor
     position: absolute
     display: inline
     @include block($tile, $tile, $floor)
     @include block_color(rgba(0, 230, 230, 1), 10%)
 
-  wall
+  .wall
     @include block_color(white, 10%)
 
-    &[top]
+    &[data-top]
       @include block($wall, $size - $wall, $height)
       top: - $wall
 
-    &[left]
+    &[data-left]
       @include block($size - $wall, $wall, $height)
       left: - $wall
 
-  goal
+  .checkpoint
     @include block($tile, $tile, $floor * 2)
     @include block_color(rgba(255, 255, 255, 0.3), 0)
 
@@ -46,7 +46,3 @@
 
     &.current
       @include block_color(rgba(0, 255, 0, 0.7), 0)
-
-  @for $i from 0 through $goals
-    .goal#{$i}
-      @extend %goal

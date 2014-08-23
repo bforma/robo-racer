@@ -1,43 +1,52 @@
 // Colors
 %robot-main-color
-  @include block_color(red, 2px)
+  @each $color in $player_colors
+    &.#{$color}
+      @include block_color($color, 2px)
+
 %robot-secondary-color
   @include block_color(gray, 2px)
 
 // Component
-robot
-  @extend %robot-main-color
-  @include block($robot-size * .8, $robot-size, $robot-size)
-  top: ($tile - $robot-size)/2
-  left: ($tile - $robot-size)/2
-  -webkit-transform: translateZ($robot-size + $floor + $robot-size/8) rotateZ(-80deg)
-
-  top
+.mod-board
+  .robot
     @extend %robot-main-color
-    @include block($robot-size * .7, $robot-size, $robot-size / 2)
+    @include block($robot-size * .8, $robot-size, $robot-size)
+    position: absolute !important
+    margin-top: ($tile - $robot-size)/2
+    margin-left: ($tile - $robot-size)/2
+    -webkit-transform: translateZ($robot-size + $floor + $robot-size/8)
 
-    antenna
+    @each $facing in $facings
+      &.face_#{$facing}
+        -webkit-transform: translateZ($robot-size + $floor + $robot-size/8) rotate($facing + 180deg)
+
+    .top
+      @extend %robot-main-color
+      @include block($robot-size * .7, $robot-size, $robot-size / 2)
+
+      .antenna
+        @extend %robot-secondary-color
+        @include block($robot-size/16, $robot-size/16, $robot-size)
+        top: ($tile - $robot-size)/4
+        left: ($tile - $robot-size + $robot-size/16)/2
+
+      .eye
+        @extend %robot-secondary-color
+        @include block($robot-size/16, $robot-size/3, $robot-size/8)
+        bottom: - $robot-size/16
+        -webkit-transform: translateZ(- $robot-size/8)
+
+        &[data-left]
+          left: $robot-size/16
+        &[data-right]
+          right: $robot-size/16
+
+    .leg
       @extend %robot-secondary-color
-      @include block($robot-size/16, $robot-size/16, $robot-size)
-      top: ($tile - $robot-size)/4
-      left: ($tile - $robot-size + $robot-size/16)/2
+      @include block($robot-size, $robot-size/3, $robot-size/8)
+      -webkit-transform: translateZ(-$robot-size)
+      top: 0
 
-    eye
-      @extend %robot-secondary-color
-      @include block($robot-size/16, $robot-size/3, $robot-size/8)
-      bottom: - $robot-size/16
-      -webkit-transform: translateZ(- $robot-size/8)
-
-      &[left]
-        left: $robot-size/16
-      &[right]
-        right: $robot-size/16
-
-  leg
-    @extend %robot-secondary-color
-    @include block($robot-size, $robot-size/3, $robot-size/8)
-    -webkit-transform: translateZ(-$robot-size)
-    top: 0
-
-    &:nth-child(2)
-      right: 0
+      &:nth-child(2)
+        right: 0
