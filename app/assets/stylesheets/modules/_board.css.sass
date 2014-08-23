@@ -1,11 +1,17 @@
 .mod-board
-  position: relative
-  height: $max_x * $size
-  width: $max_y * $size
-  margin: 0 auto
-  -webkit-transform-origin: center
-  -webkit-transform: rotateX(60deg) rotateZ(45deg)
-  -webkit-transform-style: preserve-3d
+  margin-top: -150px
+
+  .body
+    position: relative
+    height: $max_x * $size
+    width: $max_y * $size
+    margin: 0 auto
+    -webkit-transform-origin: center
+    -webkit-transform: rotateX(60deg) rotateZ(45deg)
+    -webkit-transform-style: preserve-3d
+
+  &.perspective
+    +perspective(2500px)
 
   %relative
     position: relative
