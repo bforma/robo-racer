@@ -6,9 +6,9 @@
     height: $max_x * $size
     width: $max_y * $size
     margin: 0 auto
-    -webkit-transform-origin: center
-    -webkit-transform: rotateX(60deg) rotateZ(45deg)
-    -webkit-transform-style: preserve-3d
+    +transform-origin(center)
+    +transform(rotateX(60deg) rotateZ(45deg))
+    +transform-style(preserve-3d)
 
   &.perspective
     +perspective(2500px)
@@ -47,7 +47,7 @@
     @include block($tile, $tile, $floor * 2)
     @include block_color(rgba(255, 255, 255, 0.3), 0)
 
-    -webkit-transform: translateZ($floor * 3)
+    +transform(translateZ($floor * 3))
     box-shadow: inset 0 0 0 $tile/6 rgba(255, 255, 255, 0.4)
 
     &.current
