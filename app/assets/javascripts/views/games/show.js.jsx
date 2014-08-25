@@ -1,21 +1,10 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Game = React.createBackboneClass({
-  changeOptions: "change change:players",
-
   render: function() {
     var game = this.getModel();
 
     if(game.lobbying()) {
-      if (game.currentPlayerInGame()) {
-        var leaveGameButton = <button className="button" onClick={this.leaveGame}>Leave game</button>
-      } else {
-        var joinGameButton = <button className="button" onClick={this.joinGame}>Join game</button>
-      }
-
-      if (game.currentPlayerIsHost()) {
-        var startGameButton =
-          <button className="button" onClick={ this.startGame }>Start game</button>
-      }
+      var lobbyButtons = <RoboRacer.Views.LobbyButtons game={game} />
     } else if(game.running()) {
       var round = "Round " + game.get('round_number');
       var board = RoboRacer.Views.Board({model: game.get('board')});
@@ -49,10 +38,7 @@ RoboRacer.Views.Game = React.createBackboneClass({
 
         <div className="panel right">
           <div className="content">
-            { joinGameButton }
-            { leaveGameButton }
-            { startGameButton }
-
+            { lobbyButtons }
             { hand }
           </div>
         </div>
@@ -64,20 +50,6 @@ RoboRacer.Views.Game = React.createBackboneClass({
         </div>
       </div>
     );
-  },
-
-  joinGame: function() {
-    this.getModel().join();
-  },
-
-  leaveGame: function() {
-    this.getModel().leave({success: function() {
-      document.location.href = "/";
-    }});
-  },
-
-  startGame: function() {
-    this.getModel().start();
   },
 
   onCardDrop: function(registerIndex, instructionCard) {
