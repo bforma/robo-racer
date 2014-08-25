@@ -26,28 +26,22 @@ RoboRacer.Views.Game = React.createBackboneClass({
           { board }
         </div>
 
-        <div className="panel left">
-          <div className="content">
-            <div className="mod-game_state">
-              <p>Game is { game.get('state') }</p>
-              <p>{ round }</p>
-            </div>
-            <RoboRacer.Views.Players collection={game.get('players')} />
+        <RoboRacer.Views.SidePanel orientation="left">
+          <div className="mod-game_state">
+            <p>Game is { game.get('state') }</p>
+            <p>{ round }</p>
           </div>
-        </div>
+          <RoboRacer.Views.Players collection={game.get('players')} />
+        </RoboRacer.Views.SidePanel>
 
-        <div className="panel right">
-          <div className="content">
-            { lobbyButtons }
-            { hand }
-          </div>
-        </div>
+        <RoboRacer.Views.SidePanel orientation="right">
+          {lobbyButtons}
+          {hand}
+        </RoboRacer.Views.SidePanel>
 
-        <div className="panel bottom">
-          <div className="content">
-            { program }
-          </div>
-        </div>
+        <RoboRacer.Views.SidePanel orientation="bottom">
+          {program}
+        </RoboRacer.Views.SidePanel>
       </div>
     );
   },
