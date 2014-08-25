@@ -5,7 +5,7 @@ RoboRacer.Views.InstructionCard = React.createBackboneClass({
     var draggable = this.props.onDragStart !== undefined;
 
     return (
-      <div className="instruction_card"
+      <div className="comp-instruction_card"
          draggable={ draggable }
          onDragStart={ this.props.onDragStart }
          onClick={ this.onClick }>
