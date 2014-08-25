@@ -43,7 +43,7 @@ RoboRacer.Views.Game = React.createBackboneClass({
               <p>Game is { game.get('state') }</p>
               <p>{ round }</p>
             </div>
-            { RoboRacer.Views.Players({collection: game.get('players')}) }
+            <RoboRacer.Views.Players collection={game.get('players')} />
           </div>
         </div>
 
