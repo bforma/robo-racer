@@ -14,6 +14,7 @@ gem 'sinatra', require: false
 gem 'slim'
 
 # frontend
+gem 'sprockets', '~> 2.11.0'
 gem 'sass-rails'
 gem 'compass-rails'
 gem 'uglifier'
