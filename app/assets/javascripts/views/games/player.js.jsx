@@ -1,23 +1,18 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Player = React.createBackboneClass({
-  mixins: [
-    React.BackboneMixin("player"),
-    React.BackboneMixin("program", "program:committed program:reset")
-  ],
-
   render: function() {
     var className = "opponent " +
-      RoboRacer.Collections.Players.color(this.props.player.get('_id'));
+      RoboRacer.Collections.Players.color(this.getModel().get('_id'));
 
     var playerStatus = React.addons.classSet({
       'status': true,
-      'pending fa fa-clock-o': !this.props.program.isCommitted(),
-      'committed fa fa-check': this.props.program.isCommitted()
+      'pending fa fa-clock-o': !this.getModel().hasCommittedProgram(),
+      'committed fa fa-check': this.getModel().hasCommittedProgram()
     });
 
     return (
       <li className={ className }>
-        { this.props.player.get('name') }
+        { this.getModel().get('name') }
         <span className={playerStatus} />
       </li>
     );

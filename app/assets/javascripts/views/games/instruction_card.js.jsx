@@ -4,11 +4,17 @@ RoboRacer.Views.InstructionCard = React.createBackboneClass({
     var card = this.getModel();
     var draggable = this.props.onDragStart !== undefined;
 
+    if(this.props.onClick) {
+      var onClick = function(event) {
+        this.props.onClick(event, this.getModel());
+      }.bind(this);
+    }
+
     return (
       <div className="comp-instruction_card"
          draggable={ draggable }
          onDragStart={ this.props.onDragStart }
-         onClick={ this.onClick }>
+         onClick={ onClick }>
         <div className={ this.translateToIcon() }></div>
         <div className="text">{ this.translateToText() }</div>
         <div className="priority">{ card.get('priority') }</div>
@@ -30,10 +36,6 @@ RoboRacer.Views.InstructionCard = React.createBackboneClass({
 
   getTranslationKey: function() {
     return this.getModel().get('action') + this.getModel().get('amount');
-  },
-
-  onClick: function(event) {
-    this.props.onClick(event, this.getModel());
   }
 });
 

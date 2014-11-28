@@ -7,7 +7,7 @@ RoboRacer.Views.Registers = React.createBackboneClass({
       model: register,
       onCardDrop: this.props.onCardDrop,
       onInstructionCardClick: function(event, instructionCard) {
-        this.props.onInstructionCardInRegisterClick(
+        this.props.onInstructionCardClick(
           event, instructionCard, index
         );
       }.bind(this)

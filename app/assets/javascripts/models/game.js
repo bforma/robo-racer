@@ -62,40 +62,5 @@ RoboRacer.Models.Game = Backbone.Model.extend({
       data: data,
       success: options.success
     });
-  },
-
-  // other
-
-  programRegister: function(registerIndex, instructionCard) {
-    var hand = this.currentPlayer().get('hand');
-    var cardInHand = hand.findWhere({
-      priority: instructionCard.get('priority')
-    });
-    hand.remove(cardInHand);
-
-    var replaced = this.currentPlayer().get('program').program(
-      registerIndex,
-      instructionCard
-    );
-    if (replaced) {
-      hand.add(replaced);
-    }
-  },
-
-  programNextEmptyRegister: function(instructionCard) {
-    var program = this.currentPlayer().get('program');
-    var nextEmpty = program.find(function(register) {
-      return register.isEmpty();
-    });
-
-    if (nextEmpty) {
-      var index = program.indexOf(nextEmpty);
-      this.programRegister(index, instructionCard);
-    }
-  },
-
-  unprogramRegister: function(registerIndex, instructionCard) {
-    this.currentPlayer().get('program').unprogram(registerIndex);
-    this.currentPlayer().get('hand').add(instructionCard);
   }
 });

@@ -8,15 +8,10 @@ RoboRacer.Views.Game = React.createBackboneClass({
     } else if(game.running()) {
       var round = "Round " + game.get('round_number');
       var board = RoboRacer.Views.Board({model: game.get('board')});
-      var hand = <RoboRacer.Views.Hand
-        collection={game.currentPlayer().get('hand')}
-        onInstructionCardInHandClick={this.onInstructionCardInHandClick}
-      />;
+      var hand = <RoboRacer.Views.Hand player={game.currentPlayer()} />;
       var program = <RoboRacer.Views.Program
-        collection={game.currentPlayer().get('program')}
-        onCardDrop={this.onCardDrop}
+        player={game.currentPlayer()}
         onProgramRobotClick={this.programRobot}
-        onInstructionCardInRegisterClick={this.onInstructionCardInRegisterClick}
       />;
     }
 
@@ -44,18 +39,6 @@ RoboRacer.Views.Game = React.createBackboneClass({
         </RoboRacer.Views.SidePanel>
       </div>
     );
-  },
-
-  onCardDrop: function(registerIndex, instructionCard) {
-    this.getModel().programRegister(registerIndex, instructionCard);
-  },
-
-  onInstructionCardInHandClick: function(event, instructionCard) {
-    this.getModel().programNextEmptyRegister(instructionCard);
-  },
-
-  onInstructionCardInRegisterClick: function(event, instructionCard, registerIndex) {
-    this.getModel().unprogramRegister(registerIndex, instructionCard);
   },
 
   programRobot: function() {

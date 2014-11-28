@@ -1,27 +1,42 @@
 /** @jsx React.DOM */
 RoboRacer.Views.Program = React.createBackboneClass({
-  render: function() {
-    var registers = RoboRacer.Views.Registers({
-      collection: this.getCollection(),
-      onCardDrop: this.props.onCardDrop,
-      onInstructionCardInRegisterClick: this.props.onInstructionCardInRegisterClick
-    });
+  mixins: [
+    React.BackboneMixin('player'),
+    React.BackboneMixin({
+      modelOrCollection: function(props) {
+        return props.player.get('program');
+      }
+    })
+  ],
 
-    var enabled = _.every(this.getCollection().models, function(register) {
-      return register.get('instruction_card');
-    });
+  render: function() {
+    var goButtonEnabled =
+      this.props.player.get('program').allRegistersFilled() &&
+      ! this.props.player.hasCommittedProgram();
 
     return (
       <div className="mod-program">
-        { registers }
+        <RoboRacer.Views.Registers
+          collection={this.props.player.get('program')}
+          onCardDrop={this.onCardDrop}
+          onInstructionCardClick={this.onInstructionCardClick}
+        />
 
         <button
           className="button-program-robot"
-          disabled={ !enabled }
-          onClick={ this.props.onProgramRobotClick }>
+          disabled={ ! goButtonEnabled}
+          onClick={this.props.onProgramRobotClick}>
           GO!
         </button>
       </div>
     );
+  },
+
+  onCardDrop: function(registerIndex, instructionCard) {
+    this.props.player.programRegister(registerIndex, instructionCard);
+  },
+
+  onInstructionCardClick: function(event, instructionCard, registerIndex) {
+    this.props.player.unprogramRegister(registerIndex, instructionCard);
   }
 });

@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 RoboRacer.Views.LobbyButtons = React.createBackboneClass({
   mixins: [
-    React.BackboneMixin("game"),
+    React.BackboneMixin('game'),
     React.BackboneMixin({
       modelOrCollection: function(props) {
         return props.game.get('players');
@@ -37,7 +37,7 @@ RoboRacer.Views.LobbyButtons = React.createBackboneClass({
 
   leaveGame: function() {
     this.props.game.leave({success: function() {
-      document.location.href = "/";
+      document.location.href = '/';
     }});
   },
 

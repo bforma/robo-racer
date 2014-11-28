@@ -95,6 +95,7 @@ RoboRacer.GameEventListener = Class.extend({
 
     _(payload.programs).forEach(function(instructionCards, playerId) {
       var player = game.get('players').findWhere({_id: playerId});
+      player.set('committedProgram', false);
       player.get('program').forEach(function(register, index) {
         register.set('instruction_card', instructionCards[index]);
       });
@@ -113,13 +114,13 @@ RoboRacer.GameEventListener = Class.extend({
     var game = this.gameRepository.find(payload.id);
     var player = game.get('players').findWhere({_id: payload.player_id});
 
+    player.set('committedProgram', true);
     player.get('program').forEach(function(register, index) {
       register.set('instruction_card', new RoboRacer.Models.InstructionCard(
         payload.instruction_cards[index]
       ));
     });
 
-    // TODO this feels weird
     _(payload.instruction_cards).forEach(function(instructionCard) {
       var cardInHand = player.get('hand').findWhere({
         priority: instructionCard.priority
