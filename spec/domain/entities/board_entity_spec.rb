@@ -63,6 +63,12 @@ describe BoardEntity, type: :entities do
 
       specify { expect_events(RobotSpawnedEvent.new(id, bob, robot_bob)) }
 
+      context "and already spawned" do
+        before { given_events(RobotSpawnedEvent.new(id, bob, robot_bob)) }
+
+        specify { expect_no_events }
+      end
+
       context "and replaced" do
         let(:replaced_spawn) { GameUnit.new(0, 0, GameUnit::UP) }
 

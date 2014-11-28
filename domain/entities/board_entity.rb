@@ -33,7 +33,7 @@ class BoardEntity < BaseEntity
         id,
         player_id,
         GameUnit.new(spawn.x, spawn.y, spawn.facing)
-      )
+      ) unless @robots[player_id]
     end
   end
 

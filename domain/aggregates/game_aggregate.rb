@@ -38,7 +38,6 @@ class GameAggregate < BaseAggregate
 
     place_spawns
     place_goals
-    spawn_players
     start_new_round
   end
 
@@ -87,6 +86,7 @@ class GameAggregate < BaseAggregate
 private
 
   def start_new_round
+    spawn_players
     hands = programs = @player_ids.reduce({}) do |memo, player_id|
       memo[player_id] = []
       memo
