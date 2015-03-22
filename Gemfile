@@ -21,6 +21,7 @@ gem 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml'
+gem 'redcarpet'
 gem 'react-rails', github: 'reactjs/react-rails'
 gem 'font-awesome-rails'
 
