@@ -2,11 +2,9 @@
 
 // For commercial use please feel free to contact us for price, links and details at: the_fontry@yahoo.com
 // or visit the Fontry website http://www.thefontry.com/
-
-$font: "DataGothic"
-
+$font_gothic: "DataGothic"
 @font-face
-  font-family: $font
+  font-family: $font_gothic
   src: asset-url("jlsdatagothicr_nc-webfont.eot")
   src: asset-url("jlsdatagothicr_nc-webfont.eot?#iefix") format("embedded-opentype"), asset-url("jlsdatagothicr_nc-webfont.woff") format("woff"), asset-url("jlsdatagothicr_nc-webfont.ttf") format("truetype"), asset-url("jlsdatagothicr_nc-webfont.svg#jlsdatagothicr_nc-webfont") format("svg")
   font-weight: normal
@@ -14,15 +12,24 @@ $font: "DataGothic"
 
 // this font is free for non-commercial use
 // http://www.fontspace.com/qbotype/digital-tech
-
 $font_digital: "Digital Tech"
-
 @font-face
   font-family: $font_digital
   src: asset-url("digital_tech-webfont.eot")
   src: asset-url("digital_tech-webfont.eot?#iefix") format("embedded-opentype"), asset-url("digital_tech-webfont.woff") format("woff"), asset-url("digital_tech-webfont.ttf") format("truetype"), asset-url("digital_tech-webfont.svg#digital_tech-webfont") format("svg")
   font-weight: normal
   font-style: normal
+
+// Roboto from Google web fonts
+$font_roboto: 'robotoregular'
+@font-face
+  font-family: $font_roboto
+  src: asset-url('Roboto-Regular-webfont.eot')
+  src: asset-url('Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'), asset-url('Roboto-Regular-webfont.woff2') format('woff2'), asset-url('Roboto-Regular-webfont.woff') format('woff'), asset-url('Roboto-Regular-webfont.ttf') format('truetype'), asset-url('Roboto-Regular-webfont.svg#robotoregular') format('svg')
+  font-weight: normal
+  font-style: normal
+
+$font: $font_roboto
 
 body
   font-family: $font
