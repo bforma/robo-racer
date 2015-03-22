@@ -9,6 +9,10 @@ FactoryGirl.define do
     email "bob@localhost.local"
     password "secret"
     access_token { SecureRandom.hex }
+
+    after :build do |o|
+      o.password = BCrypt::Password.create(o.password)
+    end
   end
 
   factory :game_created_event do
