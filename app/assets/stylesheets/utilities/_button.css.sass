@@ -1,0 +1,14 @@
+@mixin button($text_color, $background_color, $hover_background_color, $border_color, $hover_border_color)
+  color: $text_color
+  border: $border_color solid 1px
+  background-color: $background_color
+
+  &:hover,
+  &:focus,
+  &:active,
+  .active
+    background-color: $hover_background_color
+    border-color: $hover_border_color
+
+@mixin button-disabled($text_color, $button_color, $border_color: $button_color)
+  +button($text_color, $button_color, $button_color, $border_color, $border_color)

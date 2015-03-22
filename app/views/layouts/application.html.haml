@@ -11,20 +11,22 @@
     = csrf_meta_tags
 
   %body
-    .mod-header
-      %h1 Robo Racer
+    .container
+      .mod-header
+        .layout-wrap
+          %div
+            %h1
+              = link_to "Robo Racer", root_path
 
-      - if current_player
-        %span.player-name= "current player: #{current_player.name}"
-        = link_to destroy_player_session_path, method: :delete do
-          log out
-          %span.icon.fa.fa-sign-out
+          %nav
+            = link_to "Login", new_player_session_path
+            = link_to "Register", new_player_registration_path
+            %a Play now!
 
-      - else
-        = link_to new_player_session_path do
-          log in
-          %span.icon.fa.fa-sign-in
+      .layout-wrap
+        = flash[:notice] if flash[:notice]
+        = yield
 
-    = flash[:notice] if flash[:notice]
-
-    = yield
+      .mod-footer
+        .layout-wrap
+          %p Built with love by Bob Forma. Powered by Zilverline.

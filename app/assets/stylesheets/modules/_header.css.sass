@@ -1,15 +1,41 @@
 .mod-header
-  padding: 20px 20px 30px
-  margin-bottom: 50px
-  text-align: center
-  color: $white
-  background: rgba(black,.9)
-  box-shadow: $shadow-bright
+  text-align: justify
+  height: 4em
+  padding: 1em 0
+  color: white
+  background-color: $white
+  text-transform: uppercase
 
-  .player-name
-    float: left
+  h1 a
+    color: $sky
 
-  a
-    float: right
-    color: $white
-    text-decoration: none
+  .layout-wrap
+    &:after
+      content: ''
+      display: inline-block
+      width: 100%
+
+    h1, nav
+      display: inline-block
+
+    > div,
+    > div::before,
+    nav,
+    > div h1
+      display: inline-block
+      vertical-align: middle
+      text-align: left
+
+    > div
+      height: 100%
+
+    > div::before
+      content: ''
+      height: 100%
+
+    nav a
+      padding: 0 0.6em
+      white-space: nowrap
+
+    nav a:last-child
+      padding-right: 0
