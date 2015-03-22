@@ -14,9 +14,11 @@ describe Devise::SessionsController do
     visit root_path
 
     click_on 'Log in'
-    fill_in 'player[email]', with: 'bob@localhost.local'
-    fill_in 'player[password]', with: 'secret'
-    click_on 'Sign in'
+    within '.mod-sessions_new' do
+      fill_in 'player[email]', with: 'bob@localhost.local'
+      fill_in 'player[password]', with: 'secret'
+      click_on 'Log in'
+    end
 
     expect(page).to have_no_link('Log in')
     expect(page).to have_link('Log out')

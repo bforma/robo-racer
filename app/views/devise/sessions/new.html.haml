@@ -1,0 +1,10 @@
+.mod-sessions_new
+  %h1 Log in
+  %p Please enter your email address and password to continue.
+
+  = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+    = f.input :email, autofocus: true
+    = f.input :password, autocomplete: 'off'
+    = f.button :submit, 'Log in'
+    or
+    = render 'devise/shared/links'
