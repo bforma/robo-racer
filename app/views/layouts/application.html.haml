@@ -11,29 +11,31 @@
     = csrf_meta_tags
 
   %body
-    .container
-      .mod-header
-        .layout-wrap
-          %div
-            = link_to "Robo Racer", root_path, class: 'logo'
-
-          %nav
-            %a Play now!
-
-            - if current_player
-              %span.player-name= current_player.name
-              = link_to 'Log out', destroy_player_session_path, method: :delete
-
-            - else
-              = link_to 'Log in', new_player_session_path
-              = link_to 'Sign up', new_player_registration_path
-
+    %header.mod-header
       .layout-wrap
-        = flash[:notice] if flash[:notice]
-        = yield
+        %div
+          = link_to "Robo Racer", root_path, class: 'logo'
 
-      .mod-footer
-        .layout-wrap
+        %nav
+          %a Play now!
+
+          - if current_player
+            %span.player-name= current_player.name
+            = link_to 'Log out', destroy_player_session_path, method: :delete
+
+          - else
+            = link_to 'Log in', new_player_session_path
+            = link_to 'Sign up', new_player_registration_path
+
+    .mod-body
+      .layout-wrap
+        .content
+          = flash[:notice] if flash[:notice]
+          = yield
+
+    %footer.mod-footer
+      .layout-wrap
+        .content
           :markdown
             Robo Racer © 2015.
             Built with love by [Bob Forma](https://github.com/bforma/).
