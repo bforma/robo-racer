@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Robot = React.createBackboneClass({
   render: function() {
     var color = RoboRacer.Collections.Players.color(this.getModel().get('player_id'));

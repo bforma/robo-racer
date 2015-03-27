@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Board = React.createBackboneClass({
   render: function() {
     var board = this.getModel();

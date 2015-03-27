@@ -37,4 +37,5 @@ Rails.application.configure do
 
   # Configure react (see https://github.com/facebook/react-rails).
   config.react.variant = :development
+  config.react.addons = true
 end

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.LobbyButtons = React.createBackboneClass({
   mixins: [
     React.BackboneMixin('game'),

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Spawn = React.createBackboneClass({
   render: function() {
     var className = "spawn" +

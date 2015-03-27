@@ -23,8 +23,8 @@ RoboRacer.App = Class.extend({
       var game = window.game = gameRepository.find(gameId);
       game.set('current_player_id', currentPlayerId);
 
-      React.renderComponent(
-        new RoboRacer.Views.Game({model: game}),
+      React.render(
+        <RoboRacer.Views.Game model={game} />,
         $("#game").get(0)
       );
     });

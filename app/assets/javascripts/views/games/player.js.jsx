@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Player = React.createBackboneClass({
   render: function() {
     var className = "opponent " +
