@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.SidePanel = React.createClass({
   render: function() {
     return (

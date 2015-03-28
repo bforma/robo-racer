@@ -1,17 +1,18 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Registers = React.createBackboneClass({
   createRegister: function(register, index) {
-    return new RoboRacer.Views.Register({
-      key: index,
-      index: index,
-      model: register,
-      onCardDrop: this.props.onCardDrop,
-      onInstructionCardClick: function(event, instructionCard) {
-        this.props.onInstructionCardClick(
-          event, instructionCard, index
-        );
-      }.bind(this)
-    });
+    var func = function(event, instructionCard) {
+      this.props.onInstructionCardClick(
+        event, instructionCard, index
+      );
+    }.bind(this);
+
+    return <RoboRacer.Views.Register
+      key={index}
+      index={index}
+      model={register}
+      onCardDrop={this.props.onCardDrop}
+      onInstructionCardClick={func}
+    />
   },
 
   render: function() {

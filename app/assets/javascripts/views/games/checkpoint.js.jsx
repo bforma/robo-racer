@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Checkpoint = React.createBackboneClass({
   render: function() {
     var className = "checkpoint" +

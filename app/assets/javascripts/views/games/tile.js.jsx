@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Tile = React.createBackboneClass({
   render: function() {
     var className =

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Program = React.createBackboneClass({
   mixins: [
     React.BackboneMixin('player'),

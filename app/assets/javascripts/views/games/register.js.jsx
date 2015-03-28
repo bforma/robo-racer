@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Register = React.createBackboneClass({
   onDragOver: function(event) {
     event.preventDefault();
@@ -17,10 +16,10 @@ RoboRacer.Views.Register = React.createBackboneClass({
     var register = this.getModel();
     var instructionCard = register.get('instruction_card');
     if (instructionCard) {
-      var instructionCardView = new RoboRacer.Views.InstructionCard({
-        model: instructionCard,
-        onClick: this.props.onInstructionCardClick
-      });
+      var instructionCardView = <RoboRacer.Views.InstructionCard
+        model={instructionCard}
+        onClick={this.props.onInstructionCardClick}
+      />
     }
 
     return (

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.InstructionCard = React.createBackboneClass({
   render: function() {
     var card = this.getModel();

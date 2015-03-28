@@ -98,7 +98,7 @@ describe GameCommandHandler, type: :command_handlers do
       let(:command) { program_robot_command }
 
       describe "validations" do
-        it { is_expected.to ensure_length_of(:instruction_cards).is_equal_to(5) }
+        it { is_expected.to validate_length_of(:instruction_cards).is_equal_to(5) }
       end
 
       it_behaves_like "an event publisher" do

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 RoboRacer.Views.Game = React.createBackboneClass({
   render: function() {
     var game = this.getModel();
@@ -7,7 +6,7 @@ RoboRacer.Views.Game = React.createBackboneClass({
       var lobbyButtons = <RoboRacer.Views.LobbyButtons game={game} />
     } else if(game.running()) {
       var round = "Round " + game.get('round_number');
-      var board = RoboRacer.Views.Board({model: game.get('board')});
+      var board = <RoboRacer.Views.Board model={game.get('board')} />;
       var hand = <RoboRacer.Views.Hand player={game.currentPlayer()} />;
       var program = <RoboRacer.Views.Program
         player={game.currentPlayer()}
