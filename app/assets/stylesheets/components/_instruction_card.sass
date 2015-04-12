@@ -1,22 +1,24 @@
 .comp-instruction_card
-  position: relative
-  width: 60px
-  height: 100px
-  padding: 5px
-  border: 1px solid black
-  background-color: $white
-  text-align: center
+  display: flex
+  flex-direction: column
+  align-items: center
+  flex: 1
+  margin: 5px
+  width: $card_width
+  height: $card_height
+  padding: 10px
+  background: $sand_light
+  border: 2px solid $sky_dark
+  border-radius: $br
+  cursor: pointer
 
   .icon
-    font-size: 175%
-    margin-bottom: 10px
+    font-size: 200%
+    flex: 1
 
   .text
     font-size: 90%
+    margin-bottom: 10px
 
   .priority
-    position: absolute
-    bottom: 5px
-    left: 0
-    right: 0
-    font-size: 75%
+    font-size: 70%

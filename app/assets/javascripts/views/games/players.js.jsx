@@ -5,7 +5,7 @@ RoboRacer.Views.Players = React.createBackboneClass({
 
   render: function() {
     return (
-      <ol className="mod-opponents">
+      <ol className="mod-players">
         { this.getCollection().map(this.createPlayer) }
       </ol>
     );

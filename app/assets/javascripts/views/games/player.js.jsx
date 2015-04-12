@@ -1,17 +1,17 @@
 RoboRacer.Views.Player = React.createBackboneClass({
   render: function() {
-    var className = "opponent " +
+    var className = "player " +
       RoboRacer.Collections.Players.color(this.getModel().get('_id'));
 
     var playerStatus = React.addons.classSet({
-      'status': true,
+      'player-status': true,
       'pending fa fa-clock-o': !this.getModel().hasCommittedProgram(),
       'committed fa fa-check': this.getModel().hasCommittedProgram()
     });
 
     return (
       <li className={ className }>
-        { this.getModel().get('name') }
+        <span className="player-name">{ this.getModel().get('name') }</span>
         <span className={playerStatus} />
       </li>
     );

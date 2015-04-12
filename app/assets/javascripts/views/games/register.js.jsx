@@ -21,10 +21,14 @@ RoboRacer.Views.Register = React.createBackboneClass({
         onClick={this.props.onInstructionCardClick}
       />
     }
+    var classes = React.addons.classSet({
+      'register': true,
+      'programmed': instructionCard,
+    });
 
     return (
       <li
-        className="register"
+        className={ classes }
         onDragOver={ this.onDragOver }
         onDrop={ this.onDrop }>
         { instructionCardView }

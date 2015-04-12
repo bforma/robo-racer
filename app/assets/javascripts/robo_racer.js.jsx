@@ -24,8 +24,8 @@ RoboRacer.App = Class.extend({
       game.set('current_player_id', currentPlayerId);
 
       React.render(
-        <RoboRacer.Views.Game model={game} />,
-        $("#game").get(0)
+        <RoboRacer.Views.Show model={game} />,
+        $("body").get(0)
       );
     });
   }

@@ -1,0 +1,16 @@
+.mod-players
+  .player
+    display: flex
+    margin-bottom: 10px
+    padding: 10px
+    background: $sand_light
+    border-bottom: 2px solid $sky_dark
+    border-radius: $br
+
+    .player-name
+      flex: 1
+      text-overflow: ellipsis
+
+    @each $color in $player_colors
+      &.#{$color}
+        background: lighten($color, 20%)
