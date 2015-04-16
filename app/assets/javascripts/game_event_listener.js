@@ -139,16 +139,12 @@ RoboRacer.GameEventListener = Class.extend({
   },
 
   onRobotMovedEvent: function(payload) {
-    var game = this.gameRepository.find(payload.id);
-    var robots = game.get('board').get('robots');
-    var robot = robots.findWhere({player_id: payload.player_id});
-    robot.set({
-      x: payload.robot.x,
-      y: payload.robot.y
-    });
+    this.moveRobot(payload);
   },
 
-  onRobotPushedEvent: this.onRobotMovedEvent,
+  onRobotPushedEvent: function(payload) {
+    this.moveRobot(payload);
+  },
 
   onRobotDiedEvent: function(payload) {
     var game = this.gameRepository.find(payload.id);
@@ -156,4 +152,14 @@ RoboRacer.GameEventListener = Class.extend({
     var robot = robots.findWhere({player_id: payload.player_id});
     robots.remove(robot);
   },
+
+  moveRobot: function(payload) {
+    var game = this.gameRepository.find(payload.id);
+    var robots = game.get('board').get('robots');
+    var robot = robots.findWhere({player_id: payload.player_id});
+    robot.set({
+      x: payload.robot.x,
+      y: payload.robot.y
+    });
+  }
 });
