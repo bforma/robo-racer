@@ -1,65 +1,21 @@
 .mod-program
-  ol
-    display: inline-block
-    margin-right: 30px
+  display: flex
+  align-items: center
+
+  .registers
+    display: flex
+    flex-direction: row
+    margin: -5px 20px -5px -5px
 
   .register
-    width: 72px
-    height: 112px
-    position: relative
-    float: left
-    margin-right: 10px
-    padding: 5px
-    list-style-type: none
-    background: rgba(white,.2)
-    border: 1px dashed black
+    width: $card_width
+    height: $card_height
+    margin: 5px
+    border: 1px dashed $sky_dark
+    border-radius: $br
 
-    &:before
-      position: absolute
-      top: 0
-      right: 0
-      left: 0
-      font-size: 30px
-      text-align: center
-      line-height: 105px
-      color: rgba($blue, .3)
+    &.programmed
+      border: none
 
-    @for $i from 1 through 5
-      &:nth-child(#{$i}):before
-        content: "#{$i}"
-
-    .comp-instruction_card
-      cursor: pointer
-
-  .button-program-robot
-    display: inline-block
-    width: 80px
-    height: 80px
-    position: relative
-    top: -18px
-    margin-top: -40px
-    padding: 15px
-    font-size: 25px
-    text-shadow: 2px 2px rgba(#000,.2)
-    color: $white
-    background: linear-gradient($blue, darken($blue, 10%))
-    border: none
-    border-radius: 50%
-    box-shadow: 0 5px 0 0 darken($blue, 25%)
-    cursor: pointer
-    vertical-align: bottom
-    +appearance(none)
-
-    &:hover,
-    &:focus
-      background: darken($blue, 10%)
-
-    &:active:enabled
-      top: -13px
-      background: darken($blue, 15%)
-      box-shadow: none
-
-    &:disabled
-      cursor: not-allowed
-      background: $grey
-      box-shadow: 0 5px 0 0 darken($grey, 25%)
+  .comp-instruction_card
+    margin: 0

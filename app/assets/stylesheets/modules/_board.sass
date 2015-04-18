@@ -1,17 +1,17 @@
 .mod-board
-  margin-top: -150px
+  flex: 1
+  overflow: hidden
 
   .body
     position: relative
     height: $max_x * $size
     width: $max_y * $size
-    margin: 0 auto
+    max-height: $max_x * $size
+    max-width: $max_y * $size
+    margin: auto
     +transform-origin(center)
     +transform(rotateX(60deg) rotateZ(45deg))
     +transform-style(preserve-3d)
-
-  &.perspective
-    +perspective(2500px)
 
   %relative
     position: relative

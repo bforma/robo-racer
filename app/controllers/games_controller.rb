@@ -6,4 +6,8 @@ class GamesController < ApplicationController
     dispatch_command!(CreateGameCommand.new(id: game_id, player_id: current_player.id))
     redirect_to action: :show, id: game_id
   end
+
+  def show
+    render :show, layout: 'game'
+  end
 end

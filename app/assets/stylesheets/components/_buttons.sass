@@ -19,16 +19,22 @@ button
 
   // colors (+button arguments: $text_color, $background_color, $hover_background_color, $border_color, $hover_border_color)
 
-  +button(white, $foodpills, darken($foodpills, 20%), $foodpills, darken($foodpills, 20%))
+  +button($white, $foodpills, darken($foodpills, 10%), $foodpills, darken($foodpills, 10%))
   &.disabled,
   &[disabled]
-    +button-disabled(white, lighten($foodpills, 30%))
+    +button-disabled($white, lighten($foodpills, 20%))
 
-  &.sky
-    +button(white, $sky, darken($sky, 20%), $sky, darken($sky, 20%))
+  &.inverted
+    +button($foodpills, $white, darken($white, 10%), $foodpills, darken($foodpills, 10%))
     &.disabled,
     &[disabled]
-      +button-disabled(white, lighten($sky, 30%))
+      +button-disabled($white, lighten($foodpills, 20%))
+
+  &.sky
+    +button($white, $sky, darken($sky, 10%), $sky, darken($sky, 10%))
+    &.disabled,
+    &[disabled]
+      +button-disabled($white, lighten($sky, 20%))
 
   &.disabled,
   &[disabled]
