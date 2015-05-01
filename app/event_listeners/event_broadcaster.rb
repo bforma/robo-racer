@@ -11,10 +11,16 @@ class EventBroadcaster < BaseEventListener
     InstructionCardDealtEvent, # TODO filter cards
     RobotProgrammedEvent, # TODO filter cards
     AllRobotsProgrammedEvent,
+    GameRoundStartedPlayingEvent,
+    InstructionCardRevealedEvent,
     RobotMovedEvent,
     RobotRotatedEvent,
     RobotPushedEvent,
-    RobotDiedEvent
+    RobotDiedEvent,
+    GoalTouchedEvent,
+    GameRoundFinishedPlayingEvent,
+    PlayerWonGameEvent,
+    GameEndedEvent,
   ]
 
   inheritable_accessor :router do

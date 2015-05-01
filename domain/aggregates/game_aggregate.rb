@@ -29,12 +29,7 @@ class GameAggregate < BaseAggregate
     instruction_cards = InstructionDeckComposer.compose
     instruction_cards.shuffle!
 
-    apply GameStartedEvent.new(
-      id,
-      GameState::RUNNING,
-      instruction_cards.dup,
-      BoardComposer.compose
-    )
+    apply GameStartedEvent.new(id, GameState::RUNNING, instruction_cards.dup, BoardComposer.compose)
 
     place_spawns
     place_goals
@@ -59,10 +54,12 @@ class GameAggregate < BaseAggregate
   end
 
   def play_current_round
+    apply GameRoundStartedPlayingEvent.new(id, GameRound.new(@game_round_number))
     play_registers
     @board.touch_goals
     @board.replace_spawns
     discard_instruction_cards
+    apply GameRoundFinishedPlayingEvent.new(id, GameRound.new(@game_round_number))
 
     end_game if game_has_winner?
     start_new_round if game_running?
@@ -120,6 +117,9 @@ private
 
   def play_registers
     @registers.each do |register|
+      register.each do |robot_instruction|
+        apply InstructionCardRevealedEvent.new(id, robot_instruction[0], robot_instruction[1])
+      end
       register.each do |robot_instruction|
         @board.instruct_robot(robot_instruction[0], robot_instruction[1])
       end
@@ -180,7 +180,6 @@ private
   end
 
   route_event InstructionCardDealtEvent do |event|
-    # @hands[event.player_id] ||= Array.new
     @hands[event.player_id] << event.instruction_card
   end
 

@@ -18,6 +18,10 @@ InstructionDeckShuffledEvent = Struct.new(:id, :instruction_cards)
 RobotProgrammedEvent = Struct.new(:id, :player_id, :instruction_cards)
 AllRobotsProgrammedEvent = Struct.new(:id)
 
+GameRoundStartedPlayingEvent = Struct.new(:id, :game_round)
+InstructionCardRevealedEvent = Struct.new(:id, :player_id, :instruction_card)
+GameRoundFinishedPlayingEvent = Struct.new(:id, :game_round)
+
 RobotMovedEvent = Struct.new(:id, :player_id, :robot)
 RobotRotatedEvent = Struct.new(:id, :player_id, :robot)
 RobotDiedEvent = Struct.new(:id, :player_id, :robot)
