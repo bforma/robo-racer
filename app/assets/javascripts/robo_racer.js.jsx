@@ -12,8 +12,9 @@ RoboRacer.App = Class.extend({
 
     var gameRepository = new RoboRacer.GameRepository();
     var gameEventListener = new RoboRacer.GameEventListener(gameRepository);
+    var throttler = new RoboRacer.EventThrottler(gameEventListener);
     RoboRacer.App.socket = window.socket = new RoboRacer.Socket(
-      gameEventListener,
+      throttler,
       accessToken,
       gameId
     );
