@@ -15,7 +15,13 @@ RoboRacer.Socket = Class.extend({
     });
 
     connection.on("event", function(event) {
-      gameEventListener.handleEvent(JSON.parse(event));
+      try {
+        gameEventListener.handleEvent(JSON.parse(event));
+      }
+      catch(error) {
+        console.error(error);
+        throw error;
+      }
     });
   }
 });
