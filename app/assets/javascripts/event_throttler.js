@@ -13,9 +13,10 @@ RoboRacer.EventThrottler = Class.extend({
   },
 }, {
   EVENT_DELAYS: {
-    'RobotRotatedEvent': 1000,
-    'RobotMovedEvent': 1000,
-    'RobotPushedEvent': 1000,
-    'RobotDiedEvent': 1000,
+    'InstructionCardRevealedEvent': 250,
+    'RobotRotatedEvent': 2000,
+    'RobotMovedEvent': 2000,
+    'RobotPushedEvent': 2000,
+    'RobotDiedEvent': 2000,
   }
 });

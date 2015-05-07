@@ -99,6 +99,7 @@ RoboRacer.GameEventListener = Class.extend({
       player.get('program').forEach(function(register, index) {
         register.set('instruction_card', instructionCards[index]);
       });
+      player.get('revealedRegisters').reset();
     });
   },
 
@@ -129,6 +130,13 @@ RoboRacer.GameEventListener = Class.extend({
         player.get('hand').remove(cardInHand);
       }
     });
+  },
+
+  onInstructionCardRevealedEvent: function(payload) {
+    var game = this.gameRepository.find(payload.id);
+    var player = game.get('players').findWhere({_id: payload.player_id});
+    var register = player.get('revealedRegisters').findWhere({instruction_card: undefined});
+    register.set('instruction_card', new RoboRacer.Models.InstructionCard(payload.instruction_card));
   },
 
   onRobotRotatedEvent: function(payload) {

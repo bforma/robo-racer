@@ -6,6 +6,7 @@ RoboRacer.Models.Player = Backbone.Model.extend({
     this.set('hand', new RoboRacer.Collections.Hand());
     this.set('program', new RoboRacer.Collections.Program());
     this.set('committedProgram', false);
+    this.set('revealedRegisters', new RoboRacer.Collections.Program());
   },
 
   programRegister: function(registerIndex, instructionCard) {
