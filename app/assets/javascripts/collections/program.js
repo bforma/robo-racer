@@ -2,9 +2,7 @@ RoboRacer.Collections.Program = Backbone.Collection.extend({
   model: RoboRacer.Models.Register,
 
   initialize: function() {
-    _.range(5).forEach(function() {
-      this.add(new RoboRacer.Models.Register());
-    }.bind(this));
+    this.reset();
   },
 
   program: function(index, card) {
@@ -27,5 +25,12 @@ RoboRacer.Collections.Program = Backbone.Collection.extend({
     return _.every(this.models, function(register) {
       return register.get('instruction_card');
     });
+  },
+
+  reset: function() {
+    Backbone.Collection.prototype.reset.call(this);
+    _.range(5).forEach(function() {
+      this.add(new RoboRacer.Models.Register());
+    }.bind(this));
   }
 });
