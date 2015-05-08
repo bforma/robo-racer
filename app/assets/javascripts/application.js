@@ -17,11 +17,10 @@
 //= require react
 //= require react.backbone
 //= require socket.io
+//= require rx.all
 
 //= require class
 //= require robo_racer
-//= require queue
-//= require event_throttler
 //= require game_repository
 //= require game_event_listener
 //= require socket
