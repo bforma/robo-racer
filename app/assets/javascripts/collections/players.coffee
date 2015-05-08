@@ -1,12 +1,12 @@
 RoboRacer.Collections.Players = Backbone.Collection.extend({
   model: RoboRacer.Models.Player
+
   initialize: ->
     @on 'add', @playerAdded, this
-    return
+
   playerAdded: (player) ->
     player.fetch()
     @constructor.color player.id, @indexOf(player)
-    return
 
 },
   COLORS: [
