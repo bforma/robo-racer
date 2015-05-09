@@ -18,6 +18,9 @@ $robot-size: $size / 2
     margin-top: ($tile - $robot-size)/2
     margin-left: ($tile - $robot-size)/2
     +transform(translateZ($robot-size + $floor + $robot-size/8))
+    +transition-property(transform, top, left, bottom, right)
+    +transition-duration(1s)
+    +transition-timing-function(ease)
 
     @each $facing in $facings
       &.face_#{$facing}

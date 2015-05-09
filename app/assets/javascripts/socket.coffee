@@ -14,11 +14,13 @@ RoboRacer.Socket = Class.extend(
       connection.emit 'join', gameId
 
     eventDelays = {
+      'GameRoundStartedPlayingEvent': 1500
       'InstructionCardRevealedEvent': 250
       'RobotRotatedEvent': 1500
       'RobotMovedEvent': 1500
       'RobotPushedEvent': 1500
       'RobotDiedEvent': 1500
+      'GameRoundFinishedPlayingEvent': 1500
     }
 
     delayForEvent = (event) ->
@@ -28,7 +30,8 @@ RoboRacer.Socket = Class.extend(
       .fromEvent(connection, 'event')
       .map (event) -> JSON.parse(event)
       .map (event) -> event: event, delay: delayForEvent(event)
-      .concatMap (x) -> Rx.Observable.return(x.event).delay(x.delay)
+      .concatMap (x) ->
+        Rx.Observable.empty().delay(x.delay).merge(Rx.Observable.return(x.event))
 
     source.subscribe (event) -> gameEventListener.handleEvent(event)
 )
