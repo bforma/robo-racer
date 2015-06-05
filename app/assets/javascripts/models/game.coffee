@@ -39,8 +39,8 @@ RoboRacer.Models.Game = Backbone.Model.extend(
     options = options or {}
     data = data or {}
     $.ajax
-      url: @url() + '/' + command
+      url: @url() + '/' + command + '?access_token=' + RoboRacer.accessToken
       type: 'PUT'
-      data: data
+      data: JSON.stringify(data)
       success: options.success
 )

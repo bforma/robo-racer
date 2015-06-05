@@ -12,6 +12,8 @@ module Api
     rescue_from DomainError, with: :domain_error
     rescue_from InvalidCommandError, with: :invalid_command_error
 
+    skip_before_filter :verify_authenticity_token
+
   private
 
     def restrict_access

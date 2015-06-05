@@ -39,7 +39,7 @@ module Api
       end
 
       def program_robot
-        instruction_cards = params.require(:instruction_cards).map do |_, param|
+        instruction_cards = params.require(:instruction_cards).map do |param|
           InstructionCard.new(
             param[:action],
             param[:amount].to_i, # TODO fix this silly to_i

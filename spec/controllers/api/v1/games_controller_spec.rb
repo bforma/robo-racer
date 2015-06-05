@@ -40,7 +40,7 @@ describe Api::V1::GamesController do
 
     context 'when command is invalid' do
       let(:response) do
-        put :program_robot, id: 'game', instruction_cards: {"0" => {}}
+        put :program_robot, id: 'game', instruction_cards: [build(:instruction_card)]
       end
 
       it { expect(response.status).to eq(422) }
@@ -129,7 +129,7 @@ describe Api::V1::GamesController do
         put(
           :program_robot,
           id: 'game',
-          instruction_cards: {"0" => attributes_for(:instruction_card)}
+          instruction_cards: [attributes_for(:instruction_card)]
         )
       end
     end
