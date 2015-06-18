@@ -30,8 +30,7 @@ RoboRacer.Socket = Class.extend(
       .fromEvent(connection, "event")
       .map (event) -> JSON.parse(event)
       .map (event) -> event: event, delay: delayForEvent(event)
-      .concatMap (x) ->
-        Rx.Observable.empty().delay(x.delay).merge(Rx.Observable.return(x.event))
+      .concatMap (x) -> Rx.Observable.empty().delay(x.delay).merge(Rx.Observable.return(x.event))
 
     source.subscribe (event) -> gameEventListener.handleEvent(event)
 )
