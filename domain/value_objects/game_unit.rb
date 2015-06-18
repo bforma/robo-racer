@@ -1,4 +1,5 @@
-class GameUnit < Struct.new(:x, :y, :facing) 
+GameUnit = Struct.new(:x, :y, :facing)
+class GameUnit
   UP = 0
   RIGHT = 90
   DOWN = 180
@@ -20,7 +21,7 @@ class GameUnit < Struct.new(:x, :y, :facing)
     "#{x},#{x} (#{facing})"
   end
 
-private
+  private
 
   def move_x(amount)
     return x + amount if facing == RIGHT
@@ -49,5 +50,4 @@ private
   def new_facing(amount)
     (facing + amount) % 360
   end
-
 end

@@ -8,7 +8,12 @@ window.RoboRacer = {
 RoboRacer.App = Class.extend({
   initialize: function(currentPlayerId, accessToken, gameId) {
     // add access_token to all AJAX requests
-    $.ajaxSetup({data: {access_token: accessToken}});
+    RoboRacer.accessToken = accessToken;
+    $.ajaxSetup({
+      data: {access_token: RoboRacer.accessToken},
+      contentType: "application/json",
+      accept: "application/json",
+    });
 
     var gameRepository = new RoboRacer.GameRepository();
     var gameEventListener = new RoboRacer.GameEventListener(gameRepository);

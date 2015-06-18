@@ -29,12 +29,7 @@ class GameAggregate < BaseAggregate
     instruction_cards = InstructionDeckComposer.compose
     instruction_cards.shuffle!
 
-    apply GameStartedEvent.new(
-      id,
-      GameState::RUNNING,
-      instruction_cards.dup,
-      BoardComposer.compose
-    )
+    apply GameStartedEvent.new(id, GameState::RUNNING, instruction_cards.dup, BoardComposer.compose)
 
     place_spawns
     place_goals
@@ -59,10 +54,12 @@ class GameAggregate < BaseAggregate
   end
 
   def play_current_round
+    apply GameRoundStartedPlayingEvent.new(id, GameRound.new(@game_round_number))
     play_registers
     @board.touch_goals
     @board.replace_spawns
     discard_instruction_cards
+    apply GameRoundFinishedPlayingEvent.new(id, GameRound.new(@game_round_number))
 
     end_game if game_has_winner?
     start_new_round if game_running?
@@ -83,11 +80,11 @@ class GameAggregate < BaseAggregate
     end
   end
 
-private
+  private
 
   def start_new_round
     spawn_players
-    hands = programs = @player_ids.reduce({}) do |memo, player_id|
+    hands = programs = @player_ids.inject({}) do |memo, player_id|
       memo[player_id] = []
       memo
     end
@@ -120,6 +117,9 @@ private
 
   def play_registers
     @registers.each do |register|
+      register.each do |robot_instruction|
+        apply InstructionCardRevealedEvent.new(id, robot_instruction[0], robot_instruction[1])
+      end
       register.each do |robot_instruction|
         @board.instruct_robot(robot_instruction[0], robot_instruction[1])
       end
@@ -180,7 +180,6 @@ private
   end
 
   route_event InstructionCardDealtEvent do |event|
-    # @hands[event.player_id] ||= Array.new
     @hands[event.player_id] << event.instruction_card
   end
 
@@ -218,17 +217,17 @@ RobotAlreadyProgrammedError = Class.new(DomainError)
 
 class InstructionDeckComposer
   DECK_COMPOSITION = [
-    {type: :u_turn, count: 6, start: 10, step: 10},
-    {type: :rotate_left, count: 18, start: 70, step: 20},
-    {type: :rotate_right, count: 18, start: 80, step: 20},
-    {type: :back_up, count: 6, start: 430, step: 10},
-    {type: :move_1, count: 18, start: 490, step: 10},
-    {type: :move_2, count: 12, start: 670, step: 10},
-    {type: :move_3, count: 6, start: 790, step: 10},
+    { type: :u_turn, count: 6, start: 10, step: 10 },
+    { type: :rotate_left, count: 18, start: 70, step: 20 },
+    { type: :rotate_right, count: 18, start: 80, step: 20 },
+    { type: :back_up, count: 6, start: 430, step: 10 },
+    { type: :move_1, count: 18, start: 490, step: 10 },
+    { type: :move_2, count: 12, start: 670, step: 10 },
+    { type: :move_3, count: 6, start: 790, step: 10 },
   ]
 
   def self.compose
-    DECK_COMPOSITION.reduce([]) do |deck, card|
+    DECK_COMPOSITION.inject([]) do |deck, card|
       card[:count].times do |n| # n starts at 0
         priority = card[:start] + n * card[:step]
         deck << InstructionCard.send(card[:type], priority)
@@ -244,7 +243,7 @@ class BoardComposer
   DEFAULT_HEIGHT = 12
 
   def self.compose(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT)
-    (0..height - 1).reduce({}) do |memo, y|
+    (0..height - 1).inject({}) do |memo, y|
       (0..width - 1).each do |x|
         memo["#{x},#{y}"] = BoardTile.new(x, y)
       end

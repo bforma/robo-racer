@@ -1,5 +1,4 @@
 class AsyncEventListener < BaseEventListener
-
   inheritable_accessor :router do
     Fountain::Router.create_router
   end

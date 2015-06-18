@@ -1,8 +1,8 @@
 class Redis::Configuration
   class << self
-    def load_config(redis_yml = File.join(Rails.root, 'config', 'redis.yml'))
+    def load_config(redis_yml = File.join(Rails.root, "config", "redis.yml"))
       config = YAML.load_file(redis_yml)
-      default = config['default']
+      default = config["default"]
       @config = default.merge(config[Rails.env] || {}).symbolize_keys
     end
 
