@@ -1,6 +1,6 @@
 RoboRacer.Views.Players = React.createBackboneClass({
   createPlayer: function(player) {
-    return <RoboRacer.Views.Player key={player.get("_id")} model={player} />
+    return <RoboRacer.Views.Player key={player.get("id")} model={player} />
   },
 
   render: function() {

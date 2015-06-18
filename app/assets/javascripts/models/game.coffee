@@ -6,10 +6,10 @@ RoboRacer.Models.Game = Backbone.Model.extend(
     @set "players", new (RoboRacer.Collections.Players)
 
   currentPlayer: ->
-    @get("players").findWhere "_id": @get("current_player_id")
+    @get("players").findWhere "id": @get("current_player_id")
 
   currentPlayerInGame: ->
-    _.include @get("players").pluck("_id"), @get("current_player_id")
+    _.include @get("players").pluck("id"), @get("current_player_id")
 
   currentPlayerIsHost: ->
     @get("current_player_id") == @get("host_id")

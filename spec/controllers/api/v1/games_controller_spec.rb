@@ -97,21 +97,21 @@ describe Api::V1::GamesController do
 
   describe "PUT #join" do
     it_behaves_like "an accepted PUT request" do
-      let(:command) { JoinGameCommand.new(id: "game", player_id: player._id) }
+      let(:command) { JoinGameCommand.new(id: "game", player_id: player.id) }
       let(:response) { put :join, id: "game" }
     end
   end
 
   describe "PUT #leave" do
     it_behaves_like "an accepted PUT request" do
-      let(:command) { LeaveGameCommand.new(id: "game", player_id: player._id) }
+      let(:command) { LeaveGameCommand.new(id: "game", player_id: player.id) }
       let(:response) { put :leave, id: "game" }
     end
   end
 
   describe "PUT #start" do
     it_behaves_like "an accepted PUT request" do
-      let(:command) { StartGameCommand.new(id: "game", player_id: player._id) }
+      let(:command) { StartGameCommand.new(id: "game", player_id: player.id) }
       let(:response) { put :start, id: "game" }
     end
   end
@@ -121,7 +121,7 @@ describe Api::V1::GamesController do
       let(:command) do
         ProgramRobotCommand.new(
           id: "game",
-          player_id: player._id,
+          player_id: player.id,
           instruction_cards: build_list(:instruction_card, 1)
         )
       end

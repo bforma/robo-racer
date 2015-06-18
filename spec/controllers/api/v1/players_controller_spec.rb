@@ -4,7 +4,7 @@ describe Api::V1::PlayersController do
   let(:player) { login_player }
 
   describe "GET #show" do
-    let(:request) { get :show, id: player._id }
+    let(:request) { get :show, id: player.id }
     subject { request }
 
     it { expect(subject.status).to eq(200) }
