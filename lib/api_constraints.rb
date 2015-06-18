@@ -5,7 +5,7 @@ class ApiConstraints
   end
 
   def matches?(req)
-    @default || req.headers['Accept'].include?(
+    @default || req.headers["Accept"].include?(
       "application/vnd.robo-racer-api.v#{@version}"
     )
   end

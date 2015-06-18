@@ -1,7 +1,7 @@
 class BaseEntity
   include Fountain::EventSourcing::Entity
 
-private
+  private
 
   def id
     aggregate_root.id

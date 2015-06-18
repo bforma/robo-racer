@@ -3,7 +3,7 @@ class PlayerAggregate < BaseAggregate
     apply PlayerCreatedEvent.new(id, name, email, password, access_token)
   end
 
-  route_event PlayerCreatedEvent do |event, headers|
+  route_event PlayerCreatedEvent do |event, _headers|
     @id = event.id
   end
 end

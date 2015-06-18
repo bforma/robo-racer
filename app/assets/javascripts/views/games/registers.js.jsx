@@ -17,7 +17,7 @@ RoboRacer.Views.Registers = React.createBackboneClass({
 
   render: function() {
     return (
-      <ol className="registers">
+      <ol className="comp-registers">
         { this.getCollection().map(this.createRegister) }
       </ol>
     );

@@ -1,15 +1,15 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
-require 'spec_helper'
+# This file is copied to spec/ when you run "rails generate rspec:install"
+ENV["RAILS_ENV"] ||= "test"
+require "spec_helper"
 require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require 'capybara/rails'
-require 'capybara/rspec'
-require 'capybara-screenshot/rspec'
-require 'database_cleaner'
-require_all 'spec/support/rails'
-require 'factory_girl'
-require 'sidekiq/testing'
+require "rspec/rails"
+require "capybara/rails"
+require "capybara/rspec"
+require "capybara-screenshot/rspec"
+require "database_cleaner"
+require_all "spec/support/rails"
+require "factory_girl"
+require "sidekiq/testing"
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -38,7 +38,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   DatabaseCleaner[:mongoid].strategy = :truncation
-  DatabaseCleaner[:redis, {connection: Redis::Configuration.url}].strategy = :truncation
+  DatabaseCleaner[:redis, { connection: Redis::Configuration.url }].strategy = :truncation
 
   config.before { DatabaseCleaner.start }
   config.after { DatabaseCleaner.clean }

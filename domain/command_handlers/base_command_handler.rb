@@ -7,7 +7,7 @@ class BaseCommandHandler
     @repository = repository
   end
 
-private
+  private
 
   def with_aggregate(id)
     aggregate = repository.load(id)

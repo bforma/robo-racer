@@ -11,8 +11,12 @@ RoboRacer.Views.Player = React.createBackboneClass({
 
     return (
       <li className={ className }>
-        <span className="player-name">{ this.getModel().get('name') }</span>
-        <span className={playerStatus} />
+        <div className="player-info">
+          <span className="player-name">{ this.getModel().get('name') }</span>
+          <span className={playerStatus} />
+        </div>
+
+        <RoboRacer.Views.Registers collection={this.getModel().get('revealedRegisters')} />
       </li>
     );
   }

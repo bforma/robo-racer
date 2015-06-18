@@ -1,5 +1,4 @@
 class InstructionDeckEntity < BaseEntity
-
   inheritable_accessor :event_router do
     Fountain::Router.create_router
   end
@@ -12,9 +11,12 @@ class InstructionDeckEntity < BaseEntity
 
   def deal_card(player_id)
     card = @drawable.first
-    return (shuffle; deal_card(player_id)) unless card
-
-    apply InstructionCardDealtEvent.new(id, player_id, card)
+    if card
+      apply InstructionCardDealtEvent.new(id, player_id, card)
+    else
+      shuffle
+      deal_card(player_id)
+    end
   end
 
   def discard_card(card)
@@ -44,7 +46,6 @@ class InstructionDeckEntity < BaseEntity
     @drawable = event.instruction_cards.dup
     @discarded = Array.new
   end
-
 end
 
 OutOfCardsError = Class.new(DomainError)

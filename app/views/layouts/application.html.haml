@@ -3,10 +3,10 @@
   %head
     %title Robo Racer
 
-    = stylesheet_link_tag 'application', media: 'all'
+    = stylesheet_link_tag "application", media: "all"
 
-    = javascript_include_tag 'es5-shim' if Rails.env.test?
-    = javascript_include_tag 'application'
+    = javascript_include_tag "es5-shim" if Rails.env.test?
+    = javascript_include_tag "application"
 
     = csrf_meta_tags
 
@@ -14,18 +14,18 @@
     %header.mod-header
       .layout-wrap
         %div
-          = link_to "Robo Racer", root_path, class: 'logo'
+          = link_to "Robo Racer", root_path, class: "logo"
 
         %nav
           %a Play now!
 
           - if current_player
             %span.player-name= current_player.name
-            = link_to 'Log out', destroy_player_session_path, method: :delete
+            = link_to "Log out", destroy_player_session_path, method: :delete
 
           - else
-            = link_to 'Log in', new_player_session_path
-            = link_to 'Sign up', new_player_registration_path
+            = link_to "Log in", new_player_session_path
+            = link_to "Sign up", new_player_registration_path
 
     .mod-body
       .layout-wrap
@@ -38,5 +38,4 @@
         .content
           :markdown
             Robo Racer © 2015.
-            Built with love by [Bob Forma](https://github.com/bforma/).
-            Powered by [Zilverline](https://www.zilverline.com).
+            Built with love by [Zilverline](https://www.zilverline.com).

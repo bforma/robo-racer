@@ -1,5 +1,4 @@
 module AuthenticationHelper
-
   def do_login_player
     player_id = new_uuid
     given_events(

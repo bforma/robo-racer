@@ -13,11 +13,16 @@ RSpec.shared_context "CommandHandlers", type: :command_handlers do
   def dispatch(command)
     gateway.dispatch(command)
   end
+  alias_method :when_command, :dispatch
 
   def given_events(*events)
     stream_id = events.first.id
     events = events.map { |event| journal.push(event, {}) }
-    event_store.append("GameAggregate", stream_id, events)
+    event_store.given_events("GameAggregate", stream_id, events)
+  end
+
+  def then_events(*events)
+    expect(event_store.recorded_events.map(&:payload)).to match_array(events)
   end
 end
 

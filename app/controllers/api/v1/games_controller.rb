@@ -39,22 +39,26 @@ module Api
       end
 
       def program_robot
-        instruction_cards = params.require(:instruction_cards).map do |_, param|
+        command = ProgramRobotCommand.new(
+          id: params[:id],
+          player_id: current_player.id,
+          instruction_cards: parse_instruction_cards
+        )
+        dispatch_command! command
+
+        head :accepted
+      end
+
+      private
+
+      def parse_instruction_cards
+        params.require(:instruction_cards).map do |param|
           InstructionCard.new(
             param[:action],
             param[:amount].to_i, # TODO fix this silly to_i
             param[:priority].to_i
           )
         end
-
-        command = ProgramRobotCommand.new(
-          id: params[:id],
-          player_id: current_player.id,
-          instruction_cards: instruction_cards
-        )
-        dispatch_command! command
-
-        head :accepted
       end
     end
   end
