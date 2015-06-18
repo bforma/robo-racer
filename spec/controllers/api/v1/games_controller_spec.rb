@@ -11,8 +11,8 @@ describe Api::V1::GamesController do
         expect_any_instance_of(described_class).
           to receive(:dispatch_command!).
           and_raise(Fountain::Repository::AggregateNotFoundError.new(
-            GameAggregate,
-            "game"
+                      GameAggregate,
+                      "game"
           ))
       end
       it { expect(response.status).to eq(404) }

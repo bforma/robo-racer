@@ -36,7 +36,7 @@ describe PlayerCommandHandler, type: :command_handlers do
         end
 
         context "when unequal" do
-          before  { subject.password_confirmation.reverse! }
+          before { subject.password_confirmation.reverse! }
 
           it "are cleared" do
             expect(subject).to_not be_valid
@@ -51,8 +51,8 @@ describe PlayerCommandHandler, type: :command_handlers do
       it_behaves_like "an event publisher" do
         let(:expected_events) do
           [PlayerCreatedEvent.new(
-             uuid, "Bob", "bob@localhost.local", "secret", access_token
-           )]
+            uuid, "Bob", "bob@localhost.local", "secret", access_token
+          )]
         end
       end
     end

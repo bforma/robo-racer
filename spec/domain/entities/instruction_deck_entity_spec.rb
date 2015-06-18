@@ -58,7 +58,7 @@ describe InstructionDeckEntity, type: :entities do
     context "when a card is dealt" do
       before { given_events(card_1_dealt) }
 
-      it { expect_events(card_1_discarded)  }
+      it { expect_events(card_1_discarded) }
     end
 
     context "when card has not yet been dealt" do

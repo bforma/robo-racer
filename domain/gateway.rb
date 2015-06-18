@@ -52,7 +52,7 @@ class Gateway
     @command_callback ||= DefaultCommandCallback.new
   end
 
-private
+  private
 
   def init_command_bus
     command_bus

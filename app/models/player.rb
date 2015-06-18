@@ -16,7 +16,7 @@ class Player
   field :access_token, type: String
 
   ## Database authenticatable
-  field :email,              type: String, default: ""
+  field :email, type: String, default: ""
   field :encrypted_password, type: String, default: ""
 
   ## Recoverable

@@ -1,4 +1,5 @@
-class InstructionCard < Struct.new(:action, :amount, :priority)
+InstructionCard = Struct.new(:action, :amount, :priority)
+class InstructionCard
   ROTATE = "R"
   MOVE = "M"
 

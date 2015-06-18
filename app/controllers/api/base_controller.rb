@@ -14,7 +14,7 @@ module Api
 
     skip_before_filter :verify_authenticity_token
 
-  private
+    private
 
     def restrict_access
       head :unauthorized unless current_player
@@ -22,7 +22,7 @@ module Api
 
     def current_player
       access_token = params[:access_token]
-      Player.where(:access_token => access_token).first if access_token.present?
+      Player.where(access_token: access_token).first if access_token.present?
     end
     memoize :current_player
 
@@ -37,17 +37,17 @@ module Api
           title: error.class.name.underscore.humanize
         }
       ]
-      render json: {errors: errors}, status: 422
+      render json: { errors: errors }, status: 422
     end
 
     def invalid_command_error(error)
-      errors = error.command.errors.map do |attribute, error|
+      errors = error.command.errors.map do |attribute, msg|
         {
           code: attribute,
-          title: error
+          title: msg
         }
       end
-      render json: {errors: errors}, status: 422
+      render json: { errors: errors }, status: 422
     end
   end
 end

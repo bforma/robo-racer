@@ -1,5 +1,4 @@
 class BoardEntity < BaseEntity
-
   inheritable_accessor :event_router do
     Fountain::Router.create_router
   end
@@ -106,7 +105,7 @@ class BoardEntity < BaseEntity
     @spawns[event.player_id] = event.spawn
   end
 
-private
+  private
 
   def off_board?(position)
     tile_at(position.x, position.y).nil?
@@ -117,13 +116,13 @@ private
   end
 
   def robot_at(position)
-    @robots.find do |_, robot|
+    @robots.detect do |_, robot|
       robot.x == position.x && robot.y == position.y
     end
   end
 
   def goal_at(position)
-    @goals.find do |_, goal|
+    @goals.detect do |_, goal|
       goal.x == position.x && goal.y == position.y
     end
   end
@@ -181,7 +180,6 @@ private
   def player_touched_final_goal?(player_id)
     @last_touched_goals[player_id] == @final_goal
   end
-
 end
 
 IllegalLocationError = Class.new(DomainError)

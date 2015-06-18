@@ -3,7 +3,7 @@ require "domain_helper"
 describe GameUnit do
   describe "#move" do
     subject { GameUnit.new(0, 0, facing).move(amount) }
-    
+
     context "forwards" do
       let(:amount) { 1 }
 

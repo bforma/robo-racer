@@ -16,4 +16,3 @@ require_all "domain/command_handlers"
 
 require_relative "gateway"
 require_relative "default_command_callback"
-

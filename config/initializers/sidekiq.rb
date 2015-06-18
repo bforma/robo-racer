@@ -1,3 +1,3 @@
 Sidekiq.configure_server do |config|
-  config.redis = {url: Redis::Configuration.url}
+  config.redis = { url: Redis::Configuration.url }
 end

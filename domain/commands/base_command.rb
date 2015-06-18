@@ -9,7 +9,7 @@ class BaseCommand
 
   def ==(other)
     return false if other.nil?
-    self.instance_values == other.instance_values
+    instance_values == other.instance_values
   end
 end
 

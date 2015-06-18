@@ -39,7 +39,7 @@ class EventBroadcaster < BaseEventListener
     end)
   end
 
-private
+  private
 
   def redis
     Redis.new(
@@ -56,5 +56,4 @@ private
       payload: payload_filter.call(event)
     }.to_json)
   end
-
 end
