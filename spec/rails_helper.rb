@@ -16,9 +16,11 @@ require "sidekiq/testing"
 # run as spec files by default. This means that files in spec/support that end
 # in _spec.rb will both be required and run as specs, causing the specs to be
 # run twice. It is recommended that you do not name files matching this glob to
-# end with _spec.rb. You can configure this pattern with with the --pattern
+# end with _spec.rb. You can configure this pattern with the --pattern
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+
+ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
@@ -37,7 +39,7 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
 
-  DatabaseCleaner[:mongoid].strategy = :truncation
+  DatabaseCleaner[:active_record].strategy = :truncation
   DatabaseCleaner[:redis, { connection: Redis::Configuration.url }].strategy = :truncation
 
   config.before { DatabaseCleaner.start }

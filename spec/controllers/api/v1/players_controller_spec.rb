@@ -10,7 +10,7 @@ describe Api::V1::PlayersController do
     it { expect(subject.status).to eq(200) }
     it do
       expect(subject.body).to be_json_eql(
-        %({"_id": "#{player.id}", "name": "#{player.name}"})
+        %({"id": "#{player.id}", "name": "#{player.name}"})
       )
     end
 
@@ -29,7 +29,7 @@ describe Api::V1::PlayersController do
     it do
       expect(subject.body).to be_json_eql(
         %({
-            "_id": "#{player.id}",
+            "id": "#{player.id}",
             "access_token": "#{player.access_token}",
             "email": "#{player.email}",
             "name": "#{player.name}"

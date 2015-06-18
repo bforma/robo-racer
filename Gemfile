@@ -2,11 +2,10 @@ source "https://rubygems.org"
 
 gem "rails"
 gem "require_all"
-gem "mongoid"
-gem "bson_ext"
 gem "devise"
 gem "puma"
 gem "memoist"
+gem "pg"
 
 # background jobs
 gem "sidekiq"

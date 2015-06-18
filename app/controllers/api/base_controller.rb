@@ -1,7 +1,7 @@
 module Api
   class BaseController < ApplicationController
     NOT_FOUND_ERRORS = [
-      Mongoid::Errors::DocumentNotFound,
+      ActiveRecord::RecordNotFound,
       Fountain::EventStore::StreamNotFoundError,
       Fountain::Repository::AggregateNotFoundError,
     ]

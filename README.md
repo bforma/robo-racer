@@ -8,10 +8,10 @@
 ### Prerequisites
 
 ```
-brew install redis   # Key-Value Store
-brew install mongodb # Document database
-gem install bundler  # Ruby gem dependency manager
-gem install foreman  # Process manager
+brew install redis   # For event store & pub/sub
+brew install postgresql # For (player) projections
+gem install bundler
+gem install foreman
 ```
 
 ### Installation
