@@ -1,9 +1,9 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe Api::V1::PlayersController do
   let(:player) { login_player }
 
-  describe 'GET #show' do
+  describe "GET #show" do
     let(:request) { get :show, id: player._id }
     subject { request }
 
@@ -21,7 +21,7 @@ describe Api::V1::PlayersController do
     end
   end
 
-  describe 'GET #me' do
+  describe "GET #me" do
     let(:request) { get :me }
     subject { request }
 

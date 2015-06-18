@@ -26,9 +26,7 @@ module Fountain
   module EventStore
     class RedisEventStore < EventStore
       def clear
-        @connection_pool.with do |redis|
-          redis.flushall
-        end
+        @connection_pool.with(&:flushall)
       end
 
       def each_event
@@ -45,4 +43,3 @@ module Fountain
     end
   end
 end
-

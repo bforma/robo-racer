@@ -17,6 +17,7 @@
 //= require react
 //= require react.backbone
 //= require socket.io
+//= require rx.all
 
 //= require class
 //= require robo_racer

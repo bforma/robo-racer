@@ -1,4 +1,4 @@
-require 'domain_helper'
+require "domain_helper"
 
 describe GameAggregate do
   describe GameAggregate::Dealer do

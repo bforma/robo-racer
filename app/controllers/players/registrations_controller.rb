@@ -14,7 +14,7 @@ class Players::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-private
+  private
 
   def sign_up_params
     params.require(:player).permit(

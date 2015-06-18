@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :instruction_card do
-    action 'M'
+    action "M"
     amount 1
     priority 10
   end

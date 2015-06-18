@@ -1,4 +1,4 @@
-require 'domain_helper'
+require "domain_helper"
 
 describe BoardEntity, type: :entities do
   let(:tiles) { BoardComposer.compose(2, 2) }

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe AsyncEventListener do
   let(:listener) { AsyncEventListener.new }

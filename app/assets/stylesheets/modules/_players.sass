@@ -1,11 +1,14 @@
 .mod-players
   .player
-    display: flex
     margin-bottom: 10px
     padding: 10px
     background: $sand_light
     border-bottom: 2px solid $sky_dark
     border-radius: $br
+
+    .player-info
+      display: flex
+      margin-bottom: 10px
 
     .player-name
       flex: 1
@@ -14,3 +17,24 @@
     @each $color in $player_colors
       &.#{$color}
         background: lighten($color, 20%)
+
+  .comp-registers
+    margin: -5px
+
+  .register
+    width: $card_width / 2
+    height: $card_height / 2
+
+  .comp-instruction_card
+    width: $card_width / 2
+    height: $card_height / 2
+    padding: 5px
+
+    .icon
+      font-size: 100%
+
+    .text
+      font-size: 35%
+
+    .priority
+      font-size: 25%

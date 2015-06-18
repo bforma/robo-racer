@@ -5,7 +5,7 @@ RoboRacer.Views.Checkpoint = React.createBackboneClass({
       " y" + this.getModel().get('y');
 
     return (
-      <b className={ className }></b>
+      <b className={ className }>{ this.getModel().get('priority') }</b>
     );
   }
 });

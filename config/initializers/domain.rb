@@ -1,4 +1,4 @@
-require Rails.root + 'domain/domain'
+require Rails.root + "domain/domain"
 
 Fountain.configure do |config|
   config.logger = Logger.new($stdout)
