@@ -9,14 +9,14 @@ RoboRacer.Collections.Program = Backbone.Collection.extend(
     replacedRegister = @at(index)
     @remove replacedRegister
     @add new (RoboRacer.Models.Register)(instruction_card: card), at: index
-    replacedRegister.get 'instruction_card'
+    replacedRegister.get "instruction_card"
 
   unprogram: (index) ->
     @program index
 
   allRegistersFilled: ->
     _.every @models, (register) ->
-      register.get 'instruction_card'
+      register.get "instruction_card"
 
   reset: ->
     Backbone.Collection::reset.call this

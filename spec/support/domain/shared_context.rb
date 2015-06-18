@@ -18,7 +18,7 @@ RSpec.shared_context "CommandHandlers", type: :command_handlers do
   def given_events(*events)
     stream_id = events.first.id
     events = events.map { |event| journal.push(event, {}) }
-    event_store.given_events('GameAggregate', stream_id, events)
+    event_store.given_events("GameAggregate", stream_id, events)
   end
 
   def then_events(*events)

@@ -2,7 +2,7 @@ RoboRacer.Collections.Players = Backbone.Collection.extend({
   model: RoboRacer.Models.Player
 
   initialize: ->
-    @on 'add', @playerAdded, this
+    @on "add", @playerAdded, this
 
   playerAdded: (player) ->
     player.fetch()
@@ -10,14 +10,14 @@ RoboRacer.Collections.Players = Backbone.Collection.extend({
 
 },
   COLORS: [
-    'red'
-    'yellow'
-    'orange'
-    'pink'
-    'green'
-    'brown'
-    'grey'
-    'lightblue'
+    "red"
+    "yellow"
+    "orange"
+    "pink"
+    "green"
+    "brown"
+    "grey"
+    "lightblue"
   ]
   playerIdToColor: {}
   color: (playerId, index) ->

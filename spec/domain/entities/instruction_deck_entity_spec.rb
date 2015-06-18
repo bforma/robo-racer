@@ -1,4 +1,4 @@
-require 'domain_helper'
+require "domain_helper"
 
 describe InstructionDeckEntity, type: :entities do
   let(:deck) { InstructionDeckEntity.new(cards) }

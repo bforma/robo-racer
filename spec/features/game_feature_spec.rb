@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe GamesController do
   before { login_player }

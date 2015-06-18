@@ -1,5 +1,5 @@
-require 'simplecov'
-require 'coveralls'
+require "simplecov"
+require "coveralls"
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,
   Coveralls::SimpleCov::Formatter
@@ -8,7 +8,7 @@ SimpleCov.start do
   add_filter "spec/"
 end
 
-require 'support/shared/events_helper'
+require "support/shared/events_helper"
 
 RSpec.configure do |config|
   config.include EventsHelper
@@ -27,7 +27,7 @@ RSpec.configure do |config|
     # Use the documentation formatter for detailed output,
     # unless a formatter has already been configured
     # (e.g. via a command-line flag).
-    config.default_formatter = 'doc'
+    config.default_formatter = "doc"
   end
 
   config.order = :random

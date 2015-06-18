@@ -8,6 +8,6 @@ class GamesController < ApplicationController
   end
 
   def show
-    render :show, layout: 'game'
+    render :show, layout: "game"
   end
 end

@@ -1,4 +1,4 @@
-require 'bcrypt'
+require "bcrypt"
 
 module PasswordHelper
   def self.encrypt(password)

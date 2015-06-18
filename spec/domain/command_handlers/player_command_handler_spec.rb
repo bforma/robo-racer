@@ -1,4 +1,4 @@
-require 'domain_helper'
+require "domain_helper"
 
 describe PlayerCommandHandler, type: :command_handlers do
   let(:uuid) { new_uuid }

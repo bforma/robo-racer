@@ -1,24 +1,24 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe Api::V1::GamesController do
   let!(:player) { login_player }
 
-  describe 'Api::BaseController errors' do
-    let(:response) { put :start, id: 'game' }
+  describe "Api::BaseController errors" do
+    let(:response) { put :start, id: "game" }
 
-    context 'when aggregate is not found' do
+    context "when aggregate is not found" do
       before do
         expect_any_instance_of(described_class).
           to receive(:dispatch_command!).
           and_raise(Fountain::Repository::AggregateNotFoundError.new(
             GameAggregate,
-            'game'
+            "game"
           ))
       end
       it { expect(response.status).to eq(404) }
     end
 
-    context 'when command fails' do
+    context "when command fails" do
       before do
         expect_any_instance_of(described_class).
           to receive(:dispatch_command!).
@@ -38,9 +38,9 @@ describe Api::V1::GamesController do
       end
     end
 
-    context 'when command is invalid' do
+    context "when command is invalid" do
       let(:response) do
-        put :program_robot, id: 'game', instruction_cards: [build(:instruction_card)]
+        put :program_robot, id: "game", instruction_cards: [build(:instruction_card)]
       end
 
       it { expect(response.status).to eq(422) }
@@ -57,12 +57,12 @@ describe Api::V1::GamesController do
     end
   end
 
-  describe 'GET #events' do
+  describe "GET #events" do
     let(:response) { get :events, id: 1 }
 
     it { expect(response.status).to eq(404) }
 
-    context 'given a game' do
+    context "given a game" do
       before do
         given_events(GameAggregate: [build(:game_created_event, id: 1)])
       end
@@ -83,8 +83,8 @@ describe Api::V1::GamesController do
     end
   end
 
-  shared_examples 'an accepted PUT request' do
-    context 'when command succeeds' do
+  shared_examples "an accepted PUT request" do
+    context "when command succeeds" do
       before do
         expect_any_instance_of(described_class).
           to receive(:dispatch_command!).
@@ -95,32 +95,32 @@ describe Api::V1::GamesController do
     end
   end
 
-  describe 'PUT #join' do
-    it_behaves_like 'an accepted PUT request' do
-      let(:command) { JoinGameCommand.new(id: 'game', player_id: player._id) }
-      let(:response) { put :join, id: 'game' }
+  describe "PUT #join" do
+    it_behaves_like "an accepted PUT request" do
+      let(:command) { JoinGameCommand.new(id: "game", player_id: player._id) }
+      let(:response) { put :join, id: "game" }
     end
   end
 
-  describe 'PUT #leave' do
-    it_behaves_like 'an accepted PUT request' do
-      let(:command) { LeaveGameCommand.new(id: 'game', player_id: player._id) }
-      let(:response) { put :leave, id: 'game' }
+  describe "PUT #leave" do
+    it_behaves_like "an accepted PUT request" do
+      let(:command) { LeaveGameCommand.new(id: "game", player_id: player._id) }
+      let(:response) { put :leave, id: "game" }
     end
   end
 
-  describe 'PUT #start' do
-    it_behaves_like 'an accepted PUT request' do
-      let(:command) { StartGameCommand.new(id: 'game', player_id: player._id) }
-      let(:response) { put :start, id: 'game' }
+  describe "PUT #start" do
+    it_behaves_like "an accepted PUT request" do
+      let(:command) { StartGameCommand.new(id: "game", player_id: player._id) }
+      let(:response) { put :start, id: "game" }
     end
   end
 
-  describe 'PUT #program_robot' do
-    it_behaves_like 'an accepted PUT request' do
+  describe "PUT #program_robot" do
+    it_behaves_like "an accepted PUT request" do
       let(:command) do
         ProgramRobotCommand.new(
-          id: 'game',
+          id: "game",
           player_id: player._id,
           instruction_cards: build_list(:instruction_card, 1)
         )
@@ -128,7 +128,7 @@ describe Api::V1::GamesController do
       let(:response) do
         put(
           :program_robot,
-          id: 'game',
+          id: "game",
           instruction_cards: [attributes_for(:instruction_card)]
         )
       end
