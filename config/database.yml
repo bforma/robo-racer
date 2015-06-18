@@ -1,0 +1,16 @@
+database: &database
+  host: localhost
+  adapter: postgresql
+  pool: 100
+  encoding: utf8
+  username: roboracer
+  password: roboracer
+  min_messages: warning
+
+development:
+  <<: *database
+  database: roboracer_dev
+
+test:
+  <<: *database
+  database: roboracer_test

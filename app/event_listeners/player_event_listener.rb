@@ -4,13 +4,14 @@ class PlayerEventListener < BaseEventListener
   end
 
   route PlayerCreatedEvent do |event|
-    player = Player.create(
-      _id: event.id,
-      name: event.name,
-      email: event.email,
-      encrypted_password: event.password,
-      access_token: event.access_token
-    )
-    player.save(validate: false)
+    Player.transaction do
+      player = Player.create!(
+        id: event.id,
+        name: event.name,
+        email: event.email,
+        access_token: event.access_token
+      )
+      player.update_column(:encrypted_password, event.password)
+    end
   end
 end

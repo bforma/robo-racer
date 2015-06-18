@@ -28,12 +28,12 @@ RoboRacer.GameEventListener = Class.extend(
 
   onPlayerJoinedGameEvent: (payload) ->
     game = @gameRepository.find(payload.id)
-    game.get("players").add _id: payload.player_id
+    game.get("players").add id: payload.player_id
 
   onPlayerLeftGameEvent: (payload) ->
     game = @gameRepository.find(payload.id)
     players = game.get("players")
-    player = players.findWhere(_id: payload.player_id)
+    player = players.findWhere(id: payload.player_id)
     players.remove player
 
   onGameStartedEvent: (payload) ->
@@ -67,11 +67,11 @@ RoboRacer.GameEventListener = Class.extend(
     game = @gameRepository.find(payload.id)
     game.set "round_number", payload.game_round.number
     _(payload.hands).forEach (instructionCards, playerId) ->
-      player = game.get("players").findWhere(_id: playerId)
+      player = game.get("players").findWhere(id: playerId)
       player.get("hand").set instructionCards
 
     _(payload.programs).forEach (instructionCards, playerId) ->
-      player = game.get("players").findWhere(_id: playerId)
+      player = game.get("players").findWhere(id: playerId)
       player.set "committedProgram", false
       player.get("program").forEach (register, index) ->
         register.set "instruction_card", instructionCards[index]
@@ -81,12 +81,12 @@ RoboRacer.GameEventListener = Class.extend(
 
   onInstructionCardDealtEvent: (payload) ->
     game = @gameRepository.find(payload.id)
-    player = game.get("players").findWhere(_id: payload.player_id)
+    player = game.get("players").findWhere(id: payload.player_id)
     player.get("hand").add new (RoboRacer.Models.InstructionCard)(payload.instruction_card)
 
   onRobotProgrammedEvent: (payload) ->
     game = @gameRepository.find(payload.id)
-    player = game.get("players").findWhere(_id: payload.player_id)
+    player = game.get("players").findWhere(id: payload.player_id)
     player.set "committedProgram", true
     player.get("program").forEach (register, index) ->
       register.set "instruction_card", new (RoboRacer.Models.InstructionCard)(payload.instruction_cards[index])
@@ -98,7 +98,7 @@ RoboRacer.GameEventListener = Class.extend(
 
   onInstructionCardRevealedEvent: (payload) ->
     game = @gameRepository.find(payload.id)
-    player = game.get("players").findWhere(_id: payload.player_id)
+    player = game.get("players").findWhere(id: payload.player_id)
     register = player.get("revealedRegisters").findWhere(instruction_card: undefined)
     register.set "instruction_card", new (RoboRacer.Models.InstructionCard)(payload.instruction_card)
 

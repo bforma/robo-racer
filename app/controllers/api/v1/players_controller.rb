@@ -3,7 +3,7 @@ module Api
     class PlayersController < Api::BaseController
       def show
         player = Player.find(params[:id])
-        respond_with player.attributes.slice("_id", "name")
+        respond_with player.attributes.slice("id", "name")
       end
 
       def me

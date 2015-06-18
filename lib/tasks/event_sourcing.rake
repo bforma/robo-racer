@@ -1,12 +1,12 @@
 namespace :es do
   desc "Drops all recorded events and the current view model"
-  task drop: ["environment", "db:mongoid:purge"] do
+  task reset: ["environment", "db:reset"] do
     gateway = GatewayBuilder.build
     gateway.event_store.clear
   end
 
   desc "Drops the current view model and replays all recorded events to build a new one"
-  task replay: ["environment", "db:mongoid:purge"] do
+  task replay: ["environment", "db:reset"] do
     started_at = Time.current
     gateway = GatewayBuilder.build(
       event_listeners: GatewayBuilder::REPLAYABLE
