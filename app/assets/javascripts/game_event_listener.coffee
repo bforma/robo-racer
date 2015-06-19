@@ -23,27 +23,27 @@ RoboRacer.GameEventListener = Class.extend(
   methodName: (payload_type) ->
     "on" + payload_type
 
-  onGameCreatedEvent: (payload) ->
+  onGameWasCreated: (payload) ->
     @gameRepository.add new (RoboRacer.Models.Game)(payload)
 
-  onPlayerJoinedGameEvent: (payload) ->
+  onPlayerJoinedGame: (payload) ->
     game = @gameRepository.find(payload.id)
     game.get("players").add id: payload.player_id
 
-  onPlayerLeftGameEvent: (payload) ->
+  onPlayerLeftGame: (payload) ->
     game = @gameRepository.find(payload.id)
     players = game.get("players")
     player = players.findWhere(id: payload.player_id)
     players.remove player
 
-  onGameStartedEvent: (payload) ->
+  onGameStarted: (payload) ->
     game = @gameRepository.find(payload.id)
     game.set "state", payload.state
     game.get("board").set "tiles", new (RoboRacer.Collections.Tiles)(_.map(payload.tiles, (tile, _) ->
       tile
     ))
 
-  onSpawnPlacedEvent: (payload) ->
+  onSpawnPlaced: (payload) ->
     game = @gameRepository.find(payload.id)
     game.get("board").get("spawns").add new (RoboRacer.Models.Spawn)(
       player_id: payload.player_id
@@ -51,11 +51,11 @@ RoboRacer.GameEventListener = Class.extend(
       y: payload.spawn.y
       facing: payload.spawn.facing)
 
-  onGoalPlacedEvent: (payload) ->
+  onGoalPlaced: (payload) ->
     game = @gameRepository.find(payload.id)
     game.get("board").get("checkpoints").add new (RoboRacer.Models.Checkpoint)(payload.goal)
 
-  onRobotSpawnedEvent: (payload) ->
+  onRobotSpawned: (payload) ->
     game = @gameRepository.find(payload.id)
     game.get("board").get("robots").add new (RoboRacer.Models.Robot)(
       player_id: payload.player_id
@@ -63,7 +63,7 @@ RoboRacer.GameEventListener = Class.extend(
       y: payload.robot.y
       facing: payload.robot.facing)
 
-  onGameRoundStartedEvent: (payload) ->
+  onGameRoundStarted: (payload) ->
     game = @gameRepository.find(payload.id)
     game.set "round_number", payload.game_round.number
     _(payload.hands).forEach (instructionCards, playerId) ->
@@ -79,12 +79,12 @@ RoboRacer.GameEventListener = Class.extend(
       player.get("revealedRegisters").reset()
 
 
-  onInstructionCardDealtEvent: (payload) ->
+  onInstructionCardDealt: (payload) ->
     game = @gameRepository.find(payload.id)
     player = game.get("players").findWhere(id: payload.player_id)
     player.get("hand").add new (RoboRacer.Models.InstructionCard)(payload.instruction_card)
 
-  onRobotProgrammedEvent: (payload) ->
+  onRobotProgrammed: (payload) ->
     game = @gameRepository.find(payload.id)
     player = game.get("players").findWhere(id: payload.player_id)
     player.set "committedProgram", true
@@ -96,25 +96,25 @@ RoboRacer.GameEventListener = Class.extend(
       player.get("hand").remove cardInHand if cardInHand
 
 
-  onInstructionCardRevealedEvent: (payload) ->
+  onInstructionCardRevealed: (payload) ->
     game = @gameRepository.find(payload.id)
     player = game.get("players").findWhere(id: payload.player_id)
     register = player.get("revealedRegisters").findWhere(instruction_card: undefined)
     register.set "instruction_card", new (RoboRacer.Models.InstructionCard)(payload.instruction_card)
 
-  onRobotRotatedEvent: (payload) ->
+  onRobotRotated: (payload) ->
     game = @gameRepository.find(payload.id)
     robots = game.get("board").get("robots")
     robot = robots.findWhere(player_id: payload.player_id)
     robot.set "facing", payload.robot.facing
 
-  onRobotMovedEvent: (payload) ->
+  onRobotMoved: (payload) ->
     @moveRobot payload
 
-  onRobotPushedEvent: (payload) ->
+  onRobotPushed: (payload) ->
     @moveRobot payload
 
-  onRobotDiedEvent: (payload) ->
+  onRobotDied: (payload) ->
     game = @gameRepository.find(payload.id)
     robots = game.get("board").get("robots")
     robot = robots.findWhere(player_id: payload.player_id)

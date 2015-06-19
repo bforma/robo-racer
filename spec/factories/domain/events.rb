@@ -3,7 +3,7 @@ FactoryGirl.define do
     SecureRandom.uuid
   end
 
-  factory :player_created_event do
+  factory :player_was_created do
     id
     name "Bob"
     email "bob@localhost.local"
@@ -15,13 +15,13 @@ FactoryGirl.define do
     end
   end
 
-  factory :game_created_event do
+  factory :game_was_created do
     id
     state { GameState::LOBBYING }
     host_id "bob"
   end
 
-  factory :all_robots_programmed_event do
+  factory :all_robots_programmed do
     id
   end
 end

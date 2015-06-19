@@ -3,7 +3,7 @@ class PlayerEventListener < BaseEventListener
     Fountain::Router.create_router
   end
 
-  route PlayerCreatedEvent do |event|
+  route PlayerWasCreated do |event|
     Player.transaction do
       player = Player.create!(
         id: event.id,

@@ -16,19 +16,19 @@ class BoardEntity < BaseEntity
     raise SpawnAlreadyPlacedError if @spawns[player_id]
     raise IllegalLocationError if off_board?(spawn)
 
-    apply SpawnPlacedEvent.new(id, player_id, spawn)
+    apply SpawnPlaced.new(id, player_id, spawn)
   end
 
   def place_goal(goal)
     raise GoalAlreadyPlacedError if @goals.key?(goal.priority)
     raise IllegalLocationError if off_board?(goal)
 
-    apply GoalPlacedEvent.new(id, goal)
+    apply GoalPlaced.new(id, goal)
   end
 
   def spawn_players
     @spawns.each do |player_id, spawn|
-      apply RobotSpawnedEvent.new(
+      apply RobotSpawned.new(
         id,
         player_id,
         GameUnit.new(spawn.x, spawn.y, spawn.facing)
@@ -49,10 +49,10 @@ class BoardEntity < BaseEntity
   def touch_goals
     each_player_at_goal do |player_id, goal, _|
       if next_goal_for_player?(player_id, goal)
-        apply GoalTouchedEvent.new(id, player_id, goal)
+        apply GoalTouched.new(id, player_id, goal)
 
         if player_touched_final_goal?(player_id)
-          apply PlayerWonGameEvent.new(id, player_id)
+          apply PlayerWonGame.new(id, player_id)
         end
       end
     end
@@ -60,7 +60,7 @@ class BoardEntity < BaseEntity
 
   def replace_spawns
     each_player_at_goal do |player_id, goal, robot|
-      apply SpawnReplacedEvent.new(
+      apply SpawnReplaced.new(
         id,
         player_id,
         GameUnit.new(goal.x, goal.y, robot.facing)
@@ -68,40 +68,40 @@ class BoardEntity < BaseEntity
     end
   end
 
-  route_event SpawnPlacedEvent do |event|
+  route_event SpawnPlaced do |event|
     @spawns[event.player_id] = event.spawn
   end
 
-  route_event GoalPlacedEvent do |event|
+  route_event GoalPlaced do |event|
     @goals[event.goal.priority] = event.goal
     @final_goal = @goals.values.map(&:priority).max
   end
 
-  route_event RobotSpawnedEvent do |event|
+  route_event RobotSpawned do |event|
     @robots[event.player_id] = event.robot
   end
 
-  route_event RobotMovedEvent do |event|
+  route_event RobotMoved do |event|
     @robots[event.player_id] = event.robot
   end
 
-  route_event RobotPushedEvent do |event|
+  route_event RobotPushed do |event|
     @robots[event.player_id] = event.robot
   end
 
-  route_event RobotRotatedEvent do |event|
+  route_event RobotRotated do |event|
     @robots[event.player_id] = event.robot
   end
 
-  route_event RobotDiedEvent do |event|
+  route_event RobotDied do |event|
     @robots.delete(event.player_id)
   end
 
-  route_event GoalTouchedEvent do |event|
+  route_event GoalTouched do |event|
     @last_touched_goals[event.player_id] = event.goal.priority
   end
 
-  route_event SpawnReplacedEvent do |event|
+  route_event SpawnReplaced do |event|
     @spawns[event.player_id] = event.spawn
   end
 
@@ -139,10 +139,10 @@ class BoardEntity < BaseEntity
     new_position = robot.move(direction)
     other_robot = robot_at(new_position)
     push_robot(*other_robot, robot.facing) if other_robot
-    apply RobotMovedEvent.new(id, player_id, new_position)
+    apply RobotMoved.new(id, player_id, new_position)
 
     if off_board?(new_position)
-      apply RobotDiedEvent.new(id, player_id, new_position)
+      apply RobotDied.new(id, player_id, new_position)
       return false
     end
 
@@ -153,17 +153,17 @@ class BoardEntity < BaseEntity
     new_position = robot.push(direction)
     other_robot = robot_at(new_position)
     push_robot(*other_robot, direction) if other_robot
-    apply RobotPushedEvent.new(id, player_id, new_position)
+    apply RobotPushed.new(id, player_id, new_position)
 
     if off_board?(new_position)
-      apply RobotDiedEvent.new(id, player_id, new_position)
+      apply RobotDied.new(id, player_id, new_position)
     end
   end
 
   def rotate_robot(player_id, instruction_card)
     robot = @robots[player_id]
     new_position = robot.rotate(instruction_card.amount)
-    apply RobotRotatedEvent.new(id, player_id, new_position)
+    apply RobotRotated.new(id, player_id, new_position)
   end
 
   def each_player_at_goal

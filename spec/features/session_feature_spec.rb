@@ -3,7 +3,7 @@ require "rails_helper"
 describe Devise::SessionsController do
   before do
     given_events(PlayerAggregate: [build(
-      :player_created_event,
+      :player_was_created,
       email: "bob@localhost.local",
       name: "Bob",
       password: "secret"

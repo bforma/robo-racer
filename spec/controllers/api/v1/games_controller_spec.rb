@@ -64,14 +64,14 @@ describe Api::V1::GamesController do
 
     context "given a game" do
       before do
-        given_events(GameAggregate: [build(:game_created_event, id: 1)])
+        given_events(GameAggregate: [build(:game_was_created, id: 1)])
       end
 
       it { expect(response.status).to eq(200) }
       it do
         expect(response.body).to be_json_eql(
           %([{
-            "payload_type": "GameCreatedEvent",
+            "payload_type": "GameWasCreated",
             "payload": {
               "id": 1,
               "host_id": "bob",

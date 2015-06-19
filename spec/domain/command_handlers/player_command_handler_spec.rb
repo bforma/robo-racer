@@ -50,7 +50,7 @@ describe PlayerCommandHandler, type: :command_handlers do
     describe "dispatch" do
       it_behaves_like "an event publisher" do
         let(:expected_events) do
-          [PlayerCreatedEvent.new(
+          [PlayerWasCreated.new(
             uuid, "Bob", "bob@localhost.local", "secret", access_token
           )]
         end

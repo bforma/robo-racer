@@ -14,13 +14,13 @@ RoboRacer.Socket = Class.extend(
       connection.emit "join", gameId
 
     eventDelays = {
-      "GameRoundStartedPlayingEvent": 1500
-      "InstructionCardRevealedEvent": 250
-      "RobotRotatedEvent": 1500
-      "RobotMovedEvent": 1500
-      "RobotPushedEvent": 1500
-      "RobotDiedEvent": 1500
-      "GameRoundFinishedPlayingEvent": 1500
+      "GameRoundStartedPlaying": 1500
+      "InstructionCardRevealed": 250
+      "RobotRotated": 1500
+      "RobotMoved": 1500
+      "RobotPushed": 1500
+      "RobotDied": 1500
+      "GameRoundFinishedPlaying": 1500
     }
 
     delayForEvent = (event) ->

@@ -13,8 +13,8 @@ describe GameCommandHandler, type: :command_handlers do
     it "creates a new game" do
       when_command(CreateGameCommand.new(id: id, player_id: bob))
       then_events(
-        GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-        PlayerJoinedGameEvent.new(id, bob)
+        GameWasCreated.new(id, GameState::LOBBYING, bob),
+        PlayerJoinedGame.new(id, bob)
       )
     end
   end
@@ -22,29 +22,29 @@ describe GameCommandHandler, type: :command_handlers do
   describe StartGameCommand do
     before do
       given_events(
-        GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-        PlayerJoinedGameEvent.new(id, bob)
+        GameWasCreated.new(id, GameState::LOBBYING, bob),
+        PlayerJoinedGame.new(id, bob)
       )
     end
 
     it "starts a game" do
       when_command(StartGameCommand.new(id: id, player_id: bob))
       then_events(
-        GameStartedEvent.new(id, GameState::RUNNING, deck, board),
-        SpawnPlacedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-        GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
-        GoalPlacedEvent.new(id, Goal.new(10, 7, 2)),
-        RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-        GameRoundStartedEvent.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(40)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(60)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(90)),
-        InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110))
+        GameStarted.new(id, GameState::RUNNING, deck, board),
+        SpawnPlaced.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+        GoalPlaced.new(id, Goal.new(2, 11, 1)),
+        GoalPlaced.new(id, Goal.new(10, 7, 2)),
+        RobotSpawned.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+        GameRoundStarted.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
+        InstructionCardDealt.new(id, bob, InstructionCard.u_turn(10)),
+        InstructionCardDealt.new(id, bob, InstructionCard.u_turn(20)),
+        InstructionCardDealt.new(id, bob, InstructionCard.u_turn(30)),
+        InstructionCardDealt.new(id, bob, InstructionCard.u_turn(40)),
+        InstructionCardDealt.new(id, bob, InstructionCard.u_turn(50)),
+        InstructionCardDealt.new(id, bob, InstructionCard.u_turn(60)),
+        InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(70)),
+        InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(90)),
+        InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(110))
       )
     end
 
@@ -56,7 +56,7 @@ describe GameCommandHandler, type: :command_handlers do
     end
 
     context "given the game has already started" do
-      before { given_events(GameStartedEvent.new(id, GameState::RUNNING, deck, board)) }
+      before { given_events(GameStarted.new(id, GameState::RUNNING, deck, board)) }
 
       it "denies starting the game again" do
         expect { dispatch(StartGameCommand.new(id: id, player_id: bob)) }.
@@ -85,37 +85,37 @@ describe GameCommandHandler, type: :command_handlers do
     context "given a started game" do
       before do
         given_events(
-          GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-          PlayerJoinedGameEvent.new(id, bob),
-          GameStartedEvent.new(id, GameState::RUNNING, deck, board),
-          SpawnPlacedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
-          GoalPlacedEvent.new(id, Goal.new(10, 7, 2)),
-          RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          GameRoundStartedEvent.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(40)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(60)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(90)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110))
+          GameWasCreated.new(id, GameState::LOBBYING, bob),
+          PlayerJoinedGame.new(id, bob),
+          GameStarted.new(id, GameState::RUNNING, deck, board),
+          SpawnPlaced.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          GoalPlaced.new(id, Goal.new(2, 11, 1)),
+          GoalPlaced.new(id, Goal.new(10, 7, 2)),
+          RobotSpawned.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          GameRoundStarted.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(10)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(20)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(30)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(40)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(50)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(60)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(70)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(90)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(110))
         )
       end
 
       it "programs the players robot" do
         when_command(command)
         then_events(
-          RobotProgrammedEvent.new(id, bob, [
+          RobotProgrammed.new(id, bob, [
             InstructionCard.u_turn(10),
             InstructionCard.u_turn(20),
             InstructionCard.u_turn(30),
             InstructionCard.u_turn(40),
             InstructionCard.u_turn(50)
           ]),
-          AllRobotsProgrammedEvent.new(id)
+          AllRobotsProgrammed.new(id)
         )
       end
 
@@ -130,7 +130,7 @@ describe GameCommandHandler, type: :command_handlers do
       context "given the robot is already programmed" do
         before do
           given_events(
-            RobotProgrammedEvent.new(id, bob, [
+            RobotProgrammed.new(id, bob, [
               InstructionCard.u_turn(10),
               InstructionCard.u_turn(20),
               InstructionCard.u_turn(30),
@@ -157,8 +157,8 @@ describe GameCommandHandler, type: :command_handlers do
     context "given an unstarted game" do
       before do
         given_events(
-          GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-          PlayerJoinedGameEvent.new(id, bob),
+          GameWasCreated.new(id, GameState::LOBBYING, bob),
+          PlayerJoinedGame.new(id, bob),
         )
       end
 
@@ -172,68 +172,68 @@ describe GameCommandHandler, type: :command_handlers do
     context "given all robots where programmed" do
       before do
         given_events(
-          GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-          PlayerJoinedGameEvent.new(id, bob),
-          GameStartedEvent.new(id, GameState::RUNNING, deck, board),
-          SpawnPlacedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
-          GoalPlacedEvent.new(id, Goal.new(10, 7, 2)),
-          RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          GameRoundStartedEvent.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(40)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(60)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(90)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110)),
-          RobotProgrammedEvent.new(id, bob, [
+          GameWasCreated.new(id, GameState::LOBBYING, bob),
+          PlayerJoinedGame.new(id, bob),
+          GameStarted.new(id, GameState::RUNNING, deck, board),
+          SpawnPlaced.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          GoalPlaced.new(id, Goal.new(2, 11, 1)),
+          GoalPlaced.new(id, Goal.new(10, 7, 2)),
+          RobotSpawned.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          GameRoundStarted.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(10)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(20)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(30)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(40)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(50)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(60)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(70)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(90)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(110)),
+          RobotProgrammed.new(id, bob, [
             InstructionCard.u_turn(10),
             InstructionCard.u_turn(20),
             InstructionCard.u_turn(30),
             InstructionCard.u_turn(40),
             InstructionCard.u_turn(50)
           ]),
-          AllRobotsProgrammedEvent.new(id)
+          AllRobotsProgrammed.new(id)
         )
       end
 
       it "plays the current round" do
         when_command PlayCurrentRoundCommand.new(id: id)
         then_events(
-          GameRoundStartedPlayingEvent.new(id, GameRound.new(1)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(10)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(20)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(30)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(40)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(50)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(10)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(20)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(30)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(40)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(50)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(60)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(70)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(90)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(110)),
-          GameRoundFinishedPlayingEvent.new(id, GameRound.new(1)),
-          GameRoundStartedEvent.new(id, GameRound.new(2), { "bob" => [] }, "bob" => []),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(130)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(150)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(170)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(190)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(210)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(230)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(250)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(270)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(290))
+          GameRoundStartedPlaying.new(id, GameRound.new(1)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(10)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(20)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(30)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(40)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(50)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(10)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(20)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(30)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(40)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(50)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(60)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(70)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(90)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(110)),
+          GameRoundFinishedPlaying.new(id, GameRound.new(1)),
+          GameRoundStarted.new(id, GameRound.new(2), { "bob" => [] }, "bob" => []),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(130)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(150)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(170)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(190)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(210)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(230)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(250)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(270)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(290))
         )
       end
     end
@@ -241,114 +241,114 @@ describe GameCommandHandler, type: :command_handlers do
     context "given two players" do
       before do
         given_events(
-          GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-          PlayerJoinedGameEvent.new(id, bob),
-          PlayerJoinedGameEvent.new(id, steven),
-          GameStartedEvent.new(id, GameState::RUNNING, deck, board),
-          SpawnPlacedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          SpawnPlacedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
-          GoalPlacedEvent.new(id, Goal.new(2, 11, 1)),
-          RobotSpawnedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          RobotSpawnedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
-          GameRoundStartedEvent.new(id, GameRound.new(1), { "bob" => [], "steven" => [] }, "bob" => [], "steven" => []),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.u_turn(20)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.u_turn(40)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.u_turn(60)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(90)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(130)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(150)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(170)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(190)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(210)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(230)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(250)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(270)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(290)),
-          RobotProgrammedEvent.new(id, bob, [
+          GameWasCreated.new(id, GameState::LOBBYING, bob),
+          PlayerJoinedGame.new(id, bob),
+          PlayerJoinedGame.new(id, steven),
+          GameStarted.new(id, GameState::RUNNING, deck, board),
+          SpawnPlaced.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          SpawnPlaced.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+          GoalPlaced.new(id, Goal.new(2, 11, 1)),
+          RobotSpawned.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          RobotSpawned.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+          GameRoundStarted.new(id, GameRound.new(1), { "bob" => [], "steven" => [] }, "bob" => [], "steven" => []),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(10)),
+          InstructionCardDealt.new(id, steven, InstructionCard.u_turn(20)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(30)),
+          InstructionCardDealt.new(id, steven, InstructionCard.u_turn(40)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(50)),
+          InstructionCardDealt.new(id, steven, InstructionCard.u_turn(60)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(70)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(90)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(110)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(130)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(150)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(170)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(190)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(210)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(230)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(250)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(270)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(290)),
+          RobotProgrammed.new(id, bob, [
             InstructionCard.u_turn(10),
             InstructionCard.u_turn(30),
             InstructionCard.u_turn(50),
             InstructionCard.rotate_left(70),
             InstructionCard.rotate_left(110)
           ]),
-          RobotProgrammedEvent.new(id, steven, [
+          RobotProgrammed.new(id, steven, [
             InstructionCard.u_turn(20),
             InstructionCard.u_turn(40),
             InstructionCard.u_turn(60),
             InstructionCard.rotate_left(90),
             InstructionCard.rotate_left(130)
           ]),
-          AllRobotsProgrammedEvent.new(id)
+          AllRobotsProgrammed.new(id)
         )
       end
 
       it "plays the round" do
         when_command PlayCurrentRoundCommand.new(id: id)
         then_events(
-          GameRoundStartedPlayingEvent.new(id, GameRound.new(1)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(10)),
-          InstructionCardRevealedEvent.new(id, steven, InstructionCard.u_turn(20)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
-          RobotRotatedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::UP)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(30)),
-          InstructionCardRevealedEvent.new(id, steven, InstructionCard.u_turn(40)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          RobotRotatedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(50)),
-          InstructionCardRevealedEvent.new(id, steven, InstructionCard.u_turn(60)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
-          RobotRotatedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::UP)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.rotate_left(70)),
-          InstructionCardRevealedEvent.new(id, steven, InstructionCard.rotate_left(90)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::LEFT)),
-          RobotRotatedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::LEFT)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.rotate_left(110)),
-          InstructionCardRevealedEvent.new(id, steven, InstructionCard.rotate_left(130)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
-          RobotRotatedEvent.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
-          GameRoundFinishedPlayingEvent.new(id, GameRound.new(1)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(10)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(20)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(30)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(40)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(50)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(60)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(70)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(90)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(110)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(130)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(150)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(170)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(190)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(210)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(230)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(250)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(270)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(290)),
-          GameRoundStartedEvent.new(id, GameRound.new(2), { "bob" => [], "steven" => [] }, "bob" => [], "steven" => []),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(310)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(330)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(350)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(370)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(390)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_left(410)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_right(80)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_right(100)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_right(120)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_right(140)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_right(160)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_right(180)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_right(200)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_right(220)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_right(240)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_right(260)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_right(280)),
-          InstructionCardDealtEvent.new(id, steven, InstructionCard.rotate_right(300)),
+          GameRoundStartedPlaying.new(id, GameRound.new(1)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(10)),
+          InstructionCardRevealed.new(id, steven, InstructionCard.u_turn(20)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+          RobotRotated.new(id, steven, GameUnit.new(3, 1, GameUnit::UP)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(30)),
+          InstructionCardRevealed.new(id, steven, InstructionCard.u_turn(40)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          RobotRotated.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(50)),
+          InstructionCardRevealed.new(id, steven, InstructionCard.u_turn(60)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::UP)),
+          RobotRotated.new(id, steven, GameUnit.new(3, 1, GameUnit::UP)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.rotate_left(70)),
+          InstructionCardRevealed.new(id, steven, InstructionCard.rotate_left(90)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::LEFT)),
+          RobotRotated.new(id, steven, GameUnit.new(3, 1, GameUnit::LEFT)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.rotate_left(110)),
+          InstructionCardRevealed.new(id, steven, InstructionCard.rotate_left(130)),
+          RobotRotated.new(id, bob, GameUnit.new(2, 1, GameUnit::DOWN)),
+          RobotRotated.new(id, steven, GameUnit.new(3, 1, GameUnit::DOWN)),
+          GameRoundFinishedPlaying.new(id, GameRound.new(1)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(10)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(20)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(30)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(40)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(50)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(60)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(70)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(90)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(110)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(130)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(150)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(170)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(190)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(210)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(230)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(250)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(270)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(290)),
+          GameRoundStarted.new(id, GameRound.new(2), { "bob" => [], "steven" => [] }, "bob" => [], "steven" => []),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(310)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(330)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(350)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(370)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(390)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_left(410)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_right(80)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_right(100)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_right(120)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_right(140)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_right(160)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_right(180)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_right(200)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_right(220)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_right(240)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_right(260)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_right(280)),
+          InstructionCardDealt.new(id, steven, InstructionCard.rotate_right(300)),
         )
       end
     end
@@ -356,61 +356,61 @@ describe GameCommandHandler, type: :command_handlers do
     context "given a winning scenario" do
       before do
         given_events(
-          GameCreatedEvent.new(id, GameState::LOBBYING, bob),
-          PlayerJoinedGameEvent.new(id, bob),
-          GameStartedEvent.new(id, GameState::RUNNING, deck, board),
-          SpawnPlacedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
-          GoalPlacedEvent.new(id, Goal.new(0, 0, 1)),
-          RobotSpawnedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
-          GameRoundStartedEvent.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(10)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(20)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(30)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(40)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(50)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.u_turn(60)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(70)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(90)),
-          InstructionCardDealtEvent.new(id, bob, InstructionCard.rotate_left(110)),
-          RobotProgrammedEvent.new(id, bob, [
+          GameWasCreated.new(id, GameState::LOBBYING, bob),
+          PlayerJoinedGame.new(id, bob),
+          GameStarted.new(id, GameState::RUNNING, deck, board),
+          SpawnPlaced.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+          GoalPlaced.new(id, Goal.new(0, 0, 1)),
+          RobotSpawned.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+          GameRoundStarted.new(id, GameRound.new(1), { "bob" => [] }, "bob" => []),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(10)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(20)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(30)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(40)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(50)),
+          InstructionCardDealt.new(id, bob, InstructionCard.u_turn(60)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(70)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(90)),
+          InstructionCardDealt.new(id, bob, InstructionCard.rotate_left(110)),
+          RobotProgrammed.new(id, bob, [
             InstructionCard.u_turn(10),
             InstructionCard.u_turn(20),
             InstructionCard.u_turn(30),
             InstructionCard.u_turn(40),
             InstructionCard.u_turn(50)
           ]),
-          AllRobotsProgrammedEvent.new(id)
+          AllRobotsProgrammed.new(id)
         )
       end
 
       it "wins the game for a player" do
         when_command PlayCurrentRoundCommand.new(id: id)
         then_events(
-          GameRoundStartedPlayingEvent.new(id, GameRound.new(1)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(10)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(20)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(30)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(40)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
-          InstructionCardRevealedEvent.new(id, bob, InstructionCard.u_turn(50)),
-          RobotRotatedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
-          GoalTouchedEvent.new(id, bob, Goal.new(0, 0, 1)),
-          PlayerWonGameEvent.new(id, bob),
-          SpawnReplacedEvent.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(10)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(20)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(30)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(40)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(50)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.u_turn(60)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(70)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(90)),
-          InstructionCardDiscardedEvent.new(id, InstructionCard.rotate_left(110)),
-          GameRoundFinishedPlayingEvent.new(id, GameRound.new(1)),
-          GameEndedEvent.new(id, GameState::ENDED)
+          GameRoundStartedPlaying.new(id, GameRound.new(1)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(10)),
+          RobotRotated.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(20)),
+          RobotRotated.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(30)),
+          RobotRotated.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(40)),
+          RobotRotated.new(id, bob, GameUnit.new(0, 0, GameUnit::DOWN)),
+          InstructionCardRevealed.new(id, bob, InstructionCard.u_turn(50)),
+          RobotRotated.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+          GoalTouched.new(id, bob, Goal.new(0, 0, 1)),
+          PlayerWonGame.new(id, bob),
+          SpawnReplaced.new(id, bob, GameUnit.new(0, 0, GameUnit::UP)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(10)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(20)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(30)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(40)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(50)),
+          InstructionCardDiscarded.new(id, InstructionCard.u_turn(60)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(70)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(90)),
+          InstructionCardDiscarded.new(id, InstructionCard.rotate_left(110)),
+          GameRoundFinishedPlaying.new(id, GameRound.new(1)),
+          GameEnded.new(id, GameState::ENDED)
         )
       end
     end
@@ -418,15 +418,15 @@ describe GameCommandHandler, type: :command_handlers do
 
   describe JoinGameCommand do
     subject(:command) { JoinGameCommand.new(id: id, player_id: steven) }
-    before { given_events GameCreatedEvent.new(id, GameState::LOBBYING, bob) }
+    before { given_events GameWasCreated.new(id, GameState::LOBBYING, bob) }
 
     it "joins a game" do
       when_command(command)
-      then_events(PlayerJoinedGameEvent.new(id, steven))
+      then_events(PlayerJoinedGame.new(id, steven))
     end
 
     context "given the player already joined the game" do
-      before { given_events PlayerJoinedGameEvent.new(id, steven) }
+      before { given_events PlayerJoinedGame.new(id, steven) }
 
       it "denies joining the game again" do
         expect { dispatch(command) }.to raise_error(PlayerAlreadyInGameError)
@@ -434,7 +434,7 @@ describe GameCommandHandler, type: :command_handlers do
     end
 
     context "given the game already started" do
-      before { given_events GameStartedEvent.new(id, GameState::RUNNING, deck, board) }
+      before { given_events GameStarted.new(id, GameState::RUNNING, deck, board) }
 
       it "denies joining the game" do
         expect { dispatch(command) }.to raise_error(GameAlreadyStartedError)
@@ -444,18 +444,18 @@ describe GameCommandHandler, type: :command_handlers do
 
   describe LeaveGameCommand do
     subject(:command) { LeaveGameCommand.new(id: id, player_id: steven) }
-    before { given_events GameCreatedEvent.new(id, GameState::LOBBYING, bob) }
+    before { given_events GameWasCreated.new(id, GameState::LOBBYING, bob) }
 
     context "given the player joined the game" do
-      before { given_events PlayerJoinedGameEvent.new(id, steven) }
+      before { given_events PlayerJoinedGame.new(id, steven) }
 
       it "leaves a game" do
         when_command(command)
-        then_events(PlayerLeftGameEvent.new(id, steven))
+        then_events(PlayerLeftGame.new(id, steven))
       end
 
       context "and the game already started" do
-        before { given_events GameStartedEvent.new(id, GameState::RUNNING, deck, board) }
+        before { given_events GameStarted.new(id, GameState::RUNNING, deck, board) }
 
         it "denies leaving the game" do
           expect { dispatch(command) }.to raise_error(GameAlreadyStartedError)

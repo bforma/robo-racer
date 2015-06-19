@@ -12,7 +12,7 @@ class InstructionDeckEntity < BaseEntity
   def deal_card(player_id)
     card = @drawable.first
     if card
-      apply InstructionCardDealtEvent.new(id, player_id, card)
+      apply InstructionCardDealt.new(id, player_id, card)
     else
       shuffle
       deal_card(player_id)
@@ -24,25 +24,25 @@ class InstructionDeckEntity < BaseEntity
     raise CardNotYetDealtError if @drawable.include?(card)
     raise UnknownCardError unless @dealt.include?(card)
 
-    apply InstructionCardDiscardedEvent.new(id, card)
+    apply InstructionCardDiscarded.new(id, card)
   end
 
   def shuffle
     raise OutOfCardsError if @discarded.empty?
 
-    apply InstructionDeckShuffledEvent.new(id, @discarded.shuffle)
+    apply InstructionDeckShuffled.new(id, @discarded.shuffle)
   end
 
-  route_event InstructionCardDealtEvent do |event|
+  route_event InstructionCardDealt do |event|
     @drawable.delete(event.instruction_card)
     @dealt << event.instruction_card
   end
 
-  route_event InstructionCardDiscardedEvent do |event|
+  route_event InstructionCardDiscarded do |event|
     @discarded << event.instruction_card
   end
 
-  route_event InstructionDeckShuffledEvent do |event|
+  route_event InstructionDeckShuffled do |event|
     @drawable = event.instruction_cards.dup
     @discarded = Array.new
   end

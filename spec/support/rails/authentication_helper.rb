@@ -3,7 +3,7 @@ module AuthenticationHelper
     player_id = new_uuid
     given_events(
       PlayerAggregate: [
-        build(:player_created_event, id: player_id)
+        build(:player_was_created, id: player_id)
       ]
     )
 

@@ -2,25 +2,25 @@ class EventBroadcaster < BaseEventListener
   GAME_CHANNEL_FORMAT = "robo_racer.%s.games.%s"
 
   UNFILTERED_EVENTS = [
-    PlayerJoinedGameEvent,
-    PlayerLeftGameEvent,
-    GameRoundStartedEvent,
-    SpawnPlacedEvent,
-    GoalPlacedEvent,
-    RobotSpawnedEvent,
-    InstructionCardDealtEvent, # TODO filter cards
-    RobotProgrammedEvent, # TODO filter cards
-    AllRobotsProgrammedEvent,
-    GameRoundStartedPlayingEvent,
-    InstructionCardRevealedEvent,
-    RobotMovedEvent,
-    RobotRotatedEvent,
-    RobotPushedEvent,
-    RobotDiedEvent,
-    GoalTouchedEvent,
-    GameRoundFinishedPlayingEvent,
-    PlayerWonGameEvent,
-    GameEndedEvent,
+    PlayerJoinedGame,
+    PlayerLeftGame,
+    GameRoundStarted,
+    SpawnPlaced,
+    GoalPlaced,
+    RobotSpawned,
+    InstructionCardDealt, # TODO filter cards
+    RobotProgrammed, # TODO filter cards
+    AllRobotsProgrammed,
+    GameRoundStartedPlaying,
+    InstructionCardRevealed,
+    RobotMoved,
+    RobotRotated,
+    RobotPushed,
+    RobotDied,
+    GoalTouched,
+    GameRoundFinishedPlaying,
+    PlayerWonGame,
+    GameEnded,
   ]
 
   inheritable_accessor :router do
@@ -31,7 +31,7 @@ class EventBroadcaster < BaseEventListener
     route(event_class) { |event| publish(event) }
   end
 
-  route(GameStartedEvent) do |event|
+  route(GameStarted) do |event|
     publish(event, ->(payload) do
       attributes = payload.to_h
       instruction_deck = attributes.delete(:instruction_deck)

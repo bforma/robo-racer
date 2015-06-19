@@ -6,9 +6,9 @@ describe InstructionDeckEntity, type: :entities do
   let(:cards) { %w(1 2) }
   let(:bob) { "bob" }
 
-  let(:card_1_dealt) { InstructionCardDealtEvent.new(id, "bob", "1") }
-  let(:card_2_dealt) { InstructionCardDealtEvent.new(id, "bob", "2") }
-  let(:card_1_discarded) { InstructionCardDiscardedEvent.new(id, "1") }
+  let(:card_1_dealt) { InstructionCardDealt.new(id, "bob", "1") }
+  let(:card_2_dealt) { InstructionCardDealt.new(id, "bob", "2") }
+  let(:card_1_discarded) { InstructionCardDiscarded.new(id, "1") }
 
   describe "dealing and discarding cards" do
     subject { deck.deal_card(bob) }
@@ -36,7 +36,7 @@ describe InstructionDeckEntity, type: :entities do
 
           it "shuffles and deals the top card" do
             expect_events(
-              InstructionDeckShuffledEvent.new(id, ["1"]),
+              InstructionDeckShuffled.new(id, ["1"]),
               card_1_dealt
             )
           end

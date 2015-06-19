@@ -4,22 +4,22 @@ class GameAggregate < BaseAggregate
   child_entities :instruction_deck, :board
 
   def initialize(id, host_id)
-    apply GameCreatedEvent.new(id, GameState::LOBBYING, host_id)
-    apply PlayerJoinedGameEvent.new(id, host_id)
+    apply GameWasCreated.new(id, GameState::LOBBYING, host_id)
+    apply PlayerJoinedGame.new(id, host_id)
   end
 
   def join(player_id)
     raise GameAlreadyStartedError if game_running?
     raise PlayerAlreadyInGameError if @player_ids.include?(player_id)
 
-    apply PlayerJoinedGameEvent.new(id, player_id)
+    apply PlayerJoinedGame.new(id, player_id)
   end
 
   def leave(player_id)
     raise GameAlreadyStartedError if game_running?
     raise PlayerNotInGameError unless @player_ids.include?(player_id)
 
-    apply PlayerLeftGameEvent.new(id, player_id)
+    apply PlayerLeftGame.new(id, player_id)
   end
 
   def start(player_id)
@@ -29,7 +29,7 @@ class GameAggregate < BaseAggregate
     instruction_cards = InstructionDeckComposer.compose
     instruction_cards.shuffle!
 
-    apply GameStartedEvent.new(id, GameState::RUNNING, instruction_cards.dup, BoardComposer.compose)
+    apply GameStarted.new(id, GameState::RUNNING, instruction_cards.dup, BoardComposer.compose)
 
     place_spawns
     place_goals
@@ -46,20 +46,20 @@ class GameAggregate < BaseAggregate
       raise IllegalInstructionCardError unless hand.include?(instruction_card)
     end
 
-    apply RobotProgrammedEvent.new(id, player_id, instruction_cards)
+    apply RobotProgrammed.new(id, player_id, instruction_cards)
 
     if @robot_programs.all? { |_, program| program.size != 0 }
-      apply AllRobotsProgrammedEvent.new(id)
+      apply AllRobotsProgrammed.new(id)
     end
   end
 
   def play_current_round
-    apply GameRoundStartedPlayingEvent.new(id, GameRound.new(@game_round_number))
+    apply GameRoundStartedPlaying.new(id, GameRound.new(@game_round_number))
     play_registers
     @board.touch_goals
     @board.replace_spawns
     discard_instruction_cards
-    apply GameRoundFinishedPlayingEvent.new(id, GameRound.new(@game_round_number))
+    apply GameRoundFinishedPlaying.new(id, GameRound.new(@game_round_number))
 
     end_game if game_has_winner?
     start_new_round if game_running?
@@ -89,7 +89,7 @@ class GameAggregate < BaseAggregate
       memo
     end
 
-    apply GameRoundStartedEvent.new(
+    apply GameRoundStarted.new(
       id,
       GameRound.new(@game_round_number + 1),
       hands,
@@ -118,7 +118,7 @@ class GameAggregate < BaseAggregate
   def play_registers
     @registers.each do |register|
       register.each do |robot_instruction|
-        apply InstructionCardRevealedEvent.new(id, robot_instruction[0], robot_instruction[1])
+        apply InstructionCardRevealed.new(id, robot_instruction[0], robot_instruction[1])
       end
       register.each do |robot_instruction|
         @board.instruct_robot(robot_instruction[0], robot_instruction[1])
@@ -133,7 +133,7 @@ class GameAggregate < BaseAggregate
   end
 
   def end_game
-    apply GameEndedEvent.new(id, GameState::ENDED)
+    apply GameEnded.new(id, GameState::ENDED)
   end
 
   def game_has_winner?
@@ -148,7 +148,7 @@ class GameAggregate < BaseAggregate
     Marshal.load(Marshal.dump(object))
   end
 
-  route_event GameCreatedEvent do |event|
+  route_event GameWasCreated do |event|
     @id = event.id
     @state = event.state
     @host_id = event.host_id
@@ -157,33 +157,33 @@ class GameAggregate < BaseAggregate
     @robot = GameUnit.new(0, 0, GameUnit::RIGHT)
   end
 
-  route_event PlayerJoinedGameEvent do |event|
+  route_event PlayerJoinedGame do |event|
     @player_ids << event.player_id
   end
 
-  route_event PlayerLeftGameEvent do |event|
+  route_event PlayerLeftGame do |event|
     @player_ids.delete(event.player_id)
   end
 
-  route_event GameStartedEvent do |event|
+  route_event GameStarted do |event|
     @state = event.state
     @instruction_deck = InstructionDeckEntity.new(event.instruction_deck)
     @board = BoardEntity.new(event.tiles)
     @game_round_number = 0
   end
 
-  route_event GameRoundStartedEvent do |event|
+  route_event GameRoundStarted do |event|
     @hands = deep_copy(event.hands)
     @robot_programs = deep_copy(event.programs)
     @registers = Array.new
     @game_round_number = event.game_round.number
   end
 
-  route_event InstructionCardDealtEvent do |event|
+  route_event InstructionCardDealt do |event|
     @hands[event.player_id] << event.instruction_card
   end
 
-  route_event RobotProgrammedEvent do |event|
+  route_event RobotProgrammed do |event|
     @robot_programs[event.player_id] = event.instruction_cards
 
     event.instruction_cards.each_with_index do |instruction_card, index|
@@ -198,11 +198,11 @@ class GameAggregate < BaseAggregate
     end
   end
 
-  route_event PlayerWonGameEvent do |event|
+  route_event PlayerWonGame do |event|
     @winner = event.player_id
   end
 
-  route_event GameEndedEvent do |event|
+  route_event GameEnded do |event|
     @state = event.state
   end
 end

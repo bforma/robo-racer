@@ -3,7 +3,7 @@ class AsyncEventListener < BaseEventListener
     Fountain::Router.create_router
   end
 
-  route AllRobotsProgrammedEvent do |event|
+  route AllRobotsProgrammed do |event|
     PlayCurrentRoundJob.perform_async(event.id)
   end
 end

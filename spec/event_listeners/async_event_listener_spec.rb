@@ -6,8 +6,8 @@ describe AsyncEventListener do
     listener.call(Fountain::Envelope.as_envelope(event))
   end
 
-  describe AllRobotsProgrammedEvent do
-    let(:event) { build(:all_robots_programmed_event) }
+  describe AllRobotsProgrammed do
+    let(:event) { build(:all_robots_programmed) }
 
     specify do
       expect { handle_event }.to change(PlayCurrentRoundJob.jobs, :size).by(1)
